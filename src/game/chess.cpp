@@ -3,6 +3,9 @@
 #include "utils.h"
 
 void Chess::initGame() {
+  /* utils.h contains the 64 bit start state of each white piece.
+   * Reversing these gives the black piece start states.
+   */
   bitboards = {pawnInit,
                horseInit,
                castleInit,
