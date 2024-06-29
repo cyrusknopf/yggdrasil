@@ -10,6 +10,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} include)
 
-# Link runTests with what we want to test and the GTest and pthread library
-add_executable(runTests tests/tests.cpp)
+# Gather all test source files
+file(GLOB TEST_SOURCES
+    tests/game/*.cpp
+    tests/*.cpp
+)
+
+# Gather all source files
+file(GLOB SRC_SOURCES
+    src/game/*.cpp
+    src/*.cpp
+)
+
+# Add the executable
+add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
+
+# Link libraries
 target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)
