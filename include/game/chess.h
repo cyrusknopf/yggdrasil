@@ -4,6 +4,7 @@
 /*
  * Contains the main logic of the game of chess.
  */
+
 class Chess {
 public:
   /*
