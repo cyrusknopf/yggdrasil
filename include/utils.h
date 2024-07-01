@@ -1,16 +1,18 @@
 #include <cstdint>
 
-uint64_t reverseU64(uint64_t X);
+using bitboard = uint64_t;
 
-int getRank(uint64_t state);
+bitboard reverseU64(bitboard X);
 
-int getFile(uint64_t state);
+int getRank(bitboard state);
 
-uint64_t slideNorth(uint64_t state);
-uint64_t slideNorthEast(uint64_t state);
-uint64_t slideEast(uint64_t state);
-uint64_t slideSouthEast(uint64_t state);
-uint64_t slideSouth(uint64_t state);
-uint64_t slideSouthWest(uint64_t state);
-uint64_t slideWest(uint64_t state);
-uint64_t slideNorthWest(uint64_t state);
+int getFile(bitboard state);
+
+bitboard slideNorth(bitboard state);
+bitboard slideNorthEast(bitboard state);
+bitboard slideEast(bitboard state);
+bitboard slideSouthEast(bitboard state);
+bitboard slideSouth(bitboard state);
+bitboard slideSouthWest(bitboard state);
+bitboard slideWest(bitboard state);
+bitboard slideNorthWest(bitboard state);

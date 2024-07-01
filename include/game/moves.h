@@ -1,12 +1,27 @@
-#include <cstdint>
+#include "utils.h"
+#include <array>
 #include <vector>
 
-class Pawn {
-public:
-  std::vector<uint64_t> makeMoves(uint64_t state, bool colour);
-};
+std::vector<bitboard> pawnPseudoLegalMoves(std::array<bitboard, 6> whiteState,
+                                           std::array<bitboard, 6> blackState,
+                                           bitboard state, bool colour);
 
-class King {
-public:
-  std::vector<uint64_t> getPseudoLegalMoves(uint64_t state, bool colour);
-};
+std::vector<bitboard> horsePseudoLegalMoves(std::array<bitboard, 6> whiteState,
+                                            std::array<bitboard, 6> blackState,
+                                            bitboard state, bool colour);
+
+std::vector<bitboard> castlePseudoLegalMoves(std::array<bitboard, 6> whiteState,
+                                             std::array<bitboard, 6> blackState,
+                                             bitboard state, bool colour);
+
+std::vector<bitboard> bishopPseudoLegalMoves(std::array<bitboard, 6> whiteState,
+                                             std::array<bitboard, 6> blackState,
+                                             bitboard state, bool colour);
+
+std::vector<bitboard> queenPseudoLegalMoves(std::array<bitboard, 6> whiteState,
+                                            std::array<bitboard, 6> blackState,
+                                            bitboard state, bool colour);
+
+std::vector<bitboard> kingPseudoLegalMoves(std::array<bitboard, 6> whiteState,
+                                           std::array<bitboard, 6> blackState,
+                                           bitboard state, bool colour);

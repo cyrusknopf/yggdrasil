@@ -1,5 +1,5 @@
+#include "utils.h"
 #include <array>
-#include <cstdint>
 
 /*
  * Contains the main logic of the game of chess.
@@ -17,7 +17,7 @@ public:
    * 5          White King
    */
 
-  std::array<uint64_t, 6> whiteBitboards;
+  std::array<bitboard, 6> whiteBitboards;
   /*
    * The 6 bitboards each representing a black piece.
    * Index  |   Piece
@@ -28,7 +28,7 @@ public:
    * 4          Black Queen
    * 5          Black King
    */
-  std::array<uint64_t, 6> blackBitboards;
+  std::array<bitboard, 6> blackBitboards;
 
   /*
    * Populates the `whiteBitboards` and `blackBitboards` arrays with the
@@ -36,6 +36,6 @@ public:
    */
   void initGame();
 
-  uint64_t getGameState();
-  uint64_t getGameState(bool colour);
+  bitboard getGameState();
+  bitboard getGameState(bool colour);
 };
