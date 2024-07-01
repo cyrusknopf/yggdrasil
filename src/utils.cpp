@@ -36,3 +36,12 @@ int getRank(uint64_t state) {
   }
   return rank;
 }
+
+uint64_t slideNorth(uint64_t state) { return state <<= 8; }
+uint64_t slideNorthEast(uint64_t state) { return state <<= 7; }
+uint64_t slideEast(uint64_t state) { return state >>= 1; }
+uint64_t slideSouthEast(uint64_t state) { return state >>= 9; }
+uint64_t slideSouth(uint64_t state) { return state >>= 8; }
+uint64_t slideSouthWest(uint64_t state) { return state >>= 7; }
+uint64_t slideWest(uint64_t state) { return state <<= 1; }
+uint64_t slideNorthWest(uint64_t state) { return state <<= 9; }
