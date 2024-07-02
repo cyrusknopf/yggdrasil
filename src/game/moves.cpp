@@ -38,60 +38,65 @@ std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
     bitboard move;
     std::vector<bitboard> moves;
 
-    move = slideEast(state);
-    move = slideNorth(move);
-    move = slideNorth(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+    std::vector<bitboard> pieces = getAllPieces(state);
 
-    move = slideNorth(state);
-    move = slideEast(move);
-    move = slideEast(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+    for (auto &piece : pieces) {
 
-    move = slideSouth(state);
-    move = slideEast(move);
-    move = slideEast(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+        move = slideEast(piece);
+        move = slideNorth(move);
+        move = slideNorth(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
 
-    move = slideEast(state);
-    move = slideSouth(move);
-    move = slideSouth(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+        move = slideNorth(piece);
+        move = slideEast(move);
+        move = slideEast(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
 
-    move = slideWest(state);
-    move = slideSouth(move);
-    move = slideSouth(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+        move = slideSouth(piece);
+        move = slideEast(move);
+        move = slideEast(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
 
-    move = slideSouth(state);
-    move = slideWest(move);
-    move = slideWest(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+        move = slideEast(piece);
+        move = slideSouth(move);
+        move = slideSouth(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
 
-    move = slideNorth(state);
-    move = slideWest(move);
-    move = slideWest(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
-    }
+        move = slideWest(piece);
+        move = slideSouth(move);
+        move = slideSouth(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
 
-    move = slideWest(state);
-    move = slideNorth(move);
-    move = slideNorth(move);
-    if (move != 0 && (move & own) == 0) {
-        moves.push_back(move);
+        move = slideSouth(piece);
+        move = slideWest(move);
+        move = slideWest(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
+
+        move = slideNorth(piece);
+        move = slideWest(move);
+        move = slideWest(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
+
+        move = slideWest(piece);
+        move = slideNorth(move);
+        move = slideNorth(move);
+        if (move != 0 && (move & own) == 0) {
+            moves.push_back(move);
+        }
     }
 
     return moves;
