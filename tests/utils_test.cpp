@@ -52,3 +52,24 @@ TEST(slideNorth, e4) {
     bitboard correctState = 0x0000000800000000;
     ASSERT_EQ(correctState, state);
 }
+
+TEST(slideNorth, e8) {
+    bitboard state = 0x0800000000000000;
+    state = slideNorth(state);
+    bitboard correctState = 0;
+    ASSERT_EQ(correctState, state);
+}
+
+TEST(slideSouth, e4) {
+    bitboard state = 0x0000000008000000;
+    state = slideSouth(state);
+    bitboard correctState = 0x0000000000080000;
+    ASSERT_EQ(correctState, state);
+}
+
+TEST(slideSouth, e1) {
+    bitboard state = 0x0000000000000080;
+    state = slideSouth(state);
+    bitboard correctState = 0;
+    ASSERT_EQ(correctState, state);
+}
