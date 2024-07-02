@@ -73,3 +73,31 @@ TEST(slideSouth, e1) {
     bitboard correctState = 0;
     ASSERT_EQ(correctState, state);
 }
+
+TEST(slideEast, e4) {
+    bitboard state = 0x0000000008000000;
+    state = slideEast(state);
+    bitboard correctState = 0x0000000004000000;
+    ASSERT_EQ(correctState, state);
+}
+
+TEST(slideEast, h4) {
+    bitboard state = 0x0000000001000000;
+    state = slideEast(state);
+    bitboard correctState = 0;
+    ASSERT_EQ(correctState, state);
+}
+
+TEST(slideWest, e4) {
+    bitboard state = 0x0000000008000000;
+    state = slideWest(state);
+    bitboard correctState = 0x0000000010000000;
+    ASSERT_EQ(correctState, state);
+}
+
+TEST(slideWest, a4) {
+    bitboard state = 0x0000000080000000;
+    state = slideWest(state);
+    bitboard correctState = 0;
+    ASSERT_EQ(correctState, state);
+}
