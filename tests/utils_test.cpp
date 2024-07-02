@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <gtest/gtest.h>
+#include <vector>
 
 TEST(reverseU64Test, pawnStart) {
     ASSERT_EQ(0x00FF000000000000, reverseU64(0x000000000000FF00));
@@ -100,4 +101,26 @@ TEST(slideWest, a4) {
     state = slideWest(state);
     bitboard correctState = 0;
     ASSERT_EQ(correctState, state);
+}
+
+TEST(getALlPieces, e4) {
+    bitboard state = 0x0000000008000000;
+    std::vector<bitboard> pieces = getAllPieces(state);
+
+    ASSERT_EQ(1, pieces.size());
+
+    ASSERT_EQ(state, pieces.at(0));
+}
+
+TEST(getAllPieces, h1_a8) {
+    bitboard state = 0x8000000000000001;
+    std::vector<bitboard> pieces = getAllPieces(state);
+
+    ASSERT_EQ(2, pieces.size());
+
+    bitboard firstPiece = 0x0000000000000001;
+    bitboard secondPeice = 0x8000000000000000;
+
+    ASSERT_EQ(firstPiece, pieces.at(0));
+    ASSERT_EQ(secondPeice, pieces.at(1));
 }

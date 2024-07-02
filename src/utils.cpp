@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <cstdint>
 #include <immintrin.h>
+#include <vector>
 
 uint64_t reverseU64(uint64_t X) { return __bswap_64(X); }
 
@@ -50,3 +51,16 @@ uint64_t slideWest(uint64_t state) {
 // uint64_t slideSouthWest(uint64_t state) { return state >>= 7; }
 // uint64_t slideNorthEast(uint64_t state) { return state <<= 7; }
 // uint64_t slideSouthEast(uint64_t state) { return state >>= 9; }
+
+std::vector<bitboard> getAllPieces(bitboard state) {
+    bitboard initState = state;
+    std::vector<bitboard> pieces;
+
+    while (initState != 0) {
+        bitboard thisPiece = initState & -initState;
+        pieces.push_back(thisPiece);
+        initState &= initState - 1;
+    }
+
+    return pieces;
+}

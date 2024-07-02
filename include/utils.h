@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <vector>
 
 using bitboard = uint64_t;
 
@@ -12,6 +13,8 @@ bitboard slideNorth(bitboard state);
 bitboard slideEast(bitboard state);
 bitboard slideSouth(bitboard state);
 bitboard slideWest(bitboard state);
+
+std::vector<bitboard> getAllPieces(bitboard state);
 
 // bitboard slideSouthEast(bitboard state);
 // bitboard slideSouthWest(bitboard state);

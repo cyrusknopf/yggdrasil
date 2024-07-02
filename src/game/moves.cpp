@@ -18,6 +18,10 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
     return moves;
 };
 
+/*
+ * Generate the pseudo legal moves for a horse piece.
+ * Assumes state is a bitboard containing a single piece
+ */
 std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
                                             bitboard blackState, bitboard state,
                                             bool colour) {

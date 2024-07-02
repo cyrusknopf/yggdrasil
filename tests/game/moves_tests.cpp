@@ -1,7 +1,5 @@
 #include "game/moves.h"
 #include <gtest/gtest.h>
-#include <iostream>
-#include <ostream>
 
 TEST(horsePseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
@@ -13,7 +11,6 @@ TEST(horsePseudoLegalMoves, e4) {
 
     bitboard allMoves = 0;
     for (auto &move : moves) {
-        std::cout << move << std::endl;
         allMoves |= move;
     }
 
