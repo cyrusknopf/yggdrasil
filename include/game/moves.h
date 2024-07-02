@@ -1,27 +1,26 @@
 #include "utils.h"
-#include <array>
 #include <vector>
 
-std::vector<bitboard> pawnPseudoLegalMoves(std::array<bitboard, 6> whiteState,
-                                           std::array<bitboard, 6> blackState,
-                                           bitboard state, bool colour);
+std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
+                                           bitboard blackState, bitboard state,
+                                           bool colour);
 
-std::vector<bitboard> horsePseudoLegalMoves(std::array<bitboard, 6> whiteState,
-                                            std::array<bitboard, 6> blackState,
-                                            bitboard state, bool colour);
+std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
+                                            bitboard blackState, bitboard state,
+                                            bool colour);
 
-std::vector<bitboard> castlePseudoLegalMoves(std::array<bitboard, 6> whiteState,
-                                             std::array<bitboard, 6> blackState,
+std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
+                                             bitboard blackState,
                                              bitboard state, bool colour);
 
-std::vector<bitboard> bishopPseudoLegalMoves(std::array<bitboard, 6> whiteState,
-                                             std::array<bitboard, 6> blackState,
+std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
+                                             bitboard blackState,
                                              bitboard state, bool colour);
 
-std::vector<bitboard> queenPseudoLegalMoves(std::array<bitboard, 6> whiteState,
-                                            std::array<bitboard, 6> blackState,
-                                            bitboard state, bool colour);
+std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
+                                            bitboard blackState, bitboard state,
+                                            bool colour);
 
-std::vector<bitboard> kingPseudoLegalMoves(std::array<bitboard, 6> whiteState,
-                                           std::array<bitboard, 6> blackState,
-                                           bitboard state, bool colour);
+std::vector<bitboard> kingPseudoLegalMoves(bitboard whiteState,
+                                           bitboard blackState, bitboard state,
+                                           bool colour);
