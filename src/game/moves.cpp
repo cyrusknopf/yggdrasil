@@ -2,6 +2,14 @@
 #include "utils.h"
 #include <vector>
 
+/*
+ * I opt to not use an array of function pointers for carrying out moves due to
+ * the apparent inability of the compiler to perform function inlining.
+ * Whether this is true or not, I am not sure, but I feel the readability of the
+ * code does not suffer and possibly is even more readable when explicitly
+ * listing moves.
+ */
+
 std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
                                            bitboard blackState, bitboard state,
                                            bool colour) {
@@ -105,7 +113,75 @@ std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
 std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
                                              bitboard blackState,
                                              bitboard state, bool colour) {
+    bitboard own;
+    bitboard opp;
+    if (colour) {
+        own = whiteState;
+        opp = blackState;
+    } else {
+        own = blackState;
+        opp = whiteState;
+    }
+
+    bitboard move;
     std::vector<bitboard> moves;
+
+    std::vector<bitboard> pieces = getAllPieces(state);
+
+    for (auto &piece : pieces) {
+
+        // Slide north
+        move = state;
+        while (slideNorth(move) != 0) {
+            move = slideNorth(move);
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+
+        // Slide south
+        move = state;
+        while (slideSouth(move) != 0) {
+            move = slideSouth(move);
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+
+        // Slide east
+        move = state;
+        while (slideEast(move) != 0) {
+            move = slideEast(move);
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+
+        // Slide west
+        move = state;
+        while (slideWest(move) != 0) {
+            move = slideWest(move);
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+    }
     return moves;
 };
 
@@ -126,6 +202,18 @@ std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
 std::vector<bitboard> kingPseudoLegalMoves(bitboard whiteState,
                                            bitboard blackState, bitboard state,
                                            bool colour) {
+    bitboard own;
+    bitboard opp;
+    if (colour) {
+        own = whiteState;
+        opp = blackState;
+    } else {
+        own = blackState;
+        opp = whiteState;
+    }
+
+    bitboard move;
     std::vector<bitboard> moves;
+
     return moves;
 };
