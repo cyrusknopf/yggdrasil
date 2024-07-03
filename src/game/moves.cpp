@@ -188,7 +188,76 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
 std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
                                              bitboard blackState,
                                              bitboard state, bool colour) {
+
+    bitboard own;
+    bitboard opp;
+    if (colour) {
+        own = whiteState;
+        opp = blackState;
+    } else {
+        own = blackState;
+        opp = whiteState;
+    }
+
+    bitboard move;
     std::vector<bitboard> moves;
+
+    std::vector<bitboard> pieces = getAllPieces(state);
+
+    for (auto &piece : pieces) {
+
+        // Slide north east
+        move = state;
+        while (slideNorth(slideEast(move)) != 0) {
+            move = slideNorth(slideEast(move));
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+
+        // Slide south east
+        move = state;
+        while (slideSouth(slideEast(move)) != 0) {
+            move = slideSouth(slideEast(move));
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+
+        // Slide south west
+        move = state;
+        while (slideSouth(slideWest(move)) != 0) {
+            move = slideSouth(slideWest(move));
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+
+        // Slide north west
+        move = state;
+        while (slideNorth(slideWest(move)) != 0) {
+            move = slideNorth(slideWest(move));
+            if ((move & own) != 0) {
+                break;
+            }
+            moves.push_back(move);
+            if ((move & opp) != 0) {
+                break;
+            }
+        }
+    }
     return moves;
 };
 

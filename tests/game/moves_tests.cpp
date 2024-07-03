@@ -48,3 +48,29 @@ TEST(kingPseudoLegalMoves, e4) {
 
     ASSERT_EQ(allCorrectMoves, allMoves);
 }
+
+TEST(bishopPseudoLegalMoves, e4) {
+    bitboard state = 0x0000000008000000;
+    std::vector<bitboard> moves = bishopPseudoLegalMoves(0, 0, state, true);
+
+    ASSERT_EQ(13, moves.size());
+
+    // The board state which contains every legal move should be:
+    // 1 0 0 0 0 0 0 0 | 8 0
+    // 0 1 0 0 0 0 0 1 | 4 1
+    // 0 0 1 0 0 0 1 0 | 2 2
+    // 0 0 0 1 0 1 0 0 | 1 4
+    // 0 0 0 0 0 0 0 0 | 0 0
+    // 0 0 0 1 0 1 0 0 | 1 4
+    // 0 0 1 0 0 0 1 0 | 2 2
+    // 0 1 0 0 0 0 0 1 | 4 1
+
+    bitboard allCorrectMoves = 0x8041221400142241;
+
+    bitboard allMoves = 0;
+    for (auto &move : moves) {
+        allMoves |= move;
+    }
+
+    ASSERT_EQ(allCorrectMoves, allMoves);
+}
