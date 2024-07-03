@@ -265,6 +265,19 @@ std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
                                             bitboard blackState, bitboard state,
                                             bool colour) {
     std::vector<bitboard> moves;
+    std::vector<bitboard> diagonals =
+        bishopPseudoLegalMoves(whiteState, blackState, state, colour);
+    std::vector<bitboard> straights =
+        castlePseudoLegalMoves(whiteState, blackState, state, colour);
+
+    for (auto &move : diagonals) {
+        moves.push_back(move);
+    }
+
+    for (auto &move : straights) {
+        moves.push_back(move);
+    }
+
     return moves;
 };
 

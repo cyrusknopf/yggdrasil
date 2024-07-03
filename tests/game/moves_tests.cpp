@@ -74,3 +74,19 @@ TEST(bishopPseudoLegalMoves, e4) {
 
     ASSERT_EQ(allCorrectMoves, allMoves);
 }
+
+TEST(queenPseudoLegalMoves, e4) {
+    bitboard state = 0x0000000008000000;
+    std::vector<bitboard> moves = queenPseudoLegalMoves(0, 0, state, true);
+
+    ASSERT_EQ(27, moves.size());
+
+    long allCorrectMoves = 0x88492A1CF71C2A49L;
+
+    bitboard allMoves = 0;
+    for (auto &move : moves) {
+        allMoves |= move;
+    }
+
+    ASSERT_EQ(allCorrectMoves, allMoves);
+}
