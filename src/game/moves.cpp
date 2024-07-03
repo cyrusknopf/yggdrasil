@@ -215,5 +215,45 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard whiteState,
     bitboard move;
     std::vector<bitboard> moves;
 
+    move = slideNorth(state);
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideNorth(slideEast(state));
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideEast(state);
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideSouth(slideEast(state));
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideSouth(state);
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideSouth(slideWest(state));
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideWest(state);
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
+    move = slideNorth(slideWest(state));
+    if (move != 0 && (move & own) == 0) {
+        moves.push_back(move);
+    }
+
     return moves;
 };
