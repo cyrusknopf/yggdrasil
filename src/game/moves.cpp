@@ -14,22 +14,71 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
                                            bitboard blackState, bitboard state,
                                            bool colour) {
     std::vector<bitboard> moves;
+    bitboard move;
+    bitboard both = whiteState | blackState;
 
     if (colour) {
         bitboard own = whiteState;
         bitboard opp = blackState;
+
+        for (auto &piece : getAllPieces(state)) {
+            move = slideNorth(state);
+            if ((move & both) == 0) {
+                moves.push_back(move);
+            }
+
+            // If in rank 2 (i.e. starting rank)
+            if (piece > 255 && piece < 65536) {
+                move = slideNorth(move);
+                if ((move & both) == 0) {
+                    moves.push_back(move);
+                }
+            }
+
+            move = slideNorth(slideEast(state));
+            if ((move & own) == 0 && (move & opp) != 0) {
+                moves.push_back(move);
+            }
+
+            move = slideNorth(slideWest(state));
+            if ((move & own) == 0 && (move & opp) != 0) {
+                moves.push_back(move);
+            }
+        }
+
     } else {
         bitboard own = blackState;
         bitboard opp = whiteState;
+
+        for (auto &piece : getAllPieces(state)) {
+            move = slideSouth(state);
+            if ((move & both) == 0) {
+                moves.push_back(move);
+            }
+
+            // If in rank 7 (i.e. starting rank)
+            if (piece > 140737488355328 && piece < 72057594037927936) {
+                move = slideSouth(move);
+                if ((move & both) == 0) {
+                    moves.push_back(move);
+                }
+            }
+
+            move = slideSouth(slideEast(state));
+            if ((move & own) == 0 && (move & opp) != 0) {
+                moves.push_back(move);
+            }
+
+            move = slideSouth(slideWest(state));
+            if ((move & own) == 0 && (move & opp) != 0) {
+                moves.push_back(move);
+            }
+        }
     }
 
     return moves;
 };
 
-/*
- * Generate the pseudo legal moves for a horse piece.
- * Assumes state is a bitboard containing a single piece
- */
 std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
                                             bitboard blackState, bitboard state,
                                             bool colour) {

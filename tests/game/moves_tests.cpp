@@ -1,6 +1,22 @@
 #include "game/moves.h"
 #include <gtest/gtest.h>
 
+TEST(pawnPseudoLegalMoves, e4) {
+    bitboard state = 0x0000000008000000;
+    std::vector<bitboard> moves = pawnPseudoLegalMoves(0, 0, state, true);
+
+    ASSERT_EQ(1, moves.size());
+
+    bitboard allCorrectMoves = 0x0000000800000000;
+
+    bitboard allMoves = 0;
+    for (auto &move : moves) {
+        allMoves |= move;
+    }
+
+    ASSERT_EQ(allCorrectMoves, allMoves);
+}
+
 TEST(horsePseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
     std::vector<bitboard> moves = horsePseudoLegalMoves(0, 0, state, true);
@@ -24,22 +40,6 @@ TEST(castlePseudoLegalMoves, e4) {
     ASSERT_EQ(14, moves.size());
 
     bitboard allCorrectMoves = 0x08080808F7080808;
-
-    bitboard allMoves = 0;
-    for (auto &move : moves) {
-        allMoves |= move;
-    }
-
-    ASSERT_EQ(allCorrectMoves, allMoves);
-}
-
-TEST(kingPseudoLegalMoves, e4) {
-    bitboard state = 0x0000000008000000;
-    std::vector<bitboard> moves = kingPseudoLegalMoves(0, 0, state, true);
-
-    ASSERT_EQ(8, moves.size());
-
-    bitboard allCorrectMoves = 0x0000001C141C0000;
 
     bitboard allMoves = 0;
     for (auto &move : moves) {
@@ -82,6 +82,22 @@ TEST(queenPseudoLegalMoves, e4) {
     ASSERT_EQ(27, moves.size());
 
     long allCorrectMoves = 0x88492A1CF71C2A49L;
+
+    bitboard allMoves = 0;
+    for (auto &move : moves) {
+        allMoves |= move;
+    }
+
+    ASSERT_EQ(allCorrectMoves, allMoves);
+}
+
+TEST(kingPseudoLegalMoves, e4) {
+    bitboard state = 0x0000000008000000;
+    std::vector<bitboard> moves = kingPseudoLegalMoves(0, 0, state, true);
+
+    ASSERT_EQ(8, moves.size());
+
+    bitboard allCorrectMoves = 0x0000001C141C0000;
 
     bitboard allMoves = 0;
     for (auto &move : moves) {
