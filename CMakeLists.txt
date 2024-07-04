@@ -22,8 +22,18 @@ file(GLOB SRC_SOURCES
     src/*.cpp
 )
 
-# Add the executable
+# Remove driver.cpp from SRC_SOURCES
+list(REMOVE_ITEM SRC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/game/driver.cpp")
+
+# Add the executable for tests
 add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
-# Link libraries
+# Link libraries to the test executable
 target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)
+
+# Add the executable for driver.cpp and link necessary source files
+add_executable(driver src/game/driver.cpp ${SRC_SOURCES})
+
+# If the driver executable needs specific libraries, link them here
+# For example, if it needs pthread:
+target_link_libraries(driver pthread)

@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <cstdint>
 #include <immintrin.h>
+#include <iostream>
 #include <vector>
 
 uint64_t reverseU64(uint64_t X) { return __bswap_64(X); }
@@ -64,3 +65,5 @@ std::vector<bitboard> getAllPieces(bitboard state) {
 
     return pieces;
 }
+
+void clearTerm() { std::cout << "\x1B[2J\x1B[H"; }

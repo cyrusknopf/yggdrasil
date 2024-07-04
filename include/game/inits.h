@@ -1,8 +1,13 @@
-#include <cstdint>
+#ifndef _INITSH_
+#define _INITSH_
 
-constexpr uint64_t pawnInit = 0xFF00;
-constexpr uint64_t horseInit = 0x42;
-constexpr uint64_t castleInit = 0x81;
-constexpr uint64_t bishopInit = 0x24;
-constexpr uint64_t queenInit = 0x10;
-constexpr uint64_t kingInit = 0x8;
+#include "utils.h"
+
+constexpr bitboard whitePawnInit = 0xFF00;
+constexpr bitboard whiteHorseInit = 0x42;
+constexpr bitboard whiteCastleInit = 0x81;
+constexpr bitboard whiteBishopInit = 0x24;
+constexpr bitboard whiteQueenInit = 0x10;
+constexpr bitboard whiteKingInit = 0x8;
+
+#endif // !_INITSH_
