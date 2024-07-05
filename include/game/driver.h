@@ -4,6 +4,7 @@ void gameLoop();
 
 std::string readSquare();
 
-void printGameState();
+void printGameState(std::array<bitboard, 6> &whitePieces,
+                    std::array<bitboard, 6> &blackPieces);
 
 bitboard coordinateToState(std::string coord);

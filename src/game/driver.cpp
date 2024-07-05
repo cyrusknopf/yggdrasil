@@ -4,6 +4,7 @@
 #include <iostream>
 #include <regex>
 #include <string>
+#include <vector>
 
 bitboard coordinateToState(std::string coord) {
     int file = coord.at(0) - 'a';
@@ -22,24 +23,71 @@ bitboard coordinateToState(std::string coord) {
     return state;
 }
 
-std::string readSquare() {
+std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
+                                  const std::string &symbol) {
+    std::vector<bitboard> thesePieces = getAllPieces(pieceBitboard);
+    for (auto &piece : thesePieces) {
+        char file = (char)(getFile(piece) + 'a' - 1);
+        int rank = getRank(piece);
+        std::string pos = std::string(1, file) + std::to_string(rank);
+        std::regex re(pos);
+        board = std::regex_replace(board, re, symbol);
+    }
+
+    return board;
+}
+
+void printGameState(std::array<bitboard, 6> &whitePieces,
+                    std::array<bitboard, 6> &blackPieces) {
+
+    std::string board;
+
+    for (int rank = 8; rank > 0; rank--) {
+        for (char file = 'a'; file < 'i'; file++) {
+            board += file;
+            board += std::to_string(rank);
+            board += " ";
+        }
+        board += "| ";
+        board += std::to_string(rank);
+        board += '\n';
+    }
+    board.append("---------------\n");
+    board.append("a b c d e f g h\n");
+
+    board = addPieceToStringBoard(board, whitePieces.at(0), WPAWN);
+    board = addPieceToStringBoard(board, whitePieces.at(1), WHORSE);
+    board = addPieceToStringBoard(board, whitePieces.at(2), WCASTLE);
+    board = addPieceToStringBoard(board, whitePieces.at(3), WBISHOP);
+    board = addPieceToStringBoard(board, whitePieces.at(4), WQUEEN);
+    board = addPieceToStringBoard(board, whitePieces.at(5), WQUEEN);
+
+    board = addPieceToStringBoard(board, blackPieces.at(0), BPAWN);
+    board = addPieceToStringBoard(board, blackPieces.at(1), BHORSE);
+    board = addPieceToStringBoard(board, blackPieces.at(2), BCASTLE);
+    board = addPieceToStringBoard(board, blackPieces.at(3), BBISHOP);
+    board = addPieceToStringBoard(board, blackPieces.at(4), BQUEEN);
+    board = addPieceToStringBoard(board, blackPieces.at(5), BQUEEN);
+
+    board = std::regex_replace(board, std::regex("[a-z][1-8]"), " ");
+
+    std::cout << board;
+    return;
+}
+
+std::string readSquare(std::array<bitboard, 6> whitePieces,
+                       std::array<bitboard, 6> blackPieces) {
     std::string square;
     std::cin >> square;
     std::smatch matches;
 
     while (!std::regex_match(square, matches, squareRe)) {
         clearTerm();
-        std::cout << "here is the game\n";
+        printGameState(whitePieces, blackPieces);
         std::cin >> square;
     }
 
     return square;
-}
-
-void printGameState(std::array<bitboard, 6> whitePieces,
-                    std::array<bitboard, 6> blackPieces) {
-    return;
-    return;
 }
 
 void gameLoop() {
@@ -57,8 +105,8 @@ void gameLoop() {
     bool turn = true;
 
     while (!gameOver) {
-        std::string from = readSquare();
-        std::string to = readSquare();
+        std::string from = readSquare(whiteBitboards, blackBitboards);
+        std::string to = readSquare(whiteBitboards, blackBitboards);
         std::cout << "done";
     }
 }
