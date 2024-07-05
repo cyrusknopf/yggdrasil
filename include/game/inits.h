@@ -17,7 +17,7 @@ const std::string WBISHOP = "♗";
 const std::string WQUEEN = "♕";
 const std::string WKING = "♔";
 
-const std::string BPAWN = "";
+const std::string BPAWN = "♟";
 const std::string BCASTLE = "♜";
 const std::string BHORSE = "♞";
 const std::string BBISHOP = "♝";
