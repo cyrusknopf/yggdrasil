@@ -1,5 +1,7 @@
 #include "game/moves.h"
+#include "game/chess.h"
 #include "utils.h"
+#include <array>
 #include <vector>
 
 /*
@@ -10,16 +12,13 @@
  * listing moves.
  */
 
-std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
-                                           bitboard blackState, bitboard state,
-                                           bool colour) {
+std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
+                                           bitboard state, bool colour) {
     std::vector<bitboard> moves;
     bitboard move;
-    bitboard both = whiteState | blackState;
+    bitboard both = ownState | oppState;
 
     if (colour) {
-        bitboard own = whiteState;
-        bitboard opp = blackState;
 
         for (auto &piece : getAllPieces(state)) {
             move = slideNorth(state);
@@ -36,19 +35,17 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
             }
 
             move = slideNorth(slideEast(state));
-            if ((move & own) == 0 && (move & opp) != 0) {
+            if ((move & ownState) == 0 && (move & oppState) != 0) {
                 moves.push_back(move);
             }
 
             move = slideNorth(slideWest(state));
-            if ((move & own) == 0 && (move & opp) != 0) {
+            if ((move & ownState) == 0 && (move & oppState) != 0) {
                 moves.push_back(move);
             }
         }
 
     } else {
-        bitboard own = blackState;
-        bitboard opp = whiteState;
 
         for (auto &piece : getAllPieces(state)) {
             move = slideSouth(state);
@@ -65,12 +62,12 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
             }
 
             move = slideSouth(slideEast(state));
-            if ((move & own) == 0 && (move & opp) != 0) {
+            if ((move & ownState) == 0 && (move & oppState) != 0) {
                 moves.push_back(move);
             }
 
             move = slideSouth(slideWest(state));
-            if ((move & own) == 0 && (move & opp) != 0) {
+            if ((move & ownState) == 0 && (move & oppState) != 0) {
                 moves.push_back(move);
             }
         }
@@ -79,18 +76,8 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard whiteState,
     return moves;
 };
 
-std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
-                                            bitboard blackState, bitboard state,
-                                            bool colour) {
-    bitboard own;
-    bitboard opp;
-    if (colour) {
-        own = whiteState;
-        opp = blackState;
-    } else {
-        own = blackState;
-        opp = whiteState;
-    }
+std::vector<bitboard> horsePseudoLegalMoves(bitboard own, bitboard opp,
+                                            bitboard state) {
 
     bitboard move;
     std::vector<bitboard> moves;
@@ -159,18 +146,8 @@ std::vector<bitboard> horsePseudoLegalMoves(bitboard whiteState,
     return moves;
 }
 
-std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
-                                             bitboard blackState,
-                                             bitboard state, bool colour) {
-    bitboard own;
-    bitboard opp;
-    if (colour) {
-        own = whiteState;
-        opp = blackState;
-    } else {
-        own = blackState;
-        opp = whiteState;
-    }
+std::vector<bitboard>
+castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
 
     bitboard move;
     std::vector<bitboard> moves;
@@ -183,11 +160,11 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideNorth(move) != 0) {
             move = slideNorth(move);
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -196,11 +173,11 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideSouth(move) != 0) {
             move = slideSouth(move);
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -209,11 +186,11 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideEast(move) != 0) {
             move = slideEast(move);
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -222,11 +199,11 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideWest(move) != 0) {
             move = slideWest(move);
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -234,19 +211,8 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
     return moves;
 };
 
-std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
-                                             bitboard blackState,
-                                             bitboard state, bool colour) {
-
-    bitboard own;
-    bitboard opp;
-    if (colour) {
-        own = whiteState;
-        opp = blackState;
-    } else {
-        own = blackState;
-        opp = whiteState;
-    }
+std::vector<bitboard>
+bishopPseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
 
     bitboard move;
     std::vector<bitboard> moves;
@@ -259,11 +225,11 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideNorth(slideEast(move)) != 0) {
             move = slideNorth(slideEast(move));
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -272,11 +238,11 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideSouth(slideEast(move)) != 0) {
             move = slideSouth(slideEast(move));
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -285,11 +251,11 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideSouth(slideWest(move)) != 0) {
             move = slideSouth(slideWest(move));
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -298,11 +264,11 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
         move = state;
         while (slideNorth(slideWest(move)) != 0) {
             move = slideNorth(slideWest(move));
-            if ((move & own) != 0) {
+            if ((move & ownState) != 0) {
                 break;
             }
             moves.push_back(move);
-            if ((move & opp) != 0) {
+            if ((move & oppState) != 0) {
                 break;
             }
         }
@@ -310,14 +276,13 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
     return moves;
 };
 
-std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
-                                            bitboard blackState, bitboard state,
-                                            bool colour) {
+std::vector<bitboard> queenPseudoLegalMoves(bitboard ownState,
+                                            bitboard oppState, bitboard state) {
     std::vector<bitboard> moves;
     std::vector<bitboard> diagonals =
-        bishopPseudoLegalMoves(whiteState, blackState, state, colour);
+        bishopPseudoLegalMoves(ownState, oppState, state);
     std::vector<bitboard> straights =
-        castlePseudoLegalMoves(whiteState, blackState, state, colour);
+        castlePseudoLegalMoves(ownState, oppState, state);
 
     for (auto &move : diagonals) {
         moves.push_back(move);
@@ -330,61 +295,121 @@ std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
     return moves;
 };
 
-std::vector<bitboard> kingPseudoLegalMoves(bitboard whiteState,
-                                           bitboard blackState, bitboard state,
-                                           bool colour) {
-    bitboard own;
-    bitboard opp;
-    if (colour) {
-        own = whiteState;
-        opp = blackState;
-    } else {
-        own = blackState;
-        opp = whiteState;
-    }
+std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
+                                           bitboard state) {
 
     bitboard move;
     std::vector<bitboard> moves;
 
     move = slideNorth(state);
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideNorth(slideEast(state));
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideEast(state);
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideSouth(slideEast(state));
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideSouth(state);
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideSouth(slideWest(state));
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideWest(state);
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     move = slideNorth(slideWest(state));
-    if (move != 0 && (move & own) == 0) {
+    if (move != 0 && (move & ownState) == 0) {
         moves.push_back(move);
     }
 
     return moves;
-};
+}
+
+std::vector<bitboard> allPseudoLegalMoves(std::array<bitboard, 6> &own,
+                                          std::array<bitboard, 6> &opp,
+                                          bool colour) {
+    std::vector<bitboard> moves;
+
+    // XXX ref to array
+
+    bitboard ownState = getGameState(own, opp, true);
+    bitboard oppState = getGameState(own, opp, false);
+
+    bitboard pawns = own.at(0);
+    bitboard horses = own.at(1);
+    bitboard castles = own.at(2);
+    bitboard bishops = own.at(3);
+    bitboard queens = own.at(4);
+    bitboard king = own.at(5);
+
+    std::vector<bitboard> pawnMoves =
+        pawnPseudoLegalMoves(ownState, oppState, pawns, colour);
+
+    std::vector<bitboard> horseMoves =
+        horsePseudoLegalMoves(ownState, oppState, horses);
+
+    std::vector<bitboard> castleMoves =
+        castlePseudoLegalMoves(ownState, oppState, castles);
+
+    std::vector<bitboard> bishopMoves =
+        bishopPseudoLegalMoves(ownState, oppState, bishops);
+
+    std::vector<bitboard> queenMoves =
+        queenPseudoLegalMoves(ownState, oppState, queens);
+
+    std::vector<bitboard> kingMoves =
+        kingPseudoLegalMoves(ownState, oppState, king);
+
+    moves.insert(moves.end(), pawnMoves.begin(), pawnMoves.end());
+    moves.insert(moves.end(), horseMoves.begin(), horseMoves.end());
+    moves.insert(moves.end(), castleMoves.begin(), castleMoves.end());
+    moves.insert(moves.end(), bishopMoves.begin(), bishopMoves.end());
+    moves.insert(moves.end(), queenMoves.begin(), queenMoves.end());
+    moves.insert(moves.end(), kingMoves.begin(), kingMoves.end());
+
+    return moves;
+}
+
+std::vector<bitboard> pseudoLegalFromIndex(int idx,
+                                           std::array<bitboard, 6> &own,
+                                           std::array<bitboard, 6> &opp,
+                                           bool colour) {
+    bitboard ownState = getGameState(own, opp, true);
+    bitboard oppState = getGameState(own, opp, false);
+
+    switch (idx) {
+    case 0:
+        return pawnPseudoLegalMoves(ownState, oppState, own.at(idx), colour);
+    case 1:
+        return horsePseudoLegalMoves(ownState, oppState, own.at(idx));
+    case 2:
+        return castlePseudoLegalMoves(ownState, oppState, own.at(idx));
+    case 3:
+        return bishopPseudoLegalMoves(ownState, oppState, own.at(idx));
+    case 4:
+        return queenPseudoLegalMoves(ownState, oppState, own.at(idx));
+    case 5:
+        return kingPseudoLegalMoves(ownState, oppState, own.at(idx));
+    default:
+        return std::vector<bitboard>{};
+    }
+}

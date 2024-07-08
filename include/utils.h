@@ -1,11 +1,13 @@
 #ifndef _UTILSH_
 #define _UTILSH_
 
+#include <array>
 #include <cstdint>
 #include <regex>
 #include <vector>
 
 using bitboard = uint64_t;
+using teamBoards = std::array<bitboard, 6>;
 
 bitboard reverseU64(bitboard X);
 

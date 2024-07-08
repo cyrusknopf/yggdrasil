@@ -19,7 +19,7 @@ TEST(pawnPseudoLegalMoves, e4) {
 
 TEST(horsePseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
-    std::vector<bitboard> moves = horsePseudoLegalMoves(0, 0, state, true);
+    std::vector<bitboard> moves = horsePseudoLegalMoves(0, 0, state);
 
     ASSERT_EQ(8, moves.size());
 
@@ -35,7 +35,7 @@ TEST(horsePseudoLegalMoves, e4) {
 
 TEST(castlePseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
-    std::vector<bitboard> moves = castlePseudoLegalMoves(0, 0, state, true);
+    std::vector<bitboard> moves = castlePseudoLegalMoves(0, 0, state);
 
     ASSERT_EQ(14, moves.size());
 
@@ -51,7 +51,7 @@ TEST(castlePseudoLegalMoves, e4) {
 
 TEST(bishopPseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
-    std::vector<bitboard> moves = bishopPseudoLegalMoves(0, 0, state, true);
+    std::vector<bitboard> moves = bishopPseudoLegalMoves(0, 0, state);
 
     ASSERT_EQ(13, moves.size());
 
@@ -77,7 +77,7 @@ TEST(bishopPseudoLegalMoves, e4) {
 
 TEST(queenPseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
-    std::vector<bitboard> moves = queenPseudoLegalMoves(0, 0, state, true);
+    std::vector<bitboard> moves = queenPseudoLegalMoves(0, 0, state);
 
     ASSERT_EQ(27, moves.size());
 
@@ -93,7 +93,7 @@ TEST(queenPseudoLegalMoves, e4) {
 
 TEST(kingPseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
-    std::vector<bitboard> moves = kingPseudoLegalMoves(0, 0, state, true);
+    std::vector<bitboard> moves = kingPseudoLegalMoves(0, 0, state);
 
     ASSERT_EQ(8, moves.size());
 
