@@ -7,7 +7,7 @@
 #include <vector>
 
 using bitboard = uint64_t;
-using teamBoards = std::array<bitboard, 6>;
+using team = std::array<bitboard, 6>;
 const std::regex squareRe{"[a-h][1-8]"};
 
 int getRank(bitboard state);

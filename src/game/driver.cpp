@@ -1,12 +1,17 @@
 #include "game/driver.h"
+#include "game/chess.h"
 #include "game/inits.h"
 #include "game/moves.h"
 #include "utils.h"
+#include <algorithm>
 #include <array>
 #include <iostream>
+#include <optional>
 #include <ostream>
 #include <regex>
 #include <string>
+#include <unistd.h>
+#include <utility>
 #include <vector>
 
 std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
@@ -25,7 +30,6 @@ std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
 
 std::string gameStateToString(std::array<bitboard, 6> &whitePieces,
                               std::array<bitboard, 6> &blackPieces) {
-
     std::string board;
 
     for (int rank = 8; rank > 0; rank--) {
@@ -60,36 +64,93 @@ std::string gameStateToString(std::array<bitboard, 6> &whitePieces,
     return board;
 }
 
-std::string readSquare(std::array<bitboard, 6> &whitePieces,
-                       std::array<bitboard, 6> &blackPieces) {
+std::optional<bitboard> readSquare() {
     std::string square;
     std::cin >> square;
     std::smatch matches;
 
-    while (!std::regex_match(square, matches, squareRe)) {
-        /* clearTerm(); */
-        std::cout << gameStateToString(whitePieces, blackPieces);
-        std::cout << std::endl;
-        std::cin >> square;
+    if (!std::regex_match(square, matches, squareRe)) {
+        return std::nullopt;
+    } else {
+        return coordinateToState(square);
+    }
+}
+
+std::pair<bitboard, bitboard> takeTurn(team &white, team &black) {
+    std::optional<bitboard> fromSquare = std::nullopt;
+    std::optional<bitboard> toSquare = std::nullopt;
+
+    while (!fromSquare.has_value() || !toSquare.has_value()) {
+        std::cout << gameStateToString(white, black) << std::endl;
+        std::cout << "Please enter from square" << std::endl;
+        fromSquare = readSquare();
+        if (!fromSquare.has_value()) {
+            std::cout << "Not a position" << std::endl;
+            continue;
+        }
+
+        std::cout << "Please enter to square" << std::endl;
+        toSquare = readSquare();
+        if (!toSquare.has_value()) {
+            std::cout << "Not a position" << std::endl;
+            continue;
+        }
     }
 
-    return square;
+    return std::make_pair(fromSquare.value(), toSquare.value());
 }
 
 void gameLoop() {
-    std::array<bitboard, 6> whiteBitboards = {whitePawnInit,   whiteHorseInit,
-                                              whiteCastleInit, whiteBishopInit,
-                                              whiteQueenInit,  whiteKingInit};
-
-    // TODO Change these to contants
-    std::array<bitboard, 6> blackBitboards = {blackPawnInit,   blackHorseInit,
-                                              blackCastleInit, blackBishopInit,
-                                              blackQueenInit,  blackKingInit};
+    std::pair<team, team> teams = initGame();
+    team whiteBitboards = teams.first;
+    team blackBitboards = teams.second;
 
     bool gameOver = false;
     bool turn = true;
+    bool validMove = false;
 
-    std::cout << gameStateToString(whiteBitboards, blackBitboards);
+    team own;
+    team opp;
+
+    while (!validMove) {
+        std::pair<bitboard, bitboard> toAndFrom =
+            takeTurn(whiteBitboards, blackBitboards);
+        bitboard fromSquare = toAndFrom.first;
+        bitboard toSquare = toAndFrom.second;
+        std::cout << toSquare << std::endl;
+
+        if (turn) {
+            own = whiteBitboards;
+            opp = blackBitboards;
+        } else {
+            own = blackBitboards;
+            opp = whiteBitboards;
+        }
+
+        std::pair<bitboard, int> fromPiece = findPiece(fromSquare, own);
+        bitboard fromBoard = fromPiece.first;
+        bitboard fromIdx = fromPiece.second;
+
+        if (fromIdx == -1) {
+            std::cout << "No piece at from square" << std::endl;
+            continue;
+        }
+
+        bitboard newBoard = ~(~fromBoard | fromSquare);
+        newBoard = newBoard | toSquare;
+        std::cout << newBoard << std::endl;
+
+        std::vector<bitboard> moves =
+            pseudoLegalFromIndex(fromIdx, whiteBitboards, blackBitboards, turn);
+
+        std::vector<bitboard>::iterator it =
+            std::find(moves.begin(), moves.end(), newBoard);
+
+        if (it == moves.end()) {
+            std::cout << "Illegal move" << std::endl;
+            continue;
+        }
+    }
 
     /* while (!gameOver) { */
     /*     // Always return white as the first element, black as second */

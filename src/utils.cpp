@@ -2,6 +2,9 @@
 #include <cstdint>
 #include <immintrin.h>
 #include <iostream>
+#include <optional>
+#include <string>
+#include <utility>
 #include <vector>
 
 int getFile(uint64_t state) {
@@ -37,28 +40,11 @@ int getRank(uint64_t state) {
     return rank;
 }
 
-bitboard coordinateToState(const std::string &coord) {
-    int file = coord.at(0) - 'a';
-    int rank = coord.at(1) - '1';
-
-    bitboard state = 1;
-
-    for (int j = 0; j < 7 - file; j++) {
-        state = slideWest(state);
-    }
-
-    for (int i = 0; i < rank; i++) {
-        state = slideNorth(state);
-    }
-
-    return state;
-}
-
 uint64_t slideNorth(uint64_t state) { return state <<= 8; }
+uint64_t slideSouth(uint64_t state) { return state >>= 8; }
 uint64_t slideEast(uint64_t state) {
     return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
 }
-uint64_t slideSouth(uint64_t state) { return state >>= 8; }
 uint64_t slideWest(uint64_t state) {
     return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
 }
@@ -81,6 +67,23 @@ std::vector<bitboard> getAllPieces(bitboard state) {
     return pieces;
 }
 
+bitboard coordinateToState(const std::string &coord) {
+    int file = coord.at(0) - 'a';
+    int rank = coord.at(1) - '1';
+
+    bitboard state = 1;
+
+    for (int j = 0; j < 7 - file; j++) {
+        state = slideWest(state);
+    }
+
+    for (int i = 0; i < rank; i++) {
+        state = slideNorth(state);
+    }
+
+    return state;
+}
+
 std::pair<bitboard, int> findPiece(bitboard square,
                                    std::array<bitboard, 6> &target) {
     int i = 0;
@@ -94,7 +97,6 @@ std::pair<bitboard, int> findPiece(bitboard square,
 }
 
 bitboard performCapture(bitboard victim, bitboard captor) {
-
     return ~(victim & ~captor);
 }
 

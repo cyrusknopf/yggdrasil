@@ -13,3 +13,5 @@ bitboard getGameState(std::array<bitboard, 6> whiteState,
 
 bitboard getGameState(std::array<bitboard, 6> whiteState,
                       std::array<bitboard, 6> blackState, bool colour);
+
+bitboard getTeamState(team &pieces);

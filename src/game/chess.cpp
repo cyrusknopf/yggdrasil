@@ -12,10 +12,9 @@ std::pair<std::array<bitboard, 6>, std::array<bitboard, 6>> initGame() {
                                               whiteQueenInit,  whiteKingInit};
 
     // TODO Change these to contants
-    std::array<bitboard, 6> blackBitboards = {
-        reverseU64(whitePawnInit),   reverseU64(whiteHorseInit),
-        reverseU64(whiteCastleInit), reverseU64(whiteBishopInit),
-        reverseU64(whiteQueenInit),  reverseU64(whiteKingInit)};
+    std::array<bitboard, 6> blackBitboards = {blackPawnInit,   blackHorseInit,
+                                              blackCastleInit, blackBishopInit,
+                                              blackQueenInit,  blackKingInit};
 
     return std::make_pair(whiteBitboards, blackBitboards);
 }
@@ -37,6 +36,14 @@ bitboard getGameState(std::array<bitboard, 6> whiteState,
         for (auto &board : blackState) {
             state |= board;
         }
+    }
+    return state;
+}
+
+bitboard getTeamState(team &pieces) {
+    bitboard state = 0;
+    for (auto &piece : pieces) {
+        state |= piece;
     }
     return state;
 }
