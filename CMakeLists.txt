@@ -10,30 +10,39 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} include)
 
+option(test "Build test" ON)
+
 # Gather all test source files
-file(GLOB TEST_SOURCES
-    tests/game/*.cpp
-    tests/*.cpp
+set(TEST_SOURCES
+    tests/game/moves_tests.cpp
+    tests/game/driver_tests.cpp
+    tests/utils_test.cpp
 )
 
 # Gather all source files
-file(GLOB SRC_SOURCES
-    src/game/*.cpp
-    src/*.cpp
+set(SRC_SOURCES
+    src/game/chess.cpp
+    src/game/driver.cpp
+    src/game/moves.cpp
+    src/utils.cpp
 )
 
+if (test)
 # Remove driver.cpp from SRC_SOURCES
-list(REMOVE_ITEM SRC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/game/driver.cpp")
+list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
 
 # Add the executable for tests
 add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 
 # Link libraries to the test executable
 target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)
+endif()
 
+if (NOT test)
 # Add the executable for driver.cpp and link necessary source files
-add_executable(driver src/game/driver.cpp ${SRC_SOURCES})
+add_executable(driver ${SRC_SOURCES})
+endif()
 
 # If the driver executable needs specific libraries, link them here
 # For example, if it needs pthread:
-target_link_libraries(driver pthread)
+#target_link_libraries()

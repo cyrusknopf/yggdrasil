@@ -39,6 +39,23 @@ int getRank(uint64_t state) {
     return rank;
 }
 
+bitboard coordinateToState(const std::string &coord) {
+    int file = coord.at(0) - 'a';
+    int rank = coord.at(1) - '1';
+
+    bitboard state = 1;
+
+    for (int j = 0; j < 7 - file; j++) {
+        state = slideWest(state);
+    }
+
+    for (int i = 0; i < rank; i++) {
+        state = slideNorth(state);
+    }
+
+    return state;
+}
+
 uint64_t slideNorth(uint64_t state) { return state <<= 8; }
 uint64_t slideEast(uint64_t state) {
     return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
@@ -64,6 +81,23 @@ std::vector<bitboard> getAllPieces(bitboard state) {
     }
 
     return pieces;
+}
+
+std::pair<bitboard, int> findPiece(bitboard square,
+                                   std::array<bitboard, 6> &target) {
+    int i = 0;
+    for (auto &board : target) {
+        if ((board & square) != 0) {
+            return std::make_pair(board, i);
+        }
+        i++;
+    }
+    return std::make_pair(0, -1);
+}
+
+bitboard performCapture(bitboard victim, bitboard captor) {
+
+    return ~(victim & ~captor);
 }
 
 void clearTerm() { std::cout << "\x1B[2J\x1B[H"; }

@@ -8,12 +8,15 @@
 
 using bitboard = uint64_t;
 using teamBoards = std::array<bitboard, 6>;
+const std::regex squareRe{"[a-h][1-8]"};
 
 bitboard reverseU64(bitboard X);
 
 int getRank(bitboard state);
 
 int getFile(bitboard state);
+
+bitboard coordinateToState(const std::string &coord);
 
 bitboard slideNorth(bitboard state);
 bitboard slideEast(bitboard state);
@@ -22,13 +25,10 @@ bitboard slideWest(bitboard state);
 
 std::vector<bitboard> getAllPieces(bitboard state);
 
-const std::regex squareRe{"[a-h][1-8]"};
+std::pair<bitboard, int> findPiece(bitboard square,
+                                   std::array<bitboard, 6> &target);
+
+bitboard performCapture(bitboard victim, bitboard captor);
 
 void clearTerm();
-
-// bitboard slideSouthEast(bitboard state);
-// bitboard slideSouthWest(bitboard state);
-// bitboard slideNorthWest(bitboard state);
-// bitboard slideNorthEast(bitboard state);
-
 #endif // !_UTILSH_
