@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 
-uint64_t reverseU64(uint64_t X) { return __bswap_64(X); }
-
 int getFile(uint64_t state) {
     /*
      * Since file is independent of rank, we shift the piece into rank 1 for

@@ -7,7 +7,6 @@
 #include <ostream>
 #include <regex>
 #include <string>
-#include <utility>
 #include <vector>
 
 std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
@@ -83,23 +82,20 @@ void gameLoop() {
                                               whiteQueenInit,  whiteKingInit};
 
     // TODO Change these to contants
-    std::array<bitboard, 6> blackBitboards = {
-        reverseU64(whitePawnInit),   reverseU64(whiteHorseInit),
-        reverseU64(whiteCastleInit), reverseU64(whiteBishopInit),
-        reverseU64(whiteQueenInit),  reverseU64(whiteKingInit)};
+    std::array<bitboard, 6> blackBitboards = {blackPawnInit,   blackHorseInit,
+                                              blackCastleInit, blackBishopInit,
+                                              blackQueenInit,  blackKingInit};
 
     bool gameOver = false;
     bool turn = true;
 
-    while (!gameOver) {
-        std::pair<teamBoards, teamBoards> newBoards =
-            readMove(whiteBitboards, blackBitboards, turn);
-        whiteBitboards = newBoards.first;
-        blackBitboards = newBoards.second;
-        // Always return white as the first element, black as second
-        // exec move
-        turn = !turn;
-    }
+    std::cout << gameStateToString(whiteBitboards, blackBitboards);
+
+    /* while (!gameOver) { */
+    /*     // Always return white as the first element, black as second */
+    /*     // exec move */
+    /*     turn = !turn; */
+    /* } */
 }
 
 int main() { gameLoop(); }

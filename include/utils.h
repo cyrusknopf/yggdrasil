@@ -10,8 +10,6 @@ using bitboard = uint64_t;
 using teamBoards = std::array<bitboard, 6>;
 const std::regex squareRe{"[a-h][1-8]"};
 
-bitboard reverseU64(bitboard X);
-
 int getRank(bitboard state);
 
 int getFile(bitboard state);

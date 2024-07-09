@@ -10,6 +10,13 @@ constexpr bitboard whiteBishopInit = 0x24;
 constexpr bitboard whiteQueenInit = 0x10;
 constexpr bitboard whiteKingInit = 0x8;
 
+constexpr bitboard blackPawnInit = 0x00FF000000000000;
+constexpr bitboard blackHorseInit = 0x4200000000000000;
+constexpr bitboard blackCastleInit = 0x8100000000000000;
+constexpr bitboard blackBishopInit = 0x2400000000000000;
+constexpr bitboard blackQueenInit = 0x1000000000000000;
+constexpr bitboard blackKingInit = 0x800000000000000;
+
 const std::string WPAWN = "♙";
 const std::string WCASTLE = "♖";
 const std::string WHORSE = "♘";
