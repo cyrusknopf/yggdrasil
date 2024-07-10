@@ -76,13 +76,15 @@ std::optional<bitboard> readSquare() {
     }
 }
 
-std::pair<bitboard, bitboard> takeTurn(team &white, team &black) {
+std::pair<bitboard, bitboard> takeTurn(team &white, team &black,
+                                       std::string &message) {
     std::optional<bitboard> fromSquare = std::nullopt;
     std::optional<bitboard> toSquare = std::nullopt;
 
     while (!fromSquare.has_value() || !toSquare.has_value()) {
         clearTerm();
         std::cout << gameStateToString(white, black) << std::endl;
+        std::cout << message;
         std::cout << "Please enter a move" << std::endl;
         fromSquare = readSquare();
         if (!fromSquare.has_value()) {
@@ -109,18 +111,21 @@ void gameLoop() {
     bool gameOver = false;
     bool turn = true;
     bool validMove = false;
+    std::string message = "";
 
     team own;
     team opp;
 
     while (!gameOver) {
-        if (turn)
-            std::cout << "White to Move" << std::endl;
-        else
-            std::cout << "black to Move" << std::endl;
+        message = "";
         while (!validMove) {
+            if (turn)
+                message += "\nWhite to move\n";
+            else
+                message += "\nBlack to move\n";
+
             std::pair<bitboard, bitboard> toAndFrom =
-                takeTurn(whiteBitboards, blackBitboards);
+                takeTurn(whiteBitboards, blackBitboards, message);
             bitboard fromSquare = toAndFrom.first;
             bitboard toSquare = toAndFrom.second;
 
@@ -137,7 +142,7 @@ void gameLoop() {
             bitboard fromIdx = fromPiece.second;
 
             if (fromIdx == -1) {
-                std::cout << "No piece at from square" << std::endl;
+                message = "No piece at from square";
                 continue;
             }
 
@@ -151,10 +156,7 @@ void gameLoop() {
                 std::find(moves.begin(), moves.end(), newBoard);
 
             if (it == moves.end()) {
-                std::cout << "Illegal move" << std::endl;
-                for (auto &move : moves) {
-                    std::cout << "Move: " << move << std::endl;
-                }
+                message = "Illegal move";
 
                 continue;
             }
@@ -171,7 +173,6 @@ void gameLoop() {
             if (capturedIdx != -1) {
                 bitboard capturedBoard = captured.first;
                 capturedBoard = performCapture(capturedBoard, toSquare);
-                std::cout << "capturedBoard: " << capturedBoard << std::endl;
 
                 if (turn)
                     blackBitboards[capturedIdx] = capturedBoard;
