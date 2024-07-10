@@ -95,7 +95,7 @@ std::pair<bitboard, int> findPiece(bitboard square,
 }
 
 bitboard performCapture(bitboard victim, bitboard captor) {
-    return ~(victim & ~captor);
+    return (victim & ~captor);
 }
 
 void clearTerm() { std::cout << "\x1B[2J\x1B[H"; }

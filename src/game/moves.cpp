@@ -392,25 +392,36 @@ std::vector<bitboard> allPseudoLegalMoves(std::array<bitboard, 6> &own,
 }
 
 std::vector<bitboard> pseudoLegalFromIndex(int idx,
-                                           std::array<bitboard, 6> &own,
-                                           std::array<bitboard, 6> &opp,
+                                           std::array<bitboard, 6> &white,
+                                           std::array<bitboard, 6> &black,
                                            bool colour) {
-    bitboard ownState = getGameState(own, opp, true);
-    bitboard oppState = getGameState(own, opp, false);
+    bitboard ownState;
+    bitboard oppState;
+    team thisTeam;
+    if (colour) {
+        ownState = getGameState(white, black, true);
+        oppState = getGameState(white, black, false);
+        thisTeam = white;
+    } else {
+        ownState = getGameState(white, black, false);
+        oppState = getGameState(white, black, true);
+        thisTeam = black;
+    }
 
     switch (idx) {
     case 0:
-        return pawnPseudoLegalMoves(ownState, oppState, own.at(idx), colour);
+        return pawnPseudoLegalMoves(ownState, oppState, thisTeam.at(idx),
+                                    colour);
     case 1:
-        return horsePseudoLegalMoves(ownState, oppState, own.at(idx));
+        return horsePseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
     case 2:
-        return castlePseudoLegalMoves(ownState, oppState, own.at(idx));
+        return castlePseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
     case 3:
-        return bishopPseudoLegalMoves(ownState, oppState, own.at(idx));
+        return bishopPseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
     case 4:
-        return queenPseudoLegalMoves(ownState, oppState, own.at(idx));
+        return queenPseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
     case 5:
-        return kingPseudoLegalMoves(ownState, oppState, own.at(idx));
+        return kingPseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
     default:
         return std::vector<bitboard>{};
     }
