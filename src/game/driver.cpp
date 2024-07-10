@@ -10,6 +10,7 @@
 #include <ostream>
 #include <regex>
 #include <string>
+#include <tuple>
 #include <unistd.h>
 #include <utility>
 #include <vector>
@@ -103,6 +104,88 @@ std::pair<bitboard, bitboard> takeTurn(team &white, team &black,
     return std::make_pair(fromSquare.value(), toSquare.value());
 }
 
+std::tuple<bitboard, int, bitboard> takeMove(team &whiteBitboards,
+                                             team &blackBitboards, bool turn,
+                                             std::string &message) {
+    team own;
+    team opp;
+    bitboard newBoard;
+
+    // Repeat until a legal move is provided, at which point return the changed
+    // board
+    while (true) {
+        if (turn)
+            message += "\nWhite to move\n";
+        else
+            message += "\nBlack to move\n";
+
+        std::pair<bitboard, bitboard> toAndFrom =
+            takeTurn(whiteBitboards, blackBitboards, message);
+        bitboard fromSquare = toAndFrom.first;
+        bitboard toSquare = toAndFrom.second;
+
+        if (turn) {
+            own = whiteBitboards;
+            opp = blackBitboards;
+        } else {
+            own = blackBitboards;
+            opp = whiteBitboards;
+        }
+
+        std::pair<bitboard, int> fromPiece = findPiece(fromSquare, own);
+        bitboard fromBoard = fromPiece.first;
+        bitboard fromIdx = fromPiece.second;
+
+        if (fromIdx == -1) {
+            message = "No piece at from square";
+            continue;
+        }
+
+        bitboard newBoard = ~(~fromBoard | fromSquare);
+        newBoard = newBoard | toSquare;
+
+        std::vector<bitboard> moves =
+            pseudoLegalFromIndex(fromIdx, whiteBitboards, blackBitboards, turn);
+
+        std::vector<bitboard>::iterator it =
+            std::find(moves.begin(), moves.end(), newBoard);
+
+        if (it == moves.end()) {
+            message = "Illegal move";
+            continue;
+        }
+        return std::make_tuple(newBoard, fromIdx, toSquare);
+    }
+}
+
+std::pair<team, team> makeMove(team &whiteBitboards, team &blackBitboards,
+                               bitboard toSquare, bitboard newBoard,
+                               int fromIdx, bool turn) {
+    team opp;
+    // Update the game state, formally
+    if (turn) {
+        whiteBitboards[fromIdx] = newBoard;
+        team opp = blackBitboards;
+    } else {
+        blackBitboards[fromIdx] = newBoard;
+        team opp = whiteBitboards;
+    }
+
+    std::pair<bitboard, int> captured = findPiece(toSquare, opp);
+    int capturedIdx = captured.second;
+
+    if (capturedIdx != -1) {
+        bitboard capturedBoard = captured.first;
+        capturedBoard = performCapture(capturedBoard, toSquare);
+
+        if (turn)
+            blackBitboards[capturedIdx] = capturedBoard;
+        else
+            whiteBitboards[capturedIdx] = capturedBoard;
+    }
+    return std::make_pair(whiteBitboards, blackBitboards);
+}
+
 void gameLoop() {
     std::pair<team, team> teams = initGame();
     team whiteBitboards = teams.first;
@@ -118,69 +201,19 @@ void gameLoop() {
 
     while (!gameOver) {
         message = "";
-        while (!validMove) {
-            if (turn)
-                message += "\nWhite to move\n";
-            else
-                message += "\nBlack to move\n";
+        std::tuple<bitboard, int, bitboard> movingPiece =
+            takeMove(whiteBitboards, blackBitboards, turn, message);
+        bitboard movingBoard = std::get<0>(movingPiece);
+        int movingIdx = std::get<1>(movingPiece);
+        bitboard movingTo = std::get<2>(movingPiece);
 
-            std::pair<bitboard, bitboard> toAndFrom =
-                takeTurn(whiteBitboards, blackBitboards, message);
-            bitboard fromSquare = toAndFrom.first;
-            bitboard toSquare = toAndFrom.second;
+        std::pair<team, team> newBoards =
+            makeMove(whiteBitboards, blackBitboards, movingTo, movingBoard,
+                     movingIdx, turn);
 
-            if (turn) {
-                own = whiteBitboards;
-                opp = blackBitboards;
-            } else {
-                own = blackBitboards;
-                opp = whiteBitboards;
-            }
+        whiteBitboards = newBoards.first;
+        blackBitboards = newBoards.second;
 
-            std::pair<bitboard, int> fromPiece = findPiece(fromSquare, own);
-            bitboard fromBoard = fromPiece.first;
-            bitboard fromIdx = fromPiece.second;
-
-            if (fromIdx == -1) {
-                message = "No piece at from square";
-                continue;
-            }
-
-            bitboard newBoard = ~(~fromBoard | fromSquare);
-            newBoard = newBoard | toSquare;
-
-            std::vector<bitboard> moves = pseudoLegalFromIndex(
-                fromIdx, whiteBitboards, blackBitboards, turn);
-
-            std::vector<bitboard>::iterator it =
-                std::find(moves.begin(), moves.end(), newBoard);
-
-            if (it == moves.end()) {
-                message = "Illegal move";
-
-                continue;
-            }
-
-            // Update the game state, formally
-            if (turn)
-                whiteBitboards[fromIdx] = newBoard;
-            else
-                blackBitboards[fromIdx] = newBoard;
-
-            std::pair<bitboard, int> captured = findPiece(toSquare, opp);
-            int capturedIdx = captured.second;
-
-            if (capturedIdx != -1) {
-                bitboard capturedBoard = captured.first;
-                capturedBoard = performCapture(capturedBoard, toSquare);
-
-                if (turn)
-                    blackBitboards[capturedIdx] = capturedBoard;
-                else
-                    whiteBitboards[capturedIdx] = capturedBoard;
-            }
-            break;
-        }
         turn = !turn;
     }
 }
