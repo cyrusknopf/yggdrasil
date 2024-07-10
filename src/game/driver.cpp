@@ -117,7 +117,6 @@ void gameLoop() {
             takeTurn(whiteBitboards, blackBitboards);
         bitboard fromSquare = toAndFrom.first;
         bitboard toSquare = toAndFrom.second;
-        std::cout << toSquare << std::endl;
 
         if (turn) {
             own = whiteBitboards;
@@ -138,10 +137,13 @@ void gameLoop() {
 
         bitboard newBoard = ~(~fromBoard | fromSquare);
         newBoard = newBoard | toSquare;
-        std::cout << newBoard << std::endl;
+        std::cout << "newboard:" << newBoard << std::endl;
 
         std::vector<bitboard> moves =
             pseudoLegalFromIndex(fromIdx, whiteBitboards, blackBitboards, turn);
+        for (auto &move : moves) {
+            std::cout << "MOVE : " << move << std::endl;
+        }
 
         std::vector<bitboard>::iterator it =
             std::find(moves.begin(), moves.end(), newBoard);
