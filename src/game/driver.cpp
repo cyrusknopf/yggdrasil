@@ -50,14 +50,14 @@ std::string gameStateToString(std::array<bitboard, 6> &whitePieces,
     board = addPieceToStringBoard(board, whitePieces.at(2), WCASTLE);
     board = addPieceToStringBoard(board, whitePieces.at(3), WBISHOP);
     board = addPieceToStringBoard(board, whitePieces.at(4), WQUEEN);
-    board = addPieceToStringBoard(board, whitePieces.at(5), WQUEEN);
+    board = addPieceToStringBoard(board, whitePieces.at(5), WKING);
 
     board = addPieceToStringBoard(board, blackPieces.at(0), BPAWN);
     board = addPieceToStringBoard(board, blackPieces.at(1), BHORSE);
     board = addPieceToStringBoard(board, blackPieces.at(2), BCASTLE);
     board = addPieceToStringBoard(board, blackPieces.at(3), BBISHOP);
     board = addPieceToStringBoard(board, blackPieces.at(4), BQUEEN);
-    board = addPieceToStringBoard(board, blackPieces.at(5), BQUEEN);
+    board = addPieceToStringBoard(board, blackPieces.at(5), BKING);
 
     board = std::regex_replace(board, std::regex("[a-z][1-8]"), " ");
 
@@ -137,21 +137,26 @@ void gameLoop() {
 
         bitboard newBoard = ~(~fromBoard | fromSquare);
         newBoard = newBoard | toSquare;
-        std::cout << "newboard:" << newBoard << std::endl;
 
         std::vector<bitboard> moves =
             pseudoLegalFromIndex(fromIdx, whiteBitboards, blackBitboards, turn);
-        for (auto &move : moves) {
-            std::cout << "MOVE : " << move << std::endl;
-        }
 
         std::vector<bitboard>::iterator it =
             std::find(moves.begin(), moves.end(), newBoard);
 
         if (it == moves.end()) {
             std::cout << "Illegal move" << std::endl;
+            for (auto &move : moves) {
+                std::cout << "Move: " << move << std::endl;
+            }
+
             continue;
         }
+
+        if (turn)
+            whiteBitboards[fromIdx] = newBoard;
+        else
+            blackBitboards[fromIdx] = newBoard;
     }
 
     /* while (!gameOver) { */

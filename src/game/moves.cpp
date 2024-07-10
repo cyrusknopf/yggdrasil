@@ -2,7 +2,6 @@
 #include "game/chess.h"
 #include "utils.h"
 #include <array>
-#include <iostream>
 #include <vector>
 
 /*
@@ -156,7 +155,7 @@ castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
     for (auto &piece : pieces) {
 
         // Slide north
-        move = state;
+        move = piece;
         while (slideNorth(move) != 0) {
             move = slideNorth(move);
             if ((move & ownState) != 0) {
@@ -169,7 +168,7 @@ castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
         }
 
         // Slide south
-        move = state;
+        move = piece;
         while (slideSouth(move) != 0) {
             move = slideSouth(move);
             if ((move & ownState) != 0) {
@@ -182,7 +181,7 @@ castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
         }
 
         // Slide east
-        move = state;
+        move = piece;
         while (slideEast(move) != 0) {
             move = slideEast(move);
             if ((move & ownState) != 0) {
@@ -195,7 +194,7 @@ castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
         }
 
         // Slide west
-        move = state;
+        move = piece;
         while (slideWest(move) != 0) {
             move = slideWest(move);
             if ((move & ownState) != 0) {
@@ -221,7 +220,7 @@ bishopPseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
     for (auto &piece : pieces) {
 
         // Slide north east
-        move = state;
+        move = piece;
         while (slideNorth(slideEast(move)) != 0) {
             move = slideNorth(slideEast(move));
             if ((move & ownState) != 0) {
@@ -234,7 +233,7 @@ bishopPseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
         }
 
         // Slide south east
-        move = state;
+        move = piece;
         while (slideSouth(slideEast(move)) != 0) {
             move = slideSouth(slideEast(move));
             if ((move & ownState) != 0) {
@@ -247,7 +246,7 @@ bishopPseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
         }
 
         // Slide south west
-        move = state;
+        move = piece;
         while (slideSouth(slideWest(move)) != 0) {
             move = slideSouth(slideWest(move));
             if ((move & ownState) != 0) {
@@ -260,7 +259,7 @@ bishopPseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
         }
 
         // Slide north west
-        move = state;
+        move = piece;
         while (slideNorth(slideWest(move)) != 0) {
             move = slideNorth(slideWest(move));
             if ((move & ownState) != 0) {
@@ -397,11 +396,7 @@ std::vector<bitboard> pseudoLegalFromIndex(int idx,
                                            std::array<bitboard, 6> &opp,
                                            bool colour) {
     bitboard ownState = getGameState(own, opp, true);
-    std::cout << "ownstate " << ownState << std::endl;
     bitboard oppState = getGameState(own, opp, false);
-    std::cout << "oppstate" << oppState << std::endl;
-
-    std::cout << "own.at(idx)" << own.at(idx) << std::endl;
 
     switch (idx) {
     case 0:
