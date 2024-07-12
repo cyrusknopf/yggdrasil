@@ -1,20 +1,25 @@
 #include "utils.h"
+#include <cassert>
 #include <cstdint>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
 
+/*
+ * Returns the file (column) of a piece
+ *
+ * @param[state] bitboard with a single piece (single 1)
+ * @return integer corresponding to the file of the piece
+ */
 int getFile(uint64_t state) {
-    /*
-     * Since file is independent of rank, we shift the piece into rank 1 for
-     * simplicity
-     */
+    // Asserting there are not more than one piece on the board
+    assert(__builtin_popcountll(state) == 1);
+    // Since file is independent of rank, we shift the piece into rank 1 for
     uint64_t tempState = state;
     while (tempState > 128) {
         tempState >>= 8;
     }
-
     /*
      * Find the log2 of the state. Since the state is guaranteed to be a binary
      * number with a single 1, this is correct.
@@ -24,11 +29,20 @@ int getFile(uint64_t state) {
         tempState >>= 1;
         exp++;
     }
-
+    // Subtract from 8 since files are in the inverse order than we calculate
     return 8 - exp;
 }
 
+/*
+ * Returns the rank (row) of a piece
+ *
+ * @param[state] bitboard with a single piece (single 1)
+ * @return integer corresponding to the rank of the piece
+ */
 int getRank(uint64_t state) {
+    // Asserting there are not more than one piece on the board
+    assert(__builtin_popcountll(state) == 1);
+    // Shift downwards until we reach 0
     int rank = 0;
     uint64_t tempState = state;
     while (tempState != 0) {
@@ -46,11 +60,6 @@ uint64_t slideEast(uint64_t state) {
 uint64_t slideWest(uint64_t state) {
     return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
 }
-
-// uint64_t slideNorthWest(uint64_t state) { return state <<= 9; }
-// uint64_t slideSouthWest(uint64_t state) { return state >>= 7; }
-// uint64_t slideNorthEast(uint64_t state) { return state <<= 7; }
-// uint64_t slideSouthEast(uint64_t state) { return state >>= 9; }
 
 std::vector<bitboard> getAllPieces(bitboard state) {
     bitboard initState = state;

@@ -4,7 +4,6 @@
 #include "game/moves.h"
 #include "utils.h"
 #include <algorithm>
-#include <array>
 #include <iostream>
 #include <optional>
 #include <ostream>
@@ -29,8 +28,7 @@ std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
     return board;
 }
 
-std::string gameStateToString(std::array<bitboard, 6> &whitePieces,
-                              std::array<bitboard, 6> &blackPieces) {
+std::string gameStateToString(team &whitePieces, team &blackPieces) {
     std::string board;
 
     for (int rank = 8; rank > 0; rank--) {
@@ -165,10 +163,10 @@ std::pair<team, team> makeMove(team &whiteBitboards, team &blackBitboards,
     // Update the game state, formally
     if (turn) {
         whiteBitboards[fromIdx] = newBoard;
-        team opp = blackBitboards;
+        opp = blackBitboards;
     } else {
         blackBitboards[fromIdx] = newBoard;
-        team opp = whiteBitboards;
+        opp = whiteBitboards;
     }
 
     std::pair<bitboard, int> captured = findPiece(toSquare, opp);
@@ -186,6 +184,15 @@ std::pair<team, team> makeMove(team &whiteBitboards, team &blackBitboards,
     return std::make_pair(whiteBitboards, blackBitboards);
 }
 
+std::optional<bool> getWinner(team &white, team &black) {
+    if (white.at(5) == 0)
+        return false;
+    else if (black.at(5) == 0)
+        return true;
+    else
+        return std::nullopt;
+}
+
 void gameLoop() {
     std::pair<team, team> teams = initGame();
     team whiteBitboards = teams.first;
@@ -195,6 +202,7 @@ void gameLoop() {
     bool turn = true;
     bool validMove = false;
     std::string message = "";
+    std::optional<bool> winner = std::nullopt;
 
     team own;
     team opp;
@@ -214,8 +222,15 @@ void gameLoop() {
         whiteBitboards = newBoards.first;
         blackBitboards = newBoards.second;
 
+        winner = getWinner(whiteBitboards, blackBitboards);
+        if (winner.has_value()) {
+            gameOver = true;
+        }
+
         turn = !turn;
     }
+
+    std::cout << "Game over" << std::endl;
 }
 
 int main() { gameLoop(); }
