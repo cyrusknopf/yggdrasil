@@ -4,14 +4,7 @@
 #include <array>
 #include <vector>
 
-/*
- * I opt to not use an array of function pointers for carrying out moves due to
- * the apparent inability of the compiler to perform function inlining.
- * Whether this is true or not, I am not sure, but I feel the readability of the
- * code does not suffer and possibly is even more readable when explicitly
- * listing moves.
- */
-
+// TODO Include en passant
 std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
                                            bitboard state, bool colour) {
     std::vector<bitboard> moves;
@@ -167,10 +160,10 @@ castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
             }
         }
 
-        // Slide south
+        // Slide east
         move = piece;
-        while (slideSouth(move) != 0) {
-            move = slideSouth(move);
+        while (slideEast(move) != 0) {
+            move = slideEast(move);
             if ((move & ownState) != 0) {
                 break;
             }
@@ -180,10 +173,10 @@ castlePseudoLegalMoves(bitboard ownState, bitboard oppState, bitboard state) {
             }
         }
 
-        // Slide east
+        // Slide south
         move = piece;
-        while (slideEast(move) != 0) {
-            move = slideEast(move);
+        while (slideSouth(move) != 0) {
+            move = slideSouth(move);
             if ((move & ownState) != 0) {
                 break;
             }
@@ -346,54 +339,7 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
     return moves;
 }
 
-std::vector<bitboard> allPseudoLegalMoves(std::array<bitboard, 6> &own,
-                                          std::array<bitboard, 6> &opp,
-                                          bool colour) {
-    std::vector<bitboard> moves;
-
-    // XXX ref to array
-
-    bitboard ownState = getGameState(own, opp, true);
-    bitboard oppState = getGameState(own, opp, false);
-
-    bitboard pawns = own.at(0);
-    bitboard horses = own.at(1);
-    bitboard castles = own.at(2);
-    bitboard bishops = own.at(3);
-    bitboard queens = own.at(4);
-    bitboard king = own.at(5);
-
-    std::vector<bitboard> pawnMoves =
-        pawnPseudoLegalMoves(ownState, oppState, pawns, colour);
-
-    std::vector<bitboard> horseMoves =
-        horsePseudoLegalMoves(ownState, oppState, horses);
-
-    std::vector<bitboard> castleMoves =
-        castlePseudoLegalMoves(ownState, oppState, castles);
-
-    std::vector<bitboard> bishopMoves =
-        bishopPseudoLegalMoves(ownState, oppState, bishops);
-
-    std::vector<bitboard> queenMoves =
-        queenPseudoLegalMoves(ownState, oppState, queens);
-
-    std::vector<bitboard> kingMoves =
-        kingPseudoLegalMoves(ownState, oppState, king);
-
-    moves.insert(moves.end(), pawnMoves.begin(), pawnMoves.end());
-    moves.insert(moves.end(), horseMoves.begin(), horseMoves.end());
-    moves.insert(moves.end(), castleMoves.begin(), castleMoves.end());
-    moves.insert(moves.end(), bishopMoves.begin(), bishopMoves.end());
-    moves.insert(moves.end(), queenMoves.begin(), queenMoves.end());
-    moves.insert(moves.end(), kingMoves.begin(), kingMoves.end());
-
-    return moves;
-}
-
-std::vector<bitboard> pseudoLegalFromIndex(int idx,
-                                           std::array<bitboard, 6> &white,
-                                           std::array<bitboard, 6> &black,
+std::vector<bitboard> pseudoLegalFromIndex(int idx, team &white, team &black,
                                            bool colour) {
     bitboard ownState;
     bitboard oppState;
