@@ -97,7 +97,7 @@ TEST(slideWest, a4) {
     ASSERT_EQ(correctState, state);
 }
 
-TEST(getALlPieces, e4) {
+TEST(getAllPieces, e4) {
     bitboard state = 0x0000000008000000;
     std::vector<bitboard> pieces = getAllPieces(state);
 
@@ -117,4 +117,12 @@ TEST(getAllPieces, h1_a8) {
 
     ASSERT_EQ(firstPiece, pieces.at(0));
     ASSERT_EQ(secondPeice, pieces.at(1));
+}
+
+TEST(coordinateToState, e4) {
+    std::string coordinate = "e4";
+    bitboard state = coordinateToState("e4");
+    bitboard correct = 0x8000000;
+
+    ASSERT_EQ(correct, state);
 }
