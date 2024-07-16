@@ -91,7 +91,7 @@ std::pair<bitboard, bitboard> takeTurn(team &white, team &black,
             continue;
         }
 
-        std::cout << "→";
+        std::cout << "↓" << std::endl;
         toSquare = readSquare();
         if (!toSquare.has_value()) {
             std::cout << "Not a position" << std::endl;
@@ -231,6 +231,10 @@ void gameLoop() {
     }
 
     std::cout << "Game over" << std::endl;
+    if (winner)
+        std::cout << "White wins!" << std::endl;
+    else
+        std::cout << "Black wins!" << std::endl;
 }
 
 int main() { gameLoop(); }

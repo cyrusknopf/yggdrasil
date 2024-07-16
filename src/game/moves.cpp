@@ -1,7 +1,6 @@
 #include "game/moves.h"
 #include "game/chess.h"
 #include "utils.h"
-#include <array>
 #include <vector>
 
 // TODO Include en passant
@@ -13,6 +12,7 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
 
     if (colour) {
         for (auto &piece : getAllPieces(state)) {
+            // Single push
             move = slideNorth(piece);
             if ((move & both) == 0) {
                 moves.push_back(move | state & ~piece);
@@ -20,6 +20,7 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
 
             // If in rank 2 (i.e. starting rank)
             if (piece > 255 && piece < 65536) {
+                // Double push
                 move = slideNorth(move);
                 if ((move & both) == 0) {
                     moves.push_back(move | state & ~piece);
@@ -36,9 +37,9 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
                 moves.push_back(move | state & ~piece);
             }
         }
-
     } else {
         for (auto &piece : getAllPieces(state)) {
+            // Single push
             move = slideSouth(piece);
             if ((move & both) == 0) {
                 moves.push_back(move | state & ~piece);
@@ -46,6 +47,7 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
 
             // If in rank 7 (i.e. starting rank)
             if (piece > 140737488355328 && piece < 72057594037927936) {
+                // Double push
                 move = slideSouth(move);
                 if ((move & both) == 0) {
                     moves.push_back(move | state & ~piece);
@@ -63,7 +65,6 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
             }
         }
     }
-
     return moves;
 };
 
