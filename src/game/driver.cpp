@@ -75,8 +75,8 @@ std::optional<bitboard> readSquare() {
     }
 }
 
-std::pair<bitboard, bitboard> takeTurn(team &white, team &black,
-                                       std::string &message) {
+std::pair<bitboard, bitboard> takeToAndFrom(team &white, team &black,
+                                            std::string &message) {
     std::optional<bitboard> fromSquare = std::nullopt;
     std::optional<bitboard> toSquare = std::nullopt;
 
@@ -118,7 +118,7 @@ std::tuple<bitboard, int, bitboard> takeMove(team &whiteBitboards,
             message += "\nBlack to move\n";
 
         std::pair<bitboard, bitboard> toAndFrom =
-            takeTurn(whiteBitboards, blackBitboards, message);
+            takeToAndFrom(whiteBitboards, blackBitboards, message);
         bitboard fromSquare = toAndFrom.first;
         bitboard toSquare = toAndFrom.second;
 
@@ -201,8 +201,10 @@ void gameLoop() {
     bool gameOver = false;
     bool turn = true;
     bool validMove = false;
-    std::string message = "";
+    int halfMoveClock = 0;
     std::optional<bool> winner = std::nullopt;
+
+    std::string message = "";
 
     team own;
     team opp;

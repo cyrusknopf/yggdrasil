@@ -83,6 +83,7 @@ std::vector<bitboard> getAllPieces(bitboard state) {
 std::pair<bitboard, int> findPiece(bitboard square, team &target) {
     // Ensure we are only searching for a single location
     assert(__builtin_popcountll(square) == 1);
+    // i to keep track of the index that we find the board at
     int i = 0;
     for (auto &board : target) {
         if ((board & square) != 0) {

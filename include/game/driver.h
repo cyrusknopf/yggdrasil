@@ -36,8 +36,8 @@ std::optional<bitboard> readSquare();
 /*
  * Contains logic for accepting from and to locations for a move
  */
-std::pair<bitboard, bitboard> takeTurn(team &white, team &black,
-                                       std::string &message);
+std::pair<bitboard, bitboard> takeToAndFrom(team &white, team &black,
+                                            std::string &message);
 
 void gameLoop();
 
