@@ -14,17 +14,21 @@ option(test "Build test" ON)
 
 # Gather all test source files
 set(TEST_SOURCES
+    tests/utils_tests.cpp
+
     tests/game/moves_tests.cpp
-    tests/game/driver_tests.cpp
-    tests/utils_test.cpp
+    tests/mcts/gametree_tests.cpp
 )
 
 # Gather all source files
 set(SRC_SOURCES
+    src/utils.cpp
+
     src/game/chess.cpp
     src/game/driver.cpp
     src/game/moves.cpp
-    src/utils.cpp
+
+    src/mcts/gametree.cpp
 )
 
 if (test)

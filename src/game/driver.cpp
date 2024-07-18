@@ -1,8 +1,7 @@
 #include "game/driver.h"
-#include "game/chess.h"
-#include "game/inits.h"
-#include "game/moves.h"
-#include "utils.h"
+
+#include <unistd.h>
+
 #include <algorithm>
 #include <iostream>
 #include <optional>
@@ -10,14 +9,18 @@
 #include <regex>
 #include <string>
 #include <tuple>
-#include <unistd.h>
 #include <utility>
 #include <vector>
 
-std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
-                                  const std::string &symbol) {
+#include "game/chess.h"
+#include "game/inits.h"
+#include "game/moves.h"
+#include "utils.h"
+
+std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
+                                  const std::string& symbol) {
     std::vector<bitboard> thesePieces = getAllPieces(pieceBitboard);
-    for (auto &piece : thesePieces) {
+    for (auto& piece : thesePieces) {
         char file = (char)(getFile(piece) + 'a' - 1);
         int rank = getRank(piece);
         std::string pos = std::string(1, file) + std::to_string(rank);
@@ -28,7 +31,7 @@ std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
     return board;
 }
 
-std::string gameStateToString(team &whitePieces, team &blackPieces) {
+std::string gameStateToString(team& whitePieces, team& blackPieces) {
     std::string board;
 
     for (int rank = 8; rank > 0; rank--) {
@@ -75,8 +78,8 @@ std::optional<bitboard> readSquare() {
     }
 }
 
-std::pair<bitboard, bitboard> takeToAndFrom(team &white, team &black,
-                                            std::string &message) {
+std::pair<bitboard, bitboard> takeToAndFrom(team& white, team& black,
+                                            std::string& message) {
     std::optional<bitboard> fromSquare = std::nullopt;
     std::optional<bitboard> toSquare = std::nullopt;
 
@@ -102,9 +105,9 @@ std::pair<bitboard, bitboard> takeToAndFrom(team &white, team &black,
     return std::make_pair(fromSquare.value(), toSquare.value());
 }
 
-std::tuple<bitboard, int, bitboard> takeMove(team &whiteBitboards,
-                                             team &blackBitboards, bool turn,
-                                             std::string &message) {
+std::tuple<bitboard, int, bitboard> takeMove(team& whiteBitboards,
+                                             team& blackBitboards, bool turn,
+                                             std::string& message) {
     team own;
     team opp;
     bitboard newBoard;
@@ -156,7 +159,7 @@ std::tuple<bitboard, int, bitboard> takeMove(team &whiteBitboards,
     }
 }
 
-std::pair<team, team> makeMove(team &whiteBitboards, team &blackBitboards,
+std::pair<team, team> makeMove(team& whiteBitboards, team& blackBitboards,
                                bitboard toSquare, bitboard newBoard,
                                int fromIdx, bool turn) {
     team opp;
@@ -184,7 +187,7 @@ std::pair<team, team> makeMove(team &whiteBitboards, team &blackBitboards,
     return std::make_pair(whiteBitboards, blackBitboards);
 }
 
-std::optional<bool> getWinner(team &white, team &black) {
+std::optional<bool> getWinner(team& white, team& black) {
     if (white.at(5) == 0)
         return false;
     else if (black.at(5) == 0)

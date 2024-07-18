@@ -1,8 +1,10 @@
+#include <gtest/gtest.h>
+
+#include <vector>
+
 #include "game/inits.h"
 #include "game/moves.h"
 #include "utils.h"
-#include <gtest/gtest.h>
-#include <vector>
 
 TEST(pawnPseudoLegalMoves, e4) {
     bitboard state = 0x0000000008000000;
