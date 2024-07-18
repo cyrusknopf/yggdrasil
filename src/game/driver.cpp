@@ -1,5 +1,6 @@
 #include "game/driver.h"
 
+#include <assert.h>
 #include <unistd.h>
 
 #include <algorithm>
@@ -15,6 +16,7 @@
 #include "game/chess.h"
 #include "game/inits.h"
 #include "game/moves.h"
+#include "mcts/gametree.h"
 #include "utils.h"
 
 std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
@@ -197,35 +199,42 @@ std::optional<bool> getWinner(team& white, team& black) {
 }
 
 void gameLoop() {
+    // General game setup
     std::pair<team, team> teams = initGame();
     team whiteBitboards = teams.first;
     team blackBitboards = teams.second;
-
     bool gameOver = false;
     bool turn = true;
-    bool validMove = false;
     int halfMoveClock = 0;
     std::optional<bool> winner = std::nullopt;
 
+    // IO setup
     std::string message = "";
 
-    team own;
-    team opp;
+    // MCTS setup
+    GameNode root = initialiseAgent(whiteBitboards, blackBitboards);
 
     while (!gameOver) {
-        message = "";
-        std::tuple<bitboard, int, bitboard> movingPiece =
-            takeMove(whiteBitboards, blackBitboards, turn, message);
-        bitboard movingBoard = std::get<0>(movingPiece);
-        int movingIdx = std::get<1>(movingPiece);
-        bitboard movingTo = std::get<2>(movingPiece);
+        // User turn
+        if (turn) {
+            message = "";
+            std::tuple<bitboard, int, bitboard> movingPiece =
+                takeMove(whiteBitboards, blackBitboards, turn, message);
 
-        std::pair<team, team> newBoards =
-            makeMove(whiteBitboards, blackBitboards, movingTo, movingBoard,
-                     movingIdx, turn);
+            bitboard movingBoard = std::get<0>(movingPiece);
+            int movingIdx = std::get<1>(movingPiece);
+            bitboard movingTo = std::get<2>(movingPiece);
 
-        whiteBitboards = newBoards.first;
-        blackBitboards = newBoards.second;
+            std::pair<team, team> newBoards =
+                makeMove(whiteBitboards, blackBitboards, movingTo, movingBoard,
+                         movingIdx, turn);
+
+            whiteBitboards = newBoards.first;
+            blackBitboards = newBoards.second;
+        }
+        // Agent turn
+        else {
+        }
 
         winner = getWinner(whiteBitboards, blackBitboards);
         if (winner.has_value()) {
@@ -235,6 +244,7 @@ void gameLoop() {
         turn = !turn;
     }
 
+    assert(winner.has_value() && "Game over before winner");
     std::cout << "Game over" << std::endl;
     if (winner)
         std::cout << "White wins!" << std::endl;

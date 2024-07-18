@@ -41,4 +41,7 @@ class GameNode {
 
     void incrVisits();
 };
+
+GameNode initialiseAgent(team& white, team& black);
+
 #endif  // !_GAMETREE_H_

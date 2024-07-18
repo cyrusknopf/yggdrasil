@@ -22,3 +22,8 @@ const GameNode GameNode::getRandomChild(int seed) {
 const double GameNode::getValue() { return value; }
 
 void GameNode::incrVisits() { visits++; }
+
+GameNode initialiseAgent(team& white, team& black) {
+    GameNode root = GameNode(nullptr, 0, &white, &black, 0, true);
+    return root;
+}
