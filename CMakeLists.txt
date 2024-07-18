@@ -17,7 +17,9 @@ set(TEST_SOURCES
     tests/utils_tests.cpp
 
     tests/game/moves_tests.cpp
+
     tests/mcts/gametree_tests.cpp
+    tests/mcts/selection_tests.cpp
 )
 
 # Gather all source files
@@ -29,6 +31,7 @@ set(SRC_SOURCES
     src/game/moves.cpp
 
     src/mcts/gametree.cpp
+    src/mcts/selection.cpp
 )
 
 if (test)
