@@ -1,5 +1,6 @@
 #include "mcts/gametree.h"
 
+#include <cmath>
 #include <random>
 #include <vector>
 
@@ -24,6 +25,11 @@ GameNode* GameNode::getRandomChild(int seed) {
 void GameNode::incrVisits() { visits++; }
 
 void GameNode::incrWins() { wins++; }
+
+double GameNode::evaluate(double constantOfInquisitiveness) {
+    return ((double)wins / visits) +
+           constantOfInquisitiveness * sqrt(log(parent->visits) / visits);
+}
 
 GameNode initialiseTree(team& white, team& black) {
     GameNode root = GameNode(nullptr, 0, white, black, true);

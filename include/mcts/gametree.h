@@ -49,6 +49,8 @@ class GameNode {
     void incrVisits();
 
     void incrWins();
+
+    double evaluate(double constantofInquisitiveness);
 };
 
 GameNode initialiseTree(team& white, team& black);

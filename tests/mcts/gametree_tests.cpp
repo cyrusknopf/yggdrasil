@@ -58,3 +58,5 @@ TEST(getRandomChild, threeChildren) {
     // addr of child2 == returned pointer
     ASSERT_EQ(&child2, randomKid);
 }
+
+TEST(evaluate, oneToOne) { FAIL(); }

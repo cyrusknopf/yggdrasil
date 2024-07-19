@@ -5,4 +5,5 @@
 
 GameNode* selectRandomLeaf(GameNode* node, int seed);
 
+GameNode* heursiticSelectLeaf(GameNode& node, int seed);
 #endif  // !_SELECION_H_
