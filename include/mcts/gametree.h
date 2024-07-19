@@ -9,25 +9,32 @@ class GameNode {
     GameNode* parent;
     std::vector<GameNode*> children;
     bitboard move;
-    team* white;
-    team* black;
-    double value;
+    team& white;
+    team& black;
+    int wins;
     int visits;
     bool turn;
 
    public:
-    GameNode(GameNode* parent, bitboard move, team* white, team* black,
-             double value, bool turn)
+    GameNode(GameNode* parent, bitboard move, team& white, team& black,
+             bool turn)
         : parent(parent),
-          children(std::vector<GameNode*>{}),
+          children(),
+          // children(std::vector<GameNode*>{}),
           move(move),
           white(white),
           black(black),
-          value(value),
+          wins(0),
           visits(0),
           turn(turn){};
 
-    ~GameNode(){};
+    ~GameNode() {
+        for (GameNode* child : children) {
+            child = nullptr;
+            // delete child;
+        }
+        children.clear();
+    };
 
     void addChild(GameNode* child);
 
@@ -35,13 +42,15 @@ class GameNode {
 
     const std::vector<GameNode*>& getChildren();
 
-    const GameNode getRandomChild(int seed);
+    GameNode* getRandomChild(int seed);
 
     const double getValue();
 
     void incrVisits();
+
+    void incrWins();
 };
 
-GameNode initialiseAgent(team& white, team& black);
+GameNode initialiseTree(team& white, team& black);
 
 #endif  // !_GAMETREE_H_

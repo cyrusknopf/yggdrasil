@@ -212,7 +212,7 @@ void gameLoop() {
     std::string message = "";
 
     // MCTS setup
-    GameNode root = initialiseAgent(whiteBitboards, blackBitboards);
+    GameNode root = initialiseTree(whiteBitboards, blackBitboards);
 
     while (!gameOver) {
         // User turn

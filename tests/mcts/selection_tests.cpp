@@ -4,35 +4,38 @@
 
 TEST(selectRandomLeaf, orphan) {
     int seed = 1;
-    GameNode x = GameNode(nullptr, 0, nullptr, nullptr, 1., false);
+    team t;
+    GameNode root = GameNode(nullptr, 0, t, t, false);
 
-    GameNode leaf = selectRandomLeaf(x, seed);
+    GameNode* leaf = selectRandomLeaf(&root, seed);
 
-    ASSERT_EQ(1., leaf.getValue());
+    ASSERT_EQ(&root, leaf);
 }
 
 TEST(selectRandomLeaf, onlyChild) {
     int seed = 1;
-    GameNode x = GameNode(nullptr, 0, nullptr, nullptr, 1., false);
-    GameNode child = GameNode(nullptr, 0, nullptr, nullptr, 2., false);
+    team t;
+    GameNode parent = GameNode(nullptr, 0, t, t, false);
+    GameNode child = GameNode(&parent, 0, t, t, false);
 
-    x.addChild(&child);
+    parent.addChild(&child);
 
-    GameNode leaf = selectRandomLeaf(x, seed);
+    GameNode* leaf = selectRandomLeaf(&parent, seed);
 
-    ASSERT_EQ(2., leaf.getValue());
+    ASSERT_EQ(&child, leaf);
 }
 
 TEST(selectRandomLeaf, grandParent) {
     int seed = 1;
-    GameNode x = GameNode(nullptr, 0, nullptr, nullptr, 1., false);
-    GameNode child = GameNode(nullptr, 0, nullptr, nullptr, 2., false);
-    GameNode grandChild = GameNode(nullptr, 0, nullptr, nullptr, 3., false);
+    team t;
+    GameNode x = GameNode(nullptr, 0, t, t, false);
+    GameNode child = GameNode(nullptr, 0, t, t, false);
+    GameNode grandChild = GameNode(nullptr, 0, t, t, false);
 
     child.addChild(&grandChild);
     x.addChild(&child);
 
-    GameNode leaf = selectRandomLeaf(x, seed);
+    GameNode* leaf = selectRandomLeaf(&x, seed);
 
-    ASSERT_EQ(3., leaf.getValue());
+    ASSERT_EQ(&grandChild, leaf);
 }

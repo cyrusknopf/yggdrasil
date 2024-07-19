@@ -3,6 +3,6 @@
 
 #include "mcts/gametree.h"
 
-GameNode selectRandomLeaf(GameNode& node, int seed);
+GameNode* selectRandomLeaf(GameNode* node, int seed);
 
 #endif  // !_SELECION_H_
