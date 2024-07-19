@@ -8,8 +8,8 @@
 TEST(getChildren, onlyChild) {
     team t;
     GameNode parent = GameNode(nullptr, 0, t, t, true);
-    GameNode child = GameNode(nullptr, 1, t, t, false);
 
+    GameNode child = GameNode(&parent, 1, t, t, false);
     parent.addChild(&child);
 
     std::vector<GameNode*> kids = parent.getChildren();
@@ -25,9 +25,10 @@ TEST(getChildren, onlyChild) {
 TEST(getRandomChild, onlyChild) {
     int seed = 1;
     team t;
-    GameNode parent = GameNode(nullptr, 0, t, t, true);
-    GameNode child = GameNode(nullptr, 0, t, t, false);
 
+    GameNode parent = GameNode(nullptr, 0, t, t, true);
+
+    GameNode child = GameNode(&parent, 0, t, t, false);
     parent.addChild(&child);
 
     GameNode* randomKid = parent.getRandomChild(seed);
@@ -39,18 +40,20 @@ TEST(getRandomChild, onlyChild) {
 TEST(getRandomChild, threeChildren) {
     // When this seed is used it returns the second child
     int seed = 1;
-
     team t;
-    GameNode x = GameNode(nullptr, 0, t, t, true);
-    GameNode child1 = GameNode(nullptr, 0, t, t, false);
-    GameNode child2 = GameNode(nullptr, 0, t, t, false);
-    GameNode child3 = GameNode(nullptr, 0, t, t, false);
 
-    x.addChild(&child1);
-    x.addChild(&child2);
-    x.addChild(&child3);
+    GameNode parent = GameNode(nullptr, 0, t, t, true);
 
-    GameNode* randomKid = x.getRandomChild(seed);
+    GameNode child1 = GameNode(&parent, 0, t, t, false);
+    parent.addChild(&child1);
+
+    GameNode child2 = GameNode(&parent, 0, t, t, false);
+    parent.addChild(&child2);
+
+    GameNode child3 = GameNode(&parent, 0, t, t, false);
+    parent.addChild(&child3);
+
+    GameNode* randomKid = parent.getRandomChild(seed);
 
     // addr of child2 == returned pointer
     ASSERT_EQ(&child2, randomKid);
