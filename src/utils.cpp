@@ -1,10 +1,13 @@
 #include "utils.h"
+
 #include <cassert>
 #include <cstdint>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "game/inits.h"
 
 int getRank(uint64_t state) {
     // Asserting there are not more than one piece on the board
@@ -38,7 +41,7 @@ int getFile(uint64_t state) {
     return 8 - exp;
 }
 
-bitboard coordinateToState(const std::string &coord) {
+bitboard coordinateToState(const std::string& coord) {
     // Get rank and file to determine how many times we must shift
     int file = coord.at(0) - 'a';
     int rank = coord.at(1) - '1';
@@ -80,12 +83,12 @@ std::vector<bitboard> getAllPieces(bitboard state) {
     return pieces;
 }
 
-std::pair<bitboard, int> findPiece(bitboard square, team &target) {
+std::pair<bitboard, int> findPiece(bitboard square, team& target) {
     // Ensure we are only searching for a single location
     assert(__builtin_popcountll(square) == 1);
     // i to keep track of the index that we find the board at
     int i = 0;
-    for (auto &board : target) {
+    for (auto& board : target) {
         if ((board & square) != 0) {
             return std::make_pair(board, i);
         }
@@ -98,6 +101,55 @@ bitboard performCapture(bitboard victim, bitboard captor) {
     assert((victim & captor) != 0);
     assert(__builtin_popcountll(captor) == 1);
     return (victim & ~captor);
+}
+
+std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
+                                  const std::string& symbol) {
+    std::vector<bitboard> thesePieces = getAllPieces(pieceBitboard);
+    for (auto& piece : thesePieces) {
+        char file = (char)(getFile(piece) + 'a' - 1);
+        int rank = getRank(piece);
+        std::string pos = std::string(1, file) + std::to_string(rank);
+        std::regex re(pos);
+        board = std::regex_replace(board, re, symbol);
+    }
+
+    return board;
+}
+
+std::string gameStateToString(team& whitePieces, team& blackPieces) {
+    std::string board;
+
+    for (int rank = 8; rank > 0; rank--) {
+        for (char file = 'a'; file < 'i'; file++) {
+            board += file;
+            board += std::to_string(rank);
+            board += " ";
+        }
+        board += "| ";
+        board += std::to_string(rank);
+        board += '\n';
+    }
+    board.append("---------------\n");
+    board.append("a b c d e f g h\n");
+
+    board = addPieceToStringBoard(board, whitePieces.at(0), WPAWN);
+    board = addPieceToStringBoard(board, whitePieces.at(1), WHORSE);
+    board = addPieceToStringBoard(board, whitePieces.at(2), WCASTLE);
+    board = addPieceToStringBoard(board, whitePieces.at(3), WBISHOP);
+    board = addPieceToStringBoard(board, whitePieces.at(4), WQUEEN);
+    board = addPieceToStringBoard(board, whitePieces.at(5), WKING);
+
+    board = addPieceToStringBoard(board, blackPieces.at(0), BPAWN);
+    board = addPieceToStringBoard(board, blackPieces.at(1), BHORSE);
+    board = addPieceToStringBoard(board, blackPieces.at(2), BCASTLE);
+    board = addPieceToStringBoard(board, blackPieces.at(3), BBISHOP);
+    board = addPieceToStringBoard(board, blackPieces.at(4), BQUEEN);
+    board = addPieceToStringBoard(board, blackPieces.at(5), BKING);
+
+    board = std::regex_replace(board, std::regex("[a-z][1-8]"), " ");
+
+    return board;
 }
 
 // Clears terminal

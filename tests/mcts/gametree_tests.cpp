@@ -59,4 +59,17 @@ TEST(getRandomChild, threeChildren) {
     ASSERT_EQ(&child2, randomKid);
 }
 
-TEST(evaluate, oneToOne) { FAIL(); }
+TEST(evaluate, oneToOne) {
+    team t;
+    GameNode parent = GameNode(nullptr, 0, t, t, true);
+    parent.incrVisits();
+
+    GameNode child = GameNode(&parent, 0, t, t, false);
+    parent.addChild(&child);
+
+    child.incrWins();
+    child.incrVisits();
+
+    double value = child.evaluate(0);
+    ASSERT_EQ(1, value);
+}

@@ -44,11 +44,21 @@ class GameNode {
 
     GameNode* getRandomChild(int seed);
 
-    const double getValue();
+    team& getWhite();
+
+    void setWhite(team& boards);
+
+    team& getBlack();
+
+    void setBlack(team& boards);
 
     void incrVisits();
 
     void incrWins();
+
+    bool getTurn();
+
+    void nextTurn();
 
     double evaluate(double constantofInquisitiveness);
 };

@@ -1,5 +1,7 @@
 #include "mcts/gametree.h"
 
+#include <assert.h>
+
 #include <cmath>
 #include <random>
 #include <vector>
@@ -22,11 +24,26 @@ GameNode* GameNode::getRandomChild(int seed) {
     return children[index];
 }
 
+team& GameNode::getWhite() { return white; }
+
+void GameNode::setWhite(team& boards) { white = boards; }
+
+team& GameNode::getBlack() { return black; }
+
+void GameNode::setBlack(team& boards) { black = boards; }
+
 void GameNode::incrVisits() { visits++; }
 
 void GameNode::incrWins() { wins++; }
 
+bool GameNode::getTurn() { return turn; }
+
+void GameNode::nextTurn() { turn = !turn; }
+
 double GameNode::evaluate(double constantOfInquisitiveness) {
+    assert(parent != nullptr && "Evaluating node without parent");
+    assert(parent->visits != 0 && "Parent never visited");
+    if (visits == 0) incrVisits();
     return ((double)wins / visits) +
            constantOfInquisitiveness * sqrt(log(parent->visits) / visits);
 }
