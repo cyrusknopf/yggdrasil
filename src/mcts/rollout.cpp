@@ -38,8 +38,8 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         opp = white;
     }
 
-    /// XXX this is sometimes 0 for some reason
     // Get the square which the moving piece moves to
+    // XXX this is sometimes 0 for some reason
     bitboard destinationSquare = ~(~move | own.at(index));
     // Determine if the enemy is on the moved to piece i.e. there is a capture
     std::pair<bitboard, int> captureInfo = findPiece(destinationSquare, opp);
@@ -65,8 +65,9 @@ int simulate(GameNode* node, bool quiet) {
 
         std::optional<bitboard> randomMove = std::nullopt;
         int randomPieceIndex;
+        std::random_device rd;
         while (!randomMove.has_value()) {
-            randomPieceIndex = rand() % 6;
+            randomPieceIndex = rd() % 6;
             randomMove = getRandomMove(node, randomPieceIndex);
         }
         std::pair<team, team> newBoards = makeSimulatedMove(
