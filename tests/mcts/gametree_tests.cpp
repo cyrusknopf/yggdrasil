@@ -59,16 +59,25 @@ TEST(getRandomChild, threeChildren) {
     ASSERT_EQ(&child2, randomKid);
 }
 
+TEST(alterScore, whiteWin) {
+    team t;
+    GameNode node = GameNode(nullptr, 0, t, t, true);
+
+    ASSERT_EQ(0, node.getScore());
+
+    node.alterScore(1);
+
+    ASSERT_EQ(1, node.getScore());
+}
+
 TEST(evaluate, oneToOne) {
     team t;
     GameNode parent = GameNode(nullptr, 0, t, t, true);
-    parent.incrVisits();
 
     GameNode child = GameNode(&parent, 0, t, t, false);
     parent.addChild(&child);
 
-    child.incrWins();
-    child.incrVisits();
+    child.alterScore(1);
 
     double value = child.evaluate(0);
     ASSERT_EQ(1, value);

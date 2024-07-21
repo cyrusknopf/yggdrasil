@@ -11,7 +11,7 @@ class GameNode {
     bitboard move;
     team& white;
     team& black;
-    int wins;
+    int score;
     int visits;
     bool turn;
 
@@ -24,16 +24,18 @@ class GameNode {
           move(move),
           white(white),
           black(black),
-          wins(0),
-          visits(0),
+          score(0),
+          visits(1),
           turn(turn){};
 
-    ~GameNode() {
+    ~GameNode(){
+        /*
         for (GameNode* child : children) {
             child = nullptr;
             // delete child;
         }
         children.clear();
+        */
     };
 
     void addChild(GameNode* child);
@@ -54,7 +56,9 @@ class GameNode {
 
     void incrVisits();
 
-    void incrWins();
+    int getScore() const;
+
+    void alterScore(int score);
 
     bool getTurn() const;
 
