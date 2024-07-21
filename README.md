@@ -3,6 +3,8 @@ Bitboard chess engine written in C++
 
 Currently impelemting Monte Carlo Tree Search
 
+Priortising MCTS over en passant and castling
+
 ## Running the engine
 1. Clone the repo
 2. `cd yggradasil`
