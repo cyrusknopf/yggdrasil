@@ -36,8 +36,12 @@ std::pair<team, team> makeMove(team white, team black, bitboard move, int index,
 }
 
 int simulate(GameNode* node) {
-    bool gameOver = false;
-    while (!gameOver) {
+    while (true) {
+        // Black wins
+        if (node->getWhite().at(5) == 0) return -1;
+        // White wins
+        if (node->getBlack().at(5) == 0) return 1;
+
         std::optional<bitboard> randomMove = std::nullopt;
         int randomPieceIndex;
         while (!randomMove.has_value()) {
@@ -47,11 +51,6 @@ int simulate(GameNode* node) {
         std::pair<team, team> newBoards =
             makeMove(node->getWhite(), node->getBlack(), randomMove.value(),
                      randomPieceIndex, node->getTurn());
-
-        // Black wins
-        if (newBoards.first[5] == 0) return -1;
-        // White wins
-        if (newBoards.second[5] == 0) return 1;
 
         node->setWhite(newBoards.first);
         node->setBlack(newBoards.second);

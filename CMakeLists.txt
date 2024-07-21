@@ -51,7 +51,3 @@ if (NOT test)
 # Add the executable for driver.cpp and link necessary source files
 add_executable(driver ${SRC_SOURCES})
 endif()
-
-# If the driver executable needs specific libraries, link them here
-# For example, if it needs pthread:
-#target_link_libraries()
