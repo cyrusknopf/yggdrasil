@@ -11,10 +11,11 @@
 #include "game/moves.h"
 #include "utils.h"
 
-std::optional<bitboard> getRandomMove(GameNode* node, int pieceIndex) {
+std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
+                                      int pieceIndex) {
     std::random_device rd;
-    std::vector<bitboard> moves = pseudoLegalFromIndex(
-        pieceIndex, node->getWhite(), node->getBlack(), node->getTurn());
+    std::vector<bitboard> moves =
+        pseudoLegalFromIndex(pieceIndex, white, black, turn);
     std::mt19937 rng(rd());
     std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
     std::size_t randomMoveIndex = dist(rng);
@@ -56,32 +57,33 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         return std::make_pair(opp, own);
 }
 
-int simulate(GameNode* node, bool quiet) {
+int simulate(const GameNode* node, bool quiet) {
+    team white = node->getWhite();
+    team black = node->getBlack();
+    bool turn = node->getTurn();
     while (true) {
         // Black wins
-        if (node->getWhite().at(5) == 0) return -1;
+        if (white.at(5) == 0) return -1;
         // White wins
-        if (node->getBlack().at(5) == 0) return 1;
+        if (black.at(5) == 0) return 1;
 
         std::optional<bitboard> randomMove = std::nullopt;
         int randomPieceIndex;
         std::random_device rd;
         while (!randomMove.has_value()) {
-            randomPieceIndex = rd() % 6;
-            randomMove = getRandomMove(node, randomPieceIndex);
+            randomPieceIndex = rd() % 6;  // TODO better method
+            randomMove = getRandomMove(white, black, turn, randomPieceIndex);
         }
         std::pair<team, team> newBoards = makeSimulatedMove(
-            node->getWhite(), node->getBlack(), randomMove.value(),
-            randomPieceIndex, node->getTurn());
+            white, black, randomMove.value(), randomPieceIndex, turn);
 
-        node->setWhite(newBoards.first);
-        node->setBlack(newBoards.second);
+        white = newBoards.first;
+        black = newBoards.second;
 
         if (!quiet) {
-            std::cout << gameStateToString(node->getWhite(), node->getBlack())
-                      << std::endl;
+            std::cout << gameStateToString(white, black) << std::endl;
         }
 
-        node->nextTurn();
+        turn = !turn;
     }
 }

@@ -1,12 +1,42 @@
 #include "mcts/gametree.h"
 
 /*
- * Given a node of the game tree with a certain state, generates a random move
- * for the piece at provided index
+ * Given both team arrays ,generates a random move
+ * for the piece at provided index. Index should be a random number between 0
+ * and 5. Returns a move wrapped in an optional: optional is nullopt if there
+ * are no legal moves from the piece at the provided index
+ *
+ * @param [white] team array of white pieces
+ * @param [black] team array of black pieces
+ * @param [turn] turn of moving piece (white = true)
+ * @param [pieceIndex] piece index of team array to get move for
+ * @returns nullopt if no moves for piece at provided index, bitboard containg
+ * move otherwise
  */
-std::optional<bitboard> getRandomMove(GameNode* node, int pieceIndex);
 
+std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
+                                      int pieceIndex);
+
+/*
+ * Updates team boards white and black given a move, the index of the piece
+ * making the move, and the turn of the moving piece (white = true)
+ *
+ * @param [white] team array of white pieces
+ * @param [black] team array of black pieces
+ * @param [move] bitboard containg the state of the piece after the move
+ * @param [index] index in team array of the moving piece (1=pawn, ...,  5=king)
+ * @param [turn] turn of moving piece (white = true)
+ * @returns pair containg the new team arrays: <white, black>
+ */
 std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
                                         int index, bool turn);
 
-int simulate(GameNode* node, bool quiet);
+/*
+ * Randomly plays moves until a winner, from the state specified by the provided
+ * game node
+ *
+ * @param [node] gamenode state to play from
+ * @param [quiet] if false, prints board each move to stdout
+ * @returns 1=white win, 0=draw, -1= black win
+ */
+int simulate(const GameNode* node, bool quiet);

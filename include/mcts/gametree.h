@@ -40,15 +40,15 @@ class GameNode {
 
     GameNode* getParent() const;
 
-    const std::vector<GameNode*>& getChildren();
+    std::vector<GameNode*>& getChildren();
 
     GameNode* getRandomChild(int seed);
 
-    team& getWhite();
+    team& getWhite() const;
 
     void setWhite(team& boards);
 
-    team& getBlack();
+    team& getBlack() const;
 
     void setBlack(team& boards);
 
@@ -56,7 +56,7 @@ class GameNode {
 
     void incrWins();
 
-    bool getTurn();
+    bool getTurn() const;
 
     void nextTurn();
 

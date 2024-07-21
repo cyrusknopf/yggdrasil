@@ -12,7 +12,7 @@ void GameNode::addChild(GameNode* child) { children.push_back(child); }
 
 GameNode* GameNode::getParent() const { return parent; }
 
-const std::vector<GameNode*>& GameNode::getChildren() { return children; }
+std::vector<GameNode*>& GameNode::getChildren() { return children; }
 
 GameNode* GameNode::getRandomChild(int seed) {
     std::vector<GameNode*> children = getChildren();
@@ -24,11 +24,11 @@ GameNode* GameNode::getRandomChild(int seed) {
     return children[index];
 }
 
-team& GameNode::getWhite() { return white; }
+team& GameNode::getWhite() const { return white; }
 
 void GameNode::setWhite(team& boards) { white = boards; }
 
-team& GameNode::getBlack() { return black; }
+team& GameNode::getBlack() const { return black; }
 
 void GameNode::setBlack(team& boards) { black = boards; }
 
@@ -36,7 +36,7 @@ void GameNode::incrVisits() { visits++; }
 
 void GameNode::incrWins() { wins++; }
 
-bool GameNode::getTurn() { return turn; }
+bool GameNode::getTurn() const { return turn; }
 
 void GameNode::nextTurn() { turn = !turn; }
 
