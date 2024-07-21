@@ -58,7 +58,7 @@ class GameNode {
 
     int getScore() const;
 
-    void alterScore(int score);
+    void alterScore(int amnt);
 
     bool getTurn() const;
 

@@ -59,7 +59,7 @@ TEST(getRandomChild, threeChildren) {
     ASSERT_EQ(&child2, randomKid);
 }
 
-TEST(alterScore, whiteWin) {
+TEST(alterScore, pos) {
     team t;
     GameNode node = GameNode(nullptr, 0, t, t, true);
 
@@ -68,6 +68,17 @@ TEST(alterScore, whiteWin) {
     node.alterScore(1);
 
     ASSERT_EQ(1, node.getScore());
+}
+
+TEST(alterScore, neg) {
+    team t;
+    GameNode node = GameNode(nullptr, 0, t, t, true);
+
+    ASSERT_EQ(0, node.getScore());
+
+    node.alterScore(-1);
+
+    ASSERT_EQ(-1, node.getScore());
 }
 
 TEST(evaluate, oneToOne) {
