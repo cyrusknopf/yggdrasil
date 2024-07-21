@@ -38,6 +38,7 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         opp = white;
     }
 
+    /// XXX this is sometimes 0 for some reason
     // Get the square which the moving piece moves to
     bitboard destinationSquare = ~(~move | own.at(index));
     // Determine if the enemy is on the moved to piece i.e. there is a capture
@@ -55,7 +56,7 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         return std::make_pair(opp, own);
 }
 
-int simulate(GameNode* node) {
+int simulate(GameNode* node, bool quiet) {
     while (true) {
         // Black wins
         if (node->getWhite().at(5) == 0) return -1;
@@ -75,8 +76,10 @@ int simulate(GameNode* node) {
         node->setWhite(newBoards.first);
         node->setBlack(newBoards.second);
 
-        std::cout << gameStateToString(node->getWhite(), node->getBlack())
-                  << std::endl;
+        if (!quiet) {
+            std::cout << gameStateToString(node->getWhite(), node->getBlack())
+                      << std::endl;
+        }
 
         node->nextTurn();
     }
