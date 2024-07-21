@@ -12,6 +12,8 @@ include_directories(${GTEST_INCLUDE_DIRS} include)
 
 option(test "Build test" ON)
 
+option(simul "Run random simulation" ON)
+
 # Gather all test source files
 set(TEST_SOURCES
     tests/utils_tests.cpp
@@ -34,20 +36,25 @@ set(SRC_SOURCES
     src/mcts/gametree.cpp
     src/mcts/selection.cpp
     src/mcts/rollout.cpp
+    src/mcts/random_simul.cpp
 )
 
 if (test)
 # Remove driver.cpp from SRC_SOURCES
 list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
-
+list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
 # Add the executable for tests
 add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
-
 # Link libraries to the test executable
 target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)
-endif()
 
-if (NOT test)
+elseif (simul)
+# Remove driver.cpp from SRC_SOURCES
+list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
+add_executable(random_simul ${SRC_SOURCES})
+
+else()
+list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
 # Add the executable for driver.cpp and link necessary source files
 add_executable(driver ${SRC_SOURCES})
 endif()
