@@ -3,14 +3,28 @@
 #include <assert.h>
 
 #include <cmath>
+#include <iostream>
 #include <random>
 #include <vector>
 
+#include "game/driver.h"
 #include "utils.h"
 
 void GameNode::addChild(GameNode* child) { children.push_back(child); }
 
+void GameNode::removeChild(GameNode* newOrphan) {
+    for (auto it = children.begin(); it != children.end(); it++) {
+        if (*it == newOrphan) {
+            children.erase(it);
+            break;
+        }
+    }
+    newOrphan->setParent(nullptr);
+}
+
 GameNode* GameNode::getParent() const { return parent; }
+
+void GameNode::setParent(GameNode* newParent) { parent = newParent; }
 
 std::vector<GameNode*>& GameNode::getChildren() { return children; }
 
@@ -53,4 +67,38 @@ double GameNode::evaluate(double constantOfInquisitiveness) {
 GameNode initialiseTree(team& white, team& black) {
     GameNode root = GameNode(nullptr, 0, white, black, true);
     return root;
+}
+
+GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
+    assert(oldRoot->getParent() != nullptr);
+    std::vector<GameNode*> rootChildren = oldRoot->getChildren();
+    assert(rootChildren.size() != 0);
+    // Delete all children that are not the new root
+    for (auto& child : rootChildren) {
+        if (child != newRoot) {
+            delete child;
+        }
+    }
+    newRoot->setParent(nullptr);
+    delete oldRoot;
+    return newRoot;
+}
+
+void GameNode::printGameNode(int indent) const {
+    // Print indentation
+    for (int i = 0; i < indent; ++i) {
+        std::cout << "  ";
+    }
+
+    // Print node information
+    std::cout << "Move: " << move << ", Score: " << score
+              << ", Visits: " << visits
+              << ", Turn: " << (turn ? "White" : "Black") << std::endl;
+
+    std::cout << gameStateToString(white, black) << std::endl;
+
+    // Recursively print children
+    for (GameNode* child : children) {
+        child->printGameNode(indent + 1);
+    }
 }

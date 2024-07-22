@@ -20,6 +20,6 @@ void pawnCheckMate() {
 }
 
 int main() {
-    // fromRoot();
-    pawnCheckMate();
+    fromRoot();
+    // pawnCheckMate();
 }

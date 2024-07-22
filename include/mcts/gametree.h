@@ -19,8 +19,8 @@ class GameNode {
     GameNode(GameNode* parent, bitboard move, team& white, team& black,
              bool turn)
         : parent(parent),
-          children(),
-          // children(std::vector<GameNode*>{}),
+          // children(),
+          children(std::vector<GameNode*>{}),
           move(move),
           white(white),
           black(black),
@@ -28,19 +28,22 @@ class GameNode {
           visits(1),
           turn(turn){};
 
-    ~GameNode(){
-        /*
-        for (GameNode* child : children) {
-            child = nullptr;
-            // delete child;
+    ~GameNode() {
+        if (children.size() != 0) {
+            for (GameNode* child : children) {
+                child = nullptr;
+            }
+            children.clear();
         }
-        children.clear();
-        */
     };
 
     void addChild(GameNode* child);
 
+    void removeChild(GameNode* newOrphan);
+
     GameNode* getParent() const;
+
+    void setParent(GameNode* newParent);
 
     std::vector<GameNode*>& getChildren();
 
@@ -65,6 +68,8 @@ class GameNode {
     void nextTurn();
 
     double evaluate(double constantofInquisitiveness);
+
+    void printGameNode(int indent = 0) const;
 };
 
 GameNode initialiseTree(team& white, team& black);

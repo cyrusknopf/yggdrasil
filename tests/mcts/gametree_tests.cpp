@@ -93,3 +93,39 @@ TEST(evaluate, oneToOne) {
     double value = child.evaluate(0);
     ASSERT_EQ(1, value);
 }
+
+TEST(removeChild, onlyChild) {
+    team t;
+    GameNode parent = GameNode(nullptr, 0, t, t, true);
+
+    GameNode child = GameNode(&parent, 1, t, t, false);
+    parent.addChild(&child);
+
+    ASSERT_EQ(1, parent.getChildren().size());
+
+    parent.removeChild(&child);
+
+    ASSERT_EQ(0, parent.getChildren().size());
+
+    ASSERT_EQ(nullptr, child.getParent());
+}
+
+TEST(removeChild, siblings) {
+    team t;
+    GameNode parent = GameNode(nullptr, 0, t, t, true);
+
+    GameNode child1 = GameNode(&parent, 1, t, t, false);
+    parent.addChild(&child1);
+
+    GameNode child2 = GameNode(&parent, 1, t, t, false);
+    parent.addChild(&child2);
+
+    ASSERT_EQ(2, parent.getChildren().size());
+
+    parent.removeChild(&child1);
+
+    ASSERT_EQ(1, parent.getChildren().size());
+
+    ASSERT_EQ(nullptr, child1.getParent());
+    ASSERT_EQ(&parent, child2.getParent());
+}

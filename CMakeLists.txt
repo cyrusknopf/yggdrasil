@@ -23,6 +23,7 @@ set(TEST_SOURCES
     tests/mcts/gametree_tests.cpp
     tests/mcts/selection_tests.cpp
     tests/mcts/rollout_tests.cpp
+    tests/mcts/expansion_tests.cpp
 )
 
 # Gather all source files
@@ -36,6 +37,8 @@ set(SRC_SOURCES
     src/mcts/gametree.cpp
     src/mcts/selection.cpp
     src/mcts/rollout.cpp
+    src/mcts/expansion.cpp
+
     src/mcts/random_simul.cpp
 )
 
