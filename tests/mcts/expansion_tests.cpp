@@ -10,17 +10,17 @@ TEST(expansion, soloPawn) {
     // White have a single pawn
     team white = {0x8, 0, 0, 0, 0, 0};
     team black = {0x0800000000000000, 0, 0, 0, 0, 0};
-    GameNode node = GameNode(nullptr, 0, white, black, true);
-    ASSERT_EQ(0, node.getChildren().size());
+    GameNode* node = initialiseTree(white, black);
+    ASSERT_EQ(0, node->getChildren().size());
 
-    expansion(&node);
+    expansion(node);
 
-    ASSERT_EQ(1, node.getChildren().size());
+    ASSERT_EQ(1, node->getChildren().size());
 
-    GameNode* child = node.getChildren()[0];
+    GameNode* child = node->getChildren()[0];
 
-    expansion(node.getChildren()[0]);
+    expansion(node->getChildren()[0]);
 
-    ASSERT_EQ(1, node.getChildren().size());
-    ASSERT_EQ(1, node.getChildren()[0]->getChildren().size());
+    ASSERT_EQ(1, node->getChildren().size());
+    ASSERT_EQ(1, node->getChildren()[0]->getChildren().size());
 }

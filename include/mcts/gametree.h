@@ -37,7 +37,8 @@ class GameNode {
         }
     };
 
-    void addChild(GameNode* child);
+    GameNode* addChild(GameNode* parent, bitboard move, team& white,
+                       team& black);
 
     void removeChild(GameNode* newOrphan);
 

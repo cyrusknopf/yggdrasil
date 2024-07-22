@@ -24,10 +24,7 @@ void expansion(GameNode* parent) {
             std::pair<team, team> newBoards =
                 makeSimulatedMove(white, black, move, i, parent->getTurn());
 
-            GameNode* thisChild =
-                new GameNode(parent, move, newBoards.first, newBoards.second,
-                             !parent->getTurn());
-            parent->addChild(thisChild);
+            parent->addChild(parent, move, newBoards.first, newBoards.second);
         }
     }
 }

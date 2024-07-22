@@ -9,7 +9,13 @@
 
 #include "utils.h"
 
-void GameNode::addChild(GameNode* child) { children.push_back(child); }
+GameNode* GameNode::addChild(GameNode* parent, bitboard move, team& white,
+                             team& black) {
+    GameNode* child =
+        new GameNode(parent, move, white, black, !parent->getTurn());
+    parent->children.push_back(child);
+    return child;
+}
 
 void GameNode::removeChild(GameNode* newOrphan) {
     for (auto it = children.begin(); it != children.end(); it++) {
