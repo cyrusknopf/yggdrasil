@@ -31,7 +31,7 @@ class GameNode {
     ~GameNode() {
         if (children.size() != 0) {
             for (GameNode* child : children) {
-                child = nullptr;
+                delete child;
             }
             children.clear();
         }

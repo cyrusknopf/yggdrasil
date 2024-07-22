@@ -83,8 +83,8 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
             delete child;
         }
     }
-    newRoot->setParent(nullptr);
     delete oldRoot;
+    newRoot->setParent(nullptr);
     return newRoot;
 }
 
