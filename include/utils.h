@@ -44,14 +44,14 @@ bitboard coordinateToState(const std::string& coord);
  * @param [state] bitboard with a single piece (single 1)
  * @return bitboard with the piece moved up one square
  */
-bitboard slideNorth(bitboard state);
+constexpr bitboard slideNorth(bitboard state) { return state <<= 8; }
 /*
  * Moves the provided piece south one square and returns it
  *
  * @param [state] bitboard with a single piece (single 1)
  * @return bitboard with the piece moved down one square
  */
-bitboard slideSouth(bitboard state);
+constexpr bitboard slideSouth(bitboard state) { return state >>= 8; }
 
 /*
  * Moves the provided piece east one square and returns it
@@ -59,7 +59,9 @@ bitboard slideSouth(bitboard state);
  * @param [state] bitboard with a single piece (single 1)
  * @return bitboard with the piece moved right one square
  */
-bitboard slideEast(bitboard state);
+constexpr bitboard slideEast(bitboard state) {
+    return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
+}
 
 /*
  * Moves the provided piece west one square and returns it
@@ -67,8 +69,9 @@ bitboard slideEast(bitboard state);
  * @param [state] bitboard with a single piece (single 1)
  * @return bitboard with the piece moved left one square
  */
-bitboard slideWest(bitboard state);
-
+constexpr bitboard slideWest(uint64_t state) {
+    return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
+}
 /*
  * Returns an array of bitboards, each with a single piece, from a bitboard with
  * multiple pieces

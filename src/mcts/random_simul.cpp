@@ -5,18 +5,18 @@
 void fromRoot() {
     std::pair<team, team> starts = initGame();
 
-    GameNode root = initialiseTree(starts.first, starts.second);
+    GameNode* root = initialiseTree(starts.first, starts.second);
 
-    simulate(&root, false);
+    simulate(root, false);
 }
 
 void pawnCheckMate() {
     team white{1, 0, 0, 0, 0, 1 << 16};
     team black{0, 0, 0, 0, 0, 1 << 9};
 
-    GameNode node = initialiseTree(white, black);
+    GameNode* node = initialiseTree(white, black);
 
-    simulate(&node, false);
+    simulate(node, false);
 }
 
 int main() {

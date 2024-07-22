@@ -9,7 +9,7 @@
 
 #include "game/inits.h"
 
-int getRank(uint64_t state) {
+int getRank(bitboard state) {
     // Asserting there are not more than one piece on the board
     assert(__builtin_popcountll(state) == 1);
     // Shift downwards until we reach 0
@@ -22,7 +22,7 @@ int getRank(uint64_t state) {
     return rank;
 }
 
-int getFile(uint64_t state) {
+int getFile(bitboard state) {
     // Asserting there are not more than one piece on the board
     assert(__builtin_popcountll(state) == 1);
     // Since file is independent of rank, we shift the piece into rank 1 for
@@ -60,17 +60,17 @@ bitboard coordinateToState(const std::string& coord) {
     return state;
 }
 
-bitboard slideNorth(bitboard state) { return state <<= 8; }
+// constexpr bitboard slideNorth(bitboard state) { return state <<= 8; }
 
-bitboard slideSouth(bitboard state) { return state >>= 8; }
+// constexpr bitboard slideSouth(bitboard state) { return state >>= 8; }
 
-bitboard slideEast(bitboard state) {
+/*constexpr bitboard slideEast(bitboard state) {
     return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
-}
+}*/
 
-uint64_t slideWest(uint64_t state) {
+/*constexpr bitboard slideWest(uint64_t state) {
     return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
-}
+}*/
 
 std::vector<bitboard> getAllPieces(bitboard state) {
     bitboard initState = state;
