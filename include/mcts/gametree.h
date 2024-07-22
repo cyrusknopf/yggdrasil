@@ -9,8 +9,8 @@ class GameNode {
     GameNode* parent;
     std::vector<GameNode*> children;
     bitboard move;
-    team& white;
-    team& black;
+    team white;
+    team black;
     int score;
     int visits;
     bool turn;
@@ -49,11 +49,11 @@ class GameNode {
 
     GameNode* getRandomChild(int seed);
 
-    team& getWhite() const;
+    team getWhite() const;
 
     void setWhite(team& boards);
 
-    team& getBlack() const;
+    team getBlack() const;
 
     void setBlack(team& boards);
 
@@ -72,6 +72,8 @@ class GameNode {
     void printGameNode(int indent = 0) const;
 };
 
-GameNode initialiseTree(team& white, team& black);
+GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot);
+
+GameNode* initialiseTree(team& white, team& black);
 
 #endif  // !_GAMETREE_H_

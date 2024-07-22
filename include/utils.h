@@ -36,7 +36,7 @@ int getFile(bitboard state);
  * @param [coord] coordinate in string form
  * @return bitboard with a 1 at the coordinate only
  */
-bitboard coordinateToState(const std::string &coord);
+bitboard coordinateToState(const std::string& coord);
 
 /*
  * Moves the provided piece north one square and returns it
@@ -91,7 +91,7 @@ std::vector<bitboard> getAllPieces(bitboard state);
  * bitboard in the searched array>
  */
 std::pair<bitboard, int> findPiece(bitboard square,
-                                   std::array<bitboard, 6> &target);
+                                   std::array<bitboard, 6>& target);
 
 /*
  * Capture logic for a board containing possibly many pieces (victim), and a
@@ -105,6 +105,15 @@ std::pair<bitboard, int> findPiece(bitboard square,
  */
 bitboard performCapture(bitboard victim, bitboard captor);
 
+/*
+ * Given the two team arrays, creates the string representation of the board
+ *
+ * @param [whitePieces] white pieces bitboard array
+ * @param [blackPieces] black pieces bitboard array
+ * @return string representation of the game
+ */
+std::string gameStateToString(team whitePieces, team blackPieces);
+
 // Clears the terminal window, intended to preceed printing of the board
 void clearTerm();
-#endif // !_UTILSH_
+#endif  // !_UTILSH_

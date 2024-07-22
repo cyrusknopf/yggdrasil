@@ -1,3 +1,4 @@
+
 #include "mcts/gametree.h"
 
-GameNode* expansion(GameNode* parent);
+void expansion(GameNode* parent);

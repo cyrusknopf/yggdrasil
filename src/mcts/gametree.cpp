@@ -7,7 +7,6 @@
 #include <random>
 #include <vector>
 
-#include "game/driver.h"
 #include "utils.h"
 
 void GameNode::addChild(GameNode* child) { children.push_back(child); }
@@ -38,11 +37,11 @@ GameNode* GameNode::getRandomChild(int seed) {
     return children[index];
 }
 
-team& GameNode::getWhite() const { return white; }
+team GameNode::getWhite() const { return white; }
 
 void GameNode::setWhite(team& boards) { white = boards; }
 
-team& GameNode::getBlack() const { return black; }
+team GameNode::getBlack() const { return black; }
 
 void GameNode::setBlack(team& boards) { black = boards; }
 
@@ -64,17 +63,16 @@ double GameNode::evaluate(double constantOfInquisitiveness) {
            constantOfInquisitiveness * sqrt(log(parent->visits) / visits);
 }
 
-GameNode initialiseTree(team& white, team& black) {
-    GameNode root = GameNode(nullptr, 0, white, black, true);
-    return root;
+GameNode* initialiseTree(team& white, team& black) {
+    return new GameNode(nullptr, 0, white, black, true);
 }
 
 GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
-    assert(oldRoot->getParent() != nullptr);
+    assert(oldRoot->getParent() == nullptr);
     std::vector<GameNode*> rootChildren = oldRoot->getChildren();
     assert(rootChildren.size() != 0);
     // Delete all children that are not the new root
-    for (auto& child : rootChildren) {
+    for (auto child : rootChildren) {
         if (child != newRoot) {
             delete child;
         }

@@ -1,18 +1,16 @@
 #include "mcts/expansion.h"
 
-#include <__iterator/bounded_iter.h>
+#include <assert.h>
 
-#include <iostream>
 #include <utility>
 #include <vector>
 
-#include "game/driver.h"
 #include "game/moves.h"
 #include "mcts/gametree.h"
 #include "mcts/rollout.h"
 #include "utils.h"
 
-GameNode* expansion(GameNode* parent) {
+void expansion(GameNode* parent) {
     team white = parent->getWhite();
     team black = parent->getBlack();
 
@@ -21,22 +19,15 @@ GameNode* expansion(GameNode* parent) {
             pseudoLegalFromIndex(i, white, black, parent->getTurn());
 
         for (auto& move : moves) {
+            assert(move != 0);
+
             std::pair<team, team> newBoards =
                 makeSimulatedMove(white, black, move, i, parent->getTurn());
-
-            std::cout << "in expansion" << std::endl;
-            std::cout << gameStateToString(newBoards.first, newBoards.second);
 
             GameNode* thisChild =
                 new GameNode(parent, move, newBoards.first, newBoards.second,
                              !parent->getTurn());
-
-            std::cout << "child in func" << std::endl;
-            std::cout << gameStateToString(thisChild->getWhite(),
-                                           thisChild->getBlack());
-
-            return thisChild;
+            parent->addChild(thisChild);
         }
     }
-    return nullptr;
 }

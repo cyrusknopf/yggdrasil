@@ -12,17 +12,8 @@
  * @param [symbol] symbol to use as representation at each location
  * @return updated string representation of the board
  */
-std::string addPieceToStringBoard(std::string &board, bitboard pieceBitboard,
-                                  const std::string &symbol);
-
-/*
- * Given the two team arrays, creates the string representation of the board
- *
- * @param [whitePieces] white pieces bitboard array
- * @param [blackPieces] black pieces bitboard array
- * @return string representation of the game
- */
-std::string gameStateToString(team &whitePieces, team &blackPieces);
+std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
+                                  const std::string& symbol);
 
 /*
  * Takes input from user via cin, expecting a coordinate on a chess board. If
@@ -36,8 +27,8 @@ std::optional<bitboard> readSquare();
 /*
  * Contains logic for accepting from and to locations for a move
  */
-std::pair<bitboard, bitboard> takeToAndFrom(team &white, team &black,
-                                            std::string &message);
+std::pair<bitboard, bitboard> takeToAndFrom(team& white, team& black,
+                                            std::string& message);
 
 void gameLoop();
 

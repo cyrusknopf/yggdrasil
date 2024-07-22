@@ -30,9 +30,9 @@ TEST(simulate, whiteWin) {
     team white = {1, 0, 0, 0, 0, 3};
     team black = {8, 0, 0, 0, 0, 0};
 
-    GameNode root = initialiseTree(white, black);
+    GameNode* root = initialiseTree(white, black);
 
-    int res = simulate(&root, true);
+    int res = simulate(root, true);
 
     ASSERT_EQ(1, res);
 }
@@ -41,9 +41,9 @@ TEST(simulate, blackWin) {
     team black = {1, 0, 0, 0, 0, 3};
     team white = {8, 0, 0, 0, 0, 0};
 
-    GameNode root = initialiseTree(white, black);
+    GameNode* root = initialiseTree(white, black);
 
-    int res = simulate(&root, true);
+    int res = simulate(root, true);
 
     ASSERT_EQ(-1, res);
 }

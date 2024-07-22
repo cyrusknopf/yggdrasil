@@ -7,7 +7,6 @@
 #include <random>
 #include <utility>
 
-#include "game/driver.h"
 #include "game/moves.h"
 #include "utils.h"
 
@@ -31,6 +30,7 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
                                         int index, bool turn) {
     team own;
     team opp;
+
     if (turn) {
         own = white;
         opp = black;
@@ -38,8 +38,6 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         own = black;
         opp = white;
     }
-    std::cout << "in simul ove" << std::endl;
-    std::cout << gameStateToString(own, opp);
 
     // Get the square which the moving piece moves to
     // XXX this is sometimes 0 for some reason

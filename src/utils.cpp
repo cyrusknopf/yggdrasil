@@ -121,7 +121,7 @@ std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
     return board;
 }
 
-std::string gameStateToString(team& whitePieces, team& blackPieces) {
+std::string gameStateToString(team whitePieces, team blackPieces) {
     std::string board;
 
     for (int rank = 8; rank > 0; rank--) {

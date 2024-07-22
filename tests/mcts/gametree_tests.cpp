@@ -129,3 +129,16 @@ TEST(removeChild, siblings) {
     ASSERT_EQ(nullptr, child1.getParent());
     ASSERT_EQ(&parent, child2.getParent());
 }
+
+TEST(changeRoot, onlyChild) {
+    team t;
+    GameNode* root = new GameNode(nullptr, 0, t, t, true);
+    GameNode* child = new GameNode(root, 1, t, t, false);
+
+    root->addChild(child);
+
+    GameNode* newRoot = changeRoot(root, child);
+
+    ASSERT_EQ(child, newRoot);
+    ASSERT_EQ(nullptr, newRoot->getParent());
+}
