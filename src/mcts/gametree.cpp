@@ -1,7 +1,6 @@
 #include "mcts/gametree.h"
 
 #include <cassert>
-
 #include <cmath>
 #include <iostream>
 #include <random>
@@ -80,11 +79,12 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
     assert(oldRoot->getParent() == nullptr);
     std::vector<GameNode*> rootChildren = oldRoot->getChildren();
     assert(!rootChildren.empty());
-    // Delete all children that are not the new root
-    for (auto child : rootChildren) {
-        if (child != newRoot) {
-            delete child;
-        }
+    // Remove the child which is the new root
+    for (auto it = rootChildren.begin(); it != rootChildren.end();) {
+        if (*it == newRoot)
+            it = rootChildren.erase(it);
+        else
+            ++it;
     }
     delete oldRoot;
     newRoot->setParent(nullptr);
@@ -99,6 +99,7 @@ GameNode* updateRootOnMove(bitboard move, GameNode* currentRoot) {
         }
     }
     assert(1 == 2 && "Child not found");
+    return nullptr;
 }
 
 void GameNode::printGameNode(int indent) const {

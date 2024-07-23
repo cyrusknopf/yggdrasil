@@ -29,7 +29,7 @@ class GameNode {
           turn(turn){};
 
     ~GameNode() {
-        if (!children.empty()) {
+        if (children.size() != 0) {
             for (GameNode* child : children) {
                 delete child;
             }

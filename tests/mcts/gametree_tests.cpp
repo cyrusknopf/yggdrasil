@@ -3,7 +3,11 @@
 #include <cstdlib>
 #include <vector>
 
+#include "game/chess.h"
+#include "mcts/expansion.h"
 #include "mcts/gametree.h"
+#include "mcts/rollout.h"
+#include "utils.h"
 
 TEST(getChildren, onlyChild) {
     team t;
@@ -127,8 +131,48 @@ TEST(changeRoot, onlyChild) {
 
     GameNode* child = root->addChild(root, 1, t, t);
 
+    auto children = root->getChildren();
+
     GameNode* newRoot = changeRoot(root, child);
 
     ASSERT_EQ(child, newRoot);
     ASSERT_EQ(nullptr, newRoot->getParent());
+}
+
+TEST(updateRootOnMove, whiteSinglePawnPush) {
+    bitboard pawn = 0x0000000000000001;
+    team white = {pawn, 0, 0, 0, 0, 0};
+    team black = {0x08000000000000000, 0, 0, 0, 0, 0};
+
+    GameNode* root = initialiseTree(white, black);
+
+    expansion(root);
+
+    // Should have one child after expansion (single pawn push)
+    ASSERT_EQ(1, root->getChildren().size());
+
+    GameNode* child = root->getChildren().at(0);
+
+    GameNode* newRoot = updateRootOnMove(slideNorth(pawn), root);
+
+    ASSERT_EQ(child, newRoot);
+}
+
+TEST(updateRootOnMove, whiteDoublePawnPush) {
+    bitboard pawn = 0x000000000000100;
+    team white = {pawn, 0, 0, 0, 0, 0};
+    team black = {0x08000000000000000, 0, 0, 0, 0, 0};
+
+    GameNode* root = initialiseTree(white, black);
+
+    expansion(root);
+
+    // Should have one child after expansion (single pawn push)
+    ASSERT_EQ(2, root->getChildren().size());
+
+    GameNode* child = root->getChildren().at(1);
+
+    GameNode* newRoot = updateRootOnMove(slideNorth(slideNorth(pawn)), root);
+
+    ASSERT_EQ(child, newRoot);
 }
