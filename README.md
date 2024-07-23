@@ -12,3 +12,5 @@ Priortising MCTS over en passant and castling
 4. `cd build/`
 5. `cmake -Dtest=OFF -Dsimul=OFF..;make`
 6. `./driver`
+
+> Developed on Apple Silicon. For problems running on macOS set the environment variable `MallocNanoZone` to `0`

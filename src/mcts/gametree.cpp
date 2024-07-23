@@ -1,6 +1,6 @@
 #include "mcts/gametree.h"
 
-#include <assert.h>
+#include <cassert>
 
 #include <cmath>
 #include <iostream>
@@ -79,7 +79,7 @@ GameNode* initialiseTree(team& white, team& black) {
 GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
     assert(oldRoot->getParent() == nullptr);
     std::vector<GameNode*> rootChildren = oldRoot->getChildren();
-    assert(rootChildren.size() != 0);
+    assert(!rootChildren.empty());
     // Delete all children that are not the new root
     for (auto child : rootChildren) {
         if (child != newRoot) {
