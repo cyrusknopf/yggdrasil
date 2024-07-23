@@ -5,7 +5,7 @@
 
 TEST(selectRandomLeaf, orphan) {
     int seed = 1;
-    team t;
+    team t = {0, 0, 0, 0, 0, 0};
 
     GameNode* root = initialiseTree(t, t);
 
@@ -16,7 +16,7 @@ TEST(selectRandomLeaf, orphan) {
 
 TEST(selectRandomLeaf, onlyChild) {
     int seed = 1;
-    team t;
+    team t = {0, 0, 0, 0, 0, 0};
 
     GameNode* parent = initialiseTree(t, t);
 

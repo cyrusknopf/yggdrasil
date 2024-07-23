@@ -15,6 +15,7 @@
 
 #include "game/chess.h"
 #include "game/moves.h"
+#include "mcts/expansion.h"
 #include "mcts/gametree.h"
 #include "utils.h"
 
@@ -163,6 +164,10 @@ void gameLoop() {
 
     // MCTS setup
     GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
+    // Add all moves for white to the tree
+    expansion(root);
+    // Keep track of last move
+    bitboard lastMove = 0;
 
     while (!gameOver) {
         // User turn
@@ -172,6 +177,7 @@ void gameLoop() {
                 takeMove(whiteBitboards, blackBitboards, turn, message);
 
             bitboard movingBoard = std::get<0>(movingPiece);
+            lastMove = movingBoard;
             int movingIdx = std::get<1>(movingPiece);
             bitboard movingTo = std::get<2>(movingPiece);
 
@@ -184,6 +190,8 @@ void gameLoop() {
         }
         // Agent turn
         else {
+            root = updateRootOnMove(lastMove, root);
+            root->printGameNode();
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);

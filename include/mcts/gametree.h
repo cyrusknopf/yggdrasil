@@ -19,8 +19,8 @@ class GameNode {
     GameNode(GameNode* parent, bitboard move, team& white, team& black,
              bool turn)
         : parent(parent),
-          // children(),
-          children(std::vector<GameNode*>{}),
+          children(),
+          // children(std::vector<GameNode*>{}),
           move(move),
           white(white),
           black(black),
@@ -50,6 +50,8 @@ class GameNode {
 
     GameNode* getRandomChild(int seed);
 
+    bitboard getMove() const;
+
     team getWhite() const;
 
     void setWhite(team& boards);
@@ -74,6 +76,8 @@ class GameNode {
 };
 
 GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot);
+
+GameNode* updateRootOnMove(bitboard move, GameNode* currentRoot);
 
 GameNode* initialiseTree(team& white, team& black);
 

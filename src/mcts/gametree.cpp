@@ -20,6 +20,7 @@ GameNode* GameNode::addChild(GameNode* parent, bitboard move, team& white,
 void GameNode::removeChild(GameNode* newOrphan) {
     for (auto it = children.begin(); it != children.end(); it++) {
         if (*it == newOrphan) {
+            // delete *it;
             children.erase(it);
             break;
         }
@@ -42,6 +43,8 @@ GameNode* GameNode::getRandomChild(int seed) {
 
     return children[index];
 }
+
+bitboard GameNode::getMove() const { return move; }
 
 team GameNode::getWhite() const { return white; }
 
@@ -86,6 +89,16 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
     delete oldRoot;
     newRoot->setParent(nullptr);
     return newRoot;
+}
+
+GameNode* updateRootOnMove(bitboard move, GameNode* currentRoot) {
+    assert(currentRoot->getParent() == nullptr);
+    for (GameNode* child : currentRoot->getChildren()) {
+        if (child->getMove() == move) {
+            return changeRoot(currentRoot, child);
+        }
+    }
+    assert(1 == 2 && "Child not found");
 }
 
 void GameNode::printGameNode(int indent) const {
