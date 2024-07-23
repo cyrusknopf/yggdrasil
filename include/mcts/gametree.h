@@ -60,6 +60,8 @@ class GameNode {
 
     void setBlack(team& boards);
 
+    int getVisits();
+
     void incrVisits();
 
     int getScore() const;
@@ -80,5 +82,7 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot);
 GameNode* updateRootOnMove(bitboard move, GameNode* currentRoot);
 
 GameNode* initialiseTree(team& white, team& black);
+
+GameNode* getMostVisitedChild(GameNode* root);
 
 #endif  // !_GAMETREE_H_

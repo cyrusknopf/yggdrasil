@@ -38,6 +38,7 @@ set(SRC_SOURCES
     src/mcts/selection.cpp
     src/mcts/rollout.cpp
     src/mcts/expansion.cpp
+    src/mcts/backprop.cpp
 
     src/mcts/random_simul.cpp
 )

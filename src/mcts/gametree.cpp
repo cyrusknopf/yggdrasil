@@ -53,6 +53,8 @@ team GameNode::getBlack() const { return black; }
 
 void GameNode::setBlack(team& boards) { black = boards; }
 
+int GameNode::getVisits() { return visits; }
+
 void GameNode::incrVisits() { visits++; }
 
 int GameNode::getScore() const { return score; }
@@ -86,6 +88,8 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
         else
             ++it;
     }
+    // All children (other than the new root - since it just got removed) are
+    // then deleted in the call to the destructor
     delete oldRoot;
     newRoot->setParent(nullptr);
     return newRoot;
@@ -119,4 +123,19 @@ void GameNode::printGameNode(int indent) const {
     for (GameNode* child : children) {
         child->printGameNode(indent + 1);
     }
+}
+
+GameNode* getMostVisitedChild(GameNode* root) {
+    int mostVisits = 0;
+    GameNode* mostVisitedChild = nullptr;
+
+    for (GameNode* child : root->getChildren()) {
+        if (child->getVisits() > mostVisits) {
+            mostVisits = child->getVisits();
+            mostVisitedChild = child;
+        }
+    }
+
+    assert(mostVisitedChild != nullptr);
+    return mostVisitedChild;
 }

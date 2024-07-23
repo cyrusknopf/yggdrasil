@@ -7,6 +7,7 @@
 #include <iostream>
 #include <optional>
 #include <ostream>
+#include <random>
 #include <regex>
 #include <string>
 #include <tuple>
@@ -15,8 +16,11 @@
 
 #include "game/chess.h"
 #include "game/moves.h"
+#include "mcts/backprop.h"
 #include "mcts/expansion.h"
 #include "mcts/gametree.h"
+#include "mcts/rollout.h"
+#include "mcts/selection.h"
 #include "utils.h"
 
 std::optional<bitboard> readSquare() {
@@ -191,7 +195,18 @@ void gameLoop() {
         // Agent turn
         else {
             root = updateRootOnMove(lastMove, root);
-            root->printGameNode();
+
+            time_t startTime = time(NULL);
+            while (time(NULL) < startTime + 10) {
+                GameNode* L = heursiticSelectLeaf(root);
+                expansion(L);
+                std::random_device rd;
+                GameNode* C = L->getRandomChild(rd());
+                int res = simulate(C, true);
+                backpropagate(C, res);
+            }
+            GameNode* newState = getMostVisitedChild(root);
+            root = updateRootOnMove(newState->getMove(), root);
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);
