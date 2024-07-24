@@ -369,3 +369,5 @@ std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
             return std::vector<bitboard>{};
     }
 }
+
+bool inCheck(bitboard movedKing, team& own, team& opp, bool turn) {}

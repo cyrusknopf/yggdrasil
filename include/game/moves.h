@@ -1,5 +1,6 @@
-#include "utils.h"
 #include <vector>
+
+#include "utils.h"
 
 /*
  * Gets the pseudolegal moves for a bitboard of - possibly multiple - pawns from
@@ -69,8 +70,9 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
  * @param [state] single bitboard of queen pieces
  * @return vector of bitboards, each with a single unique pseudolegal move
  */
-std::vector<bitboard>
-queenPseudoLegalMoves(bitboard whiteState, bitboard blackState, bitboard state);
+std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
+                                            bitboard blackState,
+                                            bitboard state);
 
 /*
  * Gets the pseudolegal moves for a bitboard of a single king from a king
@@ -94,5 +96,7 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
  * @param [black] reference to array of black piece bitboards
  * @param [colour] colour of piece to get moves of, white=true
  */
-std::vector<bitboard> pseudoLegalFromIndex(int idx, team &white, team &black,
+std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
                                            bool colour);
+
+bool inCheck(team& own, team& opp);
