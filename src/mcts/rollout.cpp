@@ -42,6 +42,11 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
     // Get the square which the moving piece moves to
     // XXX this is sometimes 0 for some reason
     bitboard destinationSquare = ~(~move | own.at(index));
+    if (destinationSquare == 0) {
+        std::cout << "move: " << move << std::endl;
+        std::cout << "own.at(" << index << "): " << own.at(index) << std::endl;
+        std::cout << "move: " << move << std::endl;
+    }
     // Determine if the enemy is on the moved to piece i.e. there is a capture
     std::pair<bitboard, int> captureInfo = findPiece(destinationSquare, opp);
     int capturedIdx = captureInfo.second;

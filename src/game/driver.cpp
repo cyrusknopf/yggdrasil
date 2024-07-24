@@ -195,10 +195,9 @@ void gameLoop() {
         // Agent turn
         else {
             root = updateRootOnMove(lastMove, root);
-            std::cout << "Root updated" << std::endl;
 
             time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 1) {
+            while (time(NULL) < startTime + 10) {
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
@@ -207,8 +206,9 @@ void gameLoop() {
                 backpropagate(C, res);
             }
             GameNode* newState = getMostVisitedChild(root);
+            whiteBitboards = newState->getWhite();
+            blackBitboards = newState->getBlack();
             root = updateRootOnMove(newState->getMove(), root);
-            std::cout << "One iter" << std::endl;
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);
