@@ -57,15 +57,23 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         return std::make_pair(opp, own);
 }
 
-int simulate(const GameNode* node, bool quiet) {
+int simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();
     bool turn = node->getTurn();
     while (true) {
         // Black wins
-        if (white.at(5) == 0) return -1;
+        if (white.at(5) == 0) {
+            int score = -1;
+            node->alterScore(score);
+            return score;
+        }
         // White wins
-        if (black.at(5) == 0) return 1;
+        if (black.at(5) == 0) {
+            int score = 1;
+            node->alterScore(score);
+            return score;
+        }
 
         std::optional<bitboard> randomMove = std::nullopt;
         int randomPieceIndex;

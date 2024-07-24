@@ -195,6 +195,7 @@ void gameLoop() {
         // Agent turn
         else {
             root = updateRootOnMove(lastMove, root);
+            std::cout << "Root updated" << std::endl;
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 1) {

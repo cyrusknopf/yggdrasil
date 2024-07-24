@@ -39,15 +39,10 @@ void GameNode::setChildren(std::vector<GameNode*> newChildren) {
 
 GameNode* GameNode::getRandomChild(int seed) {
     std::vector<GameNode*> children = getChildren();
-    int sz = children.size();
-    std::random_device rd;
-    int index = rd() % sz;
 
-    /*
     std::mt19937 rng(seed);
     std::uniform_int_distribution<std::size_t> dist(0, children.size() - 1);
     std::size_t index = dist(rng);
-    */
 
     return children[index];
 }

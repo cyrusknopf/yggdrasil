@@ -24,6 +24,7 @@ set(TEST_SOURCES
     tests/mcts/selection_tests.cpp
     tests/mcts/rollout_tests.cpp
     tests/mcts/expansion_tests.cpp
+    tests/mcts/backprop_tests.cpp
 )
 
 # Gather all source files
