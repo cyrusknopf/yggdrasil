@@ -197,7 +197,7 @@ void gameLoop() {
             root = updateRootOnMove(lastMove, root);
 
             time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 10) {
+            while (time(NULL) < startTime + 1) {
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
@@ -207,6 +207,7 @@ void gameLoop() {
             }
             GameNode* newState = getMostVisitedChild(root);
             root = updateRootOnMove(newState->getMove(), root);
+            std::cout << "One iter" << std::endl;
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);

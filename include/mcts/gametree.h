@@ -48,6 +48,8 @@ class GameNode {
 
     std::vector<GameNode*>& getChildren();
 
+    void setChildren(std::vector<GameNode*> newChildren);
+
     GameNode* getRandomChild(int seed);
 
     bitboard getMove() const;

@@ -33,12 +33,21 @@ void GameNode::setParent(GameNode* newParent) { parent = newParent; }
 
 std::vector<GameNode*>& GameNode::getChildren() { return children; }
 
+void GameNode::setChildren(std::vector<GameNode*> newChildren) {
+    children = newChildren;
+}
+
 GameNode* GameNode::getRandomChild(int seed) {
     std::vector<GameNode*> children = getChildren();
+    int sz = children.size();
+    std::random_device rd;
+    int index = rd() % sz;
 
+    /*
     std::mt19937 rng(seed);
     std::uniform_int_distribution<std::size_t> dist(0, children.size() - 1);
     std::size_t index = dist(rng);
+    */
 
     return children[index];
 }
@@ -90,6 +99,7 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
     }
     // All children (other than the new root - since it just got removed) are
     // then deleted in the call to the destructor
+    oldRoot->setChildren(rootChildren);
     delete oldRoot;
     newRoot->setParent(nullptr);
     return newRoot;
