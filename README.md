@@ -1,9 +1,10 @@
 # Yggdrasil
-Bitboard chess engine written in C++
+Bitboard chess engine with Monte Carlo Tree Search, written in C++
+> "Yggdrasil: an immense and central tree in Norse mythology; it is the tree of life, encompassing all nine worlds"
 
-Currently impelemting Monte Carlo Tree Search
+## Demo
+![Demo showing a basic turn](demo.gif)
 
-Priortising MCTS over en passant and castling
 
 ## Running the engine
 1. Clone the repo
