@@ -40,21 +40,19 @@ int findMinIndex(std::vector<double> scores) {
 }
 
 GameNode* heursiticSelectLeaf(GameNode* node) {
-    const std::vector<GameNode*>& children = node->getChildren();
-    const bool turn = node->getTurn();
-
     // Find a node whose has no children i.e. a leaf
-    while (children.size() != 0) {
+    while (node->getChildren().size() != 0) {
+        const std::vector<GameNode*>& children = node->getChildren();
         std::vector<double> evals(children.size());
         // O(n)
         std::transform(children.begin(), children.end(), evals.begin(),
                        [](GameNode* n) { return n->evaluate(1.414); });
         int bestChildIndex;
         // O(n)
-        if (turn)
-            bestChildIndex = findMaxIndex(evals);
-        else
-            bestChildIndex = findMinIndex(evals);
+        // if (node->getTurn())
+        bestChildIndex = findMaxIndex(evals);
+        // else
+        // bestChildIndex = findMinIndex(evals);
         GameNode* bestChild = children[bestChildIndex];
         return heursiticSelectLeaf(bestChild);
     }

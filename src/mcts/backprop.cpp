@@ -1,10 +1,11 @@
 #include "mcts/backprop.h"
 
-void backpropagate(GameNode* node, int value) {
+void backpropagate(GameNode* node, bool winner) {
     while (node->getParent() != nullptr) {
         node->getParent()->incrVisits();
-        node->getParent()->alterScore(value);
-        return backpropagate(node->getParent(), value);
+        if (node->getParent()->getTurn() == winner)
+            node->getParent()->incrWins();
+        return backpropagate(node->getParent(), winner);
     }
     return;
 }

@@ -215,6 +215,8 @@ void gameLoop() {
                 backpropagate(C, res);
             }
             GameNode* newState = getMostVisitedChild(root);
+            // root->printGameNode();
+
             whiteBitboards = newState->getWhite();
             blackBitboards = newState->getBlack();
             root = updateRootOnMove(newState->getMove(), root);

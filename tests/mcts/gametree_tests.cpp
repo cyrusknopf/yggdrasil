@@ -58,26 +58,15 @@ TEST(getRandomChild, threeChildren) {
     ASSERT_EQ(child2, randomKid);
 }
 
-TEST(alterScore, pos) {
+TEST(incrWins, pos) {
     team t;
     GameNode* node = initialiseTree(t, t);
 
-    ASSERT_EQ(0, node->getScore());
+    ASSERT_EQ(0, node->getWins());
 
-    node->alterScore(1);
+    node->incrWins();
 
-    ASSERT_EQ(1, node->getScore());
-}
-
-TEST(alterScore, neg) {
-    team t;
-    GameNode* node = initialiseTree(t, t);
-
-    ASSERT_EQ(0, node->getScore());
-
-    node->alterScore(-1);
-
-    ASSERT_EQ(-1, node->getScore());
+    ASSERT_EQ(1, node->getWins());
 }
 
 TEST(evaluate, oneToOne) {
@@ -86,7 +75,7 @@ TEST(evaluate, oneToOne) {
 
     GameNode* child = parent->addChild(parent, 0, t, t);
 
-    child->alterScore(1);
+    child->incrWins();
 
     double value = child->evaluate(0);
     ASSERT_EQ(1, value);

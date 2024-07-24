@@ -11,7 +11,7 @@ class GameNode {
     bitboard move;
     team white;
     team black;
-    int score;
+    int wins;
     int visits;
     bool turn;
 
@@ -24,7 +24,7 @@ class GameNode {
           move(move),
           white(white),
           black(black),
-          score(0),
+          wins(0),
           visits(1),
           turn(turn){};
 
@@ -66,9 +66,9 @@ class GameNode {
 
     void incrVisits();
 
-    int getScore() const;
+    int getWins() const;
 
-    void alterScore(int amnt);
+    void incrWins();
 
     bool getTurn() const;
 

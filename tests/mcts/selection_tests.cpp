@@ -42,47 +42,30 @@ TEST(selectRandomLeaf, grandParent) {
     ASSERT_EQ(grandChild, leaf);
 }
 
-TEST(heuristicSelectLeaf, oneGenerationWhite) {
+TEST(heuristicSelectLeaf, oneGeneration) {
     team t;
     GameNode* parent = initialiseTree(t, t);
 
     GameNode* child1 = parent->addChild(parent, 0, t, t);
-    child1->alterScore(-100);
+    child1->incrWins();
 
     GameNode* child2 = parent->addChild(parent, 0, t, t);
-    child2->alterScore(-99);
+    child2->incrWins();
+    child2->incrWins();
 
     GameNode* child3 = parent->addChild(parent, 0, t, t);
-    child3->alterScore(50);
+    child3->incrWins();
+    child3->incrWins();
+    child3->incrWins();
 
     GameNode* child4 = parent->addChild(parent, 0, t, t);
-    child4->alterScore(100);
+    child4->incrWins();
+    child4->incrWins();
+    child4->incrWins();
+    child4->incrWins();
 
     GameNode* bestChild = heursiticSelectLeaf(parent);
 
     // Should be the child with the highest value
     ASSERT_EQ(bestChild, child4);
-}
-
-TEST(heuristicSelectLeaf, oneGenerationBlack) {
-    team t;
-    // Use new here instead of initialiseTree since we need to force black turn
-    GameNode* parent = new GameNode(nullptr, 0, t, t, false);
-
-    GameNode* child1 = parent->addChild(parent, 0, t, t);
-    child1->alterScore(-100);
-
-    GameNode* child2 = parent->addChild(parent, 0, t, t);
-    child2->alterScore(-99);
-
-    GameNode* child3 = parent->addChild(parent, 0, t, t);
-    child3->alterScore(50);
-
-    GameNode* child4 = parent->addChild(parent, 0, t, t);
-    child4->alterScore(100);
-
-    GameNode* bestChild = heursiticSelectLeaf(parent);
-
-    // Should be the child with the lowest value
-    ASSERT_EQ(bestChild, child1);
 }

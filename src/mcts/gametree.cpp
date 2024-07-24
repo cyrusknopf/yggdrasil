@@ -61,9 +61,9 @@ int GameNode::getVisits() { return visits; }
 
 void GameNode::incrVisits() { visits++; }
 
-int GameNode::getScore() const { return score; }
+int GameNode::getWins() const { return wins; }
 
-void GameNode::alterScore(int amnt) { score += amnt; }
+void GameNode::incrWins() { wins++; }
 
 bool GameNode::getTurn() const { return turn; }
 
@@ -73,7 +73,7 @@ double GameNode::evaluate(double constantOfInquisitiveness) {
     assert(parent != nullptr && "Evaluating node without parent");
     assert(parent->visits != 0 && "Parent never visited");
     assert(visits != 0 && "Node never visited");
-    return ((double)score / visits) +
+    return ((double)wins / visits) +
            constantOfInquisitiveness * sqrt(log(parent->visits) / visits);
 }
 
@@ -118,11 +118,11 @@ void GameNode::printGameNode(int indent) const {
     }
 
     // Print node information
-    std::cout << "Move: " << move << ", Score: " << score
+    std::cout << "Move: " << move << ", wins: " << wins
               << ", Visits: " << visits
               << ", Turn: " << (turn ? "White" : "Black") << std::endl;
 
-    std::cout << gameStateToString(white, black) << std::endl;
+    // std::cout << gameStateToString(white, black) << std::endl;
 
     // Recursively print children
     for (GameNode* child : children) {
