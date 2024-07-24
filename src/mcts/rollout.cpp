@@ -40,7 +40,6 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
     }
 
     // Get the square which the moving piece moves to
-    // XXX this is sometimes 0 for some reason
     bitboard destinationSquare = ~(~move | own.at(index));
     if (destinationSquare == 0) {
         std::cout << "move: " << move << std::endl;

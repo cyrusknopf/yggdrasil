@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29.4)
+cmake_minimum_required(VERSION 3.22.1)
 
 project(yggdrasil)
 
@@ -64,4 +64,5 @@ else()
 list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
 # Add the executable for driver.cpp and link necessary source files
 add_executable(driver ${SRC_SOURCES})
+
 endif()

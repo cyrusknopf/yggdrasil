@@ -1,3 +1,5 @@
+#include <optional>
+
 #include "mcts/gametree.h"
 
 /*
