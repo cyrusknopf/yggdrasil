@@ -191,18 +191,27 @@ void gameLoop() {
 
             whiteBitboards = newBoards.first;
             blackBitboards = newBoards.second;
+            // Update UI for white's move
+            clearTerm();
+            std::cout << gameStateToString(whiteBitboards, blackBitboards)
+                      << std::endl;
         }
         // Agent turn
         else {
+            int gamesSimulated = 0;
+            std::cout << "Agent thinking..." << std::endl;
             root = updateRootOnMove(lastMove, root);
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
+                std::cout << "\rSimulated games played: " << gamesSimulated
+                          << std::flush;
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
                 GameNode* C = L->getRandomChild(rd());
                 int res = simulate(C, true);
+                gamesSimulated++;
                 backpropagate(C, res);
             }
             GameNode* newState = getMostVisitedChild(root);
