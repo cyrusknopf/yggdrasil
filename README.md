@@ -3,7 +3,7 @@ Bitboard chess engine with Monte Carlo Tree Search, written in C++
 > "Yggdrasil: an immense and central tree in Norse mythology; it is the tree of life, encompassing all nine worlds"
 
 ## Demo
-![Demo showing a basic turn](demo.gif)
+<img src="demo.gif" alt="demo turn" width="200"/>
 
 
 ## Running the engine
