@@ -76,11 +76,11 @@ TEST(pseudoLegalFromIndex, pawn_e4) {
     ASSERT_EQ(idxMoves.at(0), moves.at(0));
 }
 
-TEST(isOwnKingInCheck, knightCheck) {
+TEST(isOwnKingInCheck, horseCheck) {
     bitboard ownKing = coordinateToState("e1");
-    bitboard attackingKnight = coordinateToState("d3");
+    bitboard attackingHorse = coordinateToState("d3");
     team white = {0, 0, 0, 0, 0, ownKing};
-    team black = {0, attackingKnight, 0, 0, 0, 0};
+    team black = {0, attackingHorse, 0, 0, 0, 0};
 
     ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
 }

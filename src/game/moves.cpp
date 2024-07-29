@@ -1,6 +1,6 @@
 #include "game/moves.h"
 
-#include <iostream>
+#include <array>
 #include <vector>
 
 #include "game/chess.h"
@@ -413,5 +413,17 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
         // If there is not a piece blocking the sight of a bishop, then in check
         if ((between & (ownState | oppState)) == 0) return true;
     }
+
+    // Check horses
+    std::array<int, 4> horseShifts = {17, 15, 6, 10};
+    for (bitboard horse : getAllPieces(opp.at(2))) {
+        for (int shift : horseShifts) {
+            if ((king << shift & opp.at(2)) != 0) return true;
+        }
+        for (int shift : horseShifts) {
+            if ((king >> shift & opp.at(2)) != 0) return true;
+        }
+    }
+
     return false;
 }
