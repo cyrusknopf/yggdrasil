@@ -411,15 +411,10 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
         // If getBetween != 0 and they are not same rank and file, they must be
         // on diagonal or antidiagonal
         bitboard between = getBetween(king, bishop);
-        std::cout << "between:" << between << std::endl;
-        std::cout << "king:" << getRank(king) << getFile(king) << std::endl;
-        std::cout << "bishop:" << getRank(bishop) << getFile(bishop)
-                  << std::endl;
         if (between == 0 || getRank(king) == getRank(bishop) ||
             getFile(king) == getFile(bishop))
             continue;
 
-        std::cout << "passed between check" << std::endl;
         // If there is not a piece blocking the sight of a bishop, then in check
         if ((between & (ownState | oppState)) == 0) return true;
     }
