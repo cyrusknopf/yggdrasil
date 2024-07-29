@@ -408,13 +408,8 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     // Check bishops
     for (bitboard& bishop : getAllPieces(opp.at(3))) {
         // Bishops require same diagonal or antidiagonal to capture
-        // If getBetween != 0 and they are not same rank and file, they must be
-        // on diagonal or antidiagonal
         bitboard between = getBetween(king, bishop);
-        if (between == 0 || getRank(king) == getRank(bishop) ||
-            getFile(king) == getFile(bishop))
-            continue;
-
+        if (!isDiagonal(bishop, king)) continue;
         // If there is not a piece blocking the sight of a bishop, then in check
         if ((between & (ownState | oppState)) == 0) return true;
     }

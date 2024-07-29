@@ -131,3 +131,29 @@ TEST(isOwnKingInCheck, bishopCheck) {
     team black = {0, 0, 0, attackingBishop, 0, 0};
     ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
 }
+
+TEST(isOwnKingInCheck, bishopCheckBlockedOwn) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard ownPawn = coordinateToState("c3");
+    bitboard attackingBishop = coordinateToState("b4");
+    team white = {ownPawn, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, attackingBishop, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, bishopCheckBlockedOpp) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard oppHorse = coordinateToState("c3");
+    bitboard attackingBishop = coordinateToState("b4");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, oppHorse, 0, attackingBishop, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, bishopNextSquare) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingBishop = coordinateToState("d2");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, attackingBishop, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}

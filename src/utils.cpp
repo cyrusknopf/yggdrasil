@@ -63,6 +63,14 @@ bitboard getBetween(bitboard board1, bitboard board2) {
     return line & btwn;   /* return the bits on that line in-between */
 }
 
+bool isDiagonal(bitboard sq1, bitboard sq2) {
+    assert(__builtin_popcountll(sq1) == 1);
+    assert(__builtin_popcountll(sq2) == 1);
+    int rankDiff = getRank(sq1) - getRank(sq2);
+    int fileDiff = getFile(sq1) - getFile(sq2);
+    return (rankDiff == fileDiff) || (rankDiff == -fileDiff);
+}
+
 bitboard coordinateToState(const std::string& coord) {
     // Get rank and file to determine how many times we must shift
     int file = coord.at(0) - 'a';
