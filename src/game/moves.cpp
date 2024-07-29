@@ -377,7 +377,7 @@ diagonal OR same antidiagonal: getBetween returns 0. This means the
 evaluation of (inbetween & piece) will always result in 0 and therefore
 appropriately not return true, as no valid sightline from piece to king
 */
-bool isOwnKingInCheck(team& own, team& opp) {
+bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard ownState = 0;
     for (bitboard piece : own) {
         ownState |= piece;
@@ -397,8 +397,8 @@ bool isOwnKingInCheck(team& own, team& opp) {
     // Check castles
     for (bitboard& castle : getAllPieces(opp.at(2))) {
         // Castles require same rank or file to capture
-        if (getRank(king) == getRank(castle) ||
-            getFile(king) == getFile(castle))
+        if (getRank(king) != getRank(castle) &&
+            getFile(king) != getFile(castle))
             continue;
         // If there is not a piece blocking the sight of a castle, then in check
         if ((getBetween(king, castle) & (ownState | oppState)) == 0)
@@ -410,12 +410,18 @@ bool isOwnKingInCheck(team& own, team& opp) {
         // Bishops require same diagonal or antidiagonal to capture
         // If getBetween != 0 and they are not same rank and file, they must be
         // on diagonal or antidiagonal
-        if (getBetween(king, bishop) != 0 && getRank(king) != getRank(bishop) &&
-            getFile(king) != getFile(bishop))
+        bitboard between = getBetween(king, bishop);
+        std::cout << "between:" << between << std::endl;
+        std::cout << "king:" << getRank(king) << getFile(king) << std::endl;
+        std::cout << "bishop:" << getRank(bishop) << getFile(bishop)
+                  << std::endl;
+        if (between == 0 || getRank(king) == getRank(bishop) ||
+            getFile(king) == getFile(bishop))
             continue;
+
+        std::cout << "passed between check" << std::endl;
         // If there is not a piece blocking the sight of a bishop, then in check
-        if ((getBetween(king, bishop) & (ownState | oppState)) != 0)
-            return true;
+        if ((between & (ownState | oppState)) == 0) return true;
     }
     return false;
 }

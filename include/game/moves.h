@@ -99,4 +99,4 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
 std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
                                            bool colour);
 
-bool isOwnKingInCheck(team& own, team& opp);
+bool isOwnKingInCheck(team& own, team& opp, bool colour);

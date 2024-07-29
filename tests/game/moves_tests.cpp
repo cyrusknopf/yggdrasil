@@ -82,7 +82,7 @@ TEST(isOwnKingInCheck, knightCheck) {
     team white = {0, 0, 0, 0, 0, ownKing};
     team black = {0, attackingKnight, 0, 0, 0, 0};
 
-    ASSERT_EQ(true, isOwnKingInCheck(white, black));
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
 }
 
 TEST(isOwnKingInCheck, castleCheck) {
@@ -90,7 +90,7 @@ TEST(isOwnKingInCheck, castleCheck) {
     bitboard attackingCastle = coordinateToState("h1");
     team white = {0, 0, 0, 0, 0, ownKing};
     team black = {0, 0, attackingCastle, 0, 0, 0};
-    ASSERT_EQ(true, isOwnKingInCheck(white, black));
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
 }
 
 TEST(isOwnKingInCheck, castleCheckBlockedOwn) {
@@ -100,7 +100,7 @@ TEST(isOwnKingInCheck, castleCheckBlockedOwn) {
     bitboard attackingCastle = coordinateToState("h1");
     team white = {ownPawn, 0, 0, 0, 0, ownKing};
     team black = {0, 0, attackingCastle, 0, 0, 0};
-    ASSERT_EQ(false, isOwnKingInCheck(white, black));
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
 }
 
 TEST(isOwnKingInCheck, castleCheckBlockedOpp) {
@@ -110,7 +110,7 @@ TEST(isOwnKingInCheck, castleCheckBlockedOpp) {
     bitboard attackingCastle = coordinateToState("h1");
     team white = {0, 0, 0, 0, 0, ownKing};
     team black = {oppPawn, 0, attackingCastle, 0, 0, 0};
-    ASSERT_EQ(false, isOwnKingInCheck(white, black));
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
 }
 
 TEST(isOwnKingInCheck, castleCheckOneBlockedOneCheck) {
@@ -121,5 +121,13 @@ TEST(isOwnKingInCheck, castleCheckOneBlockedOneCheck) {
         coordinateToState("h1") | coordinateToState("e8");
     team white = {ownPawn, 0, 0, 0, 0, ownKing};
     team black = {0, 0, attackingCastles, 0, 0, 0};
-    ASSERT_EQ(true, isOwnKingInCheck(white, black));
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, bishopCheck) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingBishop = coordinateToState("b4");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, attackingBishop, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
 }
