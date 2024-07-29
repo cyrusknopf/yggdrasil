@@ -29,6 +29,8 @@ int getRank(bitboard state);
  */
 int getFile(bitboard state);
 
+bitboard getBetween(bitboard sq1, bitboard sq2);
+
 /*
  * Given a chess coordinate (e.g. a3) in string form, returns a bitboard with a
  * single piece at that coordinate

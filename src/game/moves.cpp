@@ -1,5 +1,6 @@
 #include "game/moves.h"
 
+#include <iostream>
 #include <vector>
 
 #include "game/chess.h"
@@ -370,4 +371,51 @@ std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
     }
 }
 
-bool inCheck(bitboard movedKing, team& own, team& opp, bool turn) {}
+/*
+n.b. if king and piece are not on: same file, same rank, same
+diagonal OR same antidiagonal: getBetween returns 0. This means the
+evaluation of (inbetween & piece) will always result in 0 and therefore
+appropriately not return true, as no valid sightline from piece to king
+*/
+bool isOwnKingInCheck(team& own, team& opp) {
+    bitboard ownState = 0;
+    for (bitboard piece : own) {
+        ownState |= piece;
+    }
+    bitboard oppState = 0;
+    for (bitboard piece : opp) {
+        oppState |= piece;
+    }
+    bitboard king = own.at(5);
+
+    // Check queens
+    for (bitboard& queen : getAllPieces(opp.at(4))) {
+        // If there is not a piece blocking the sight of a queen, then in check
+        if ((getBetween(king, queen) & (ownState | oppState)) == 0) return true;
+    }
+
+    // Check castles
+    for (bitboard& castle : getAllPieces(opp.at(2))) {
+        // Castles require same rank or file to capture
+        if (getRank(king) == getRank(castle) ||
+            getFile(king) == getFile(castle))
+            continue;
+        // If there is not a piece blocking the sight of a castle, then in check
+        if ((getBetween(king, castle) & (ownState | oppState)) == 0)
+            return true;
+    }
+
+    // Check bishops
+    for (bitboard& bishop : getAllPieces(opp.at(3))) {
+        // Bishops require same diagonal or antidiagonal to capture
+        // If getBetween != 0 and they are not same rank and file, they must be
+        // on diagonal or antidiagonal
+        if (getBetween(king, bishop) != 0 && getRank(king) != getRank(bishop) &&
+            getFile(king) != getFile(bishop))
+            continue;
+        // If there is not a piece blocking the sight of a bishop, then in check
+        if ((getBetween(king, bishop) & (ownState | oppState)) != 0)
+            return true;
+    }
+    return false;
+}

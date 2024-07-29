@@ -75,3 +75,51 @@ TEST(pseudoLegalFromIndex, pawn_e4) {
 
     ASSERT_EQ(idxMoves.at(0), moves.at(0));
 }
+
+TEST(isOwnKingInCheck, knightCheck) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingKnight = coordinateToState("d3");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, attackingKnight, 0, 0, 0, 0};
+
+    ASSERT_EQ(true, isOwnKingInCheck(white, black));
+}
+
+TEST(isOwnKingInCheck, castleCheck) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingCastle = coordinateToState("h1");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, attackingCastle, 0, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black));
+}
+
+TEST(isOwnKingInCheck, castleCheckBlockedOwn) {
+    bitboard ownKing = coordinateToState("e1");
+    // Pawn blocking attacking castle
+    bitboard ownPawn = coordinateToState("f1");
+    bitboard attackingCastle = coordinateToState("h1");
+    team white = {ownPawn, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, attackingCastle, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black));
+}
+
+TEST(isOwnKingInCheck, castleCheckBlockedOpp) {
+    bitboard ownKing = coordinateToState("e1");
+    // Pawn blocking attacking castle
+    bitboard oppPawn = coordinateToState("f1");
+    bitboard attackingCastle = coordinateToState("h1");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {oppPawn, 0, attackingCastle, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black));
+}
+
+TEST(isOwnKingInCheck, castleCheckOneBlockedOneCheck) {
+    bitboard ownKing = coordinateToState("e1");
+    // Pawn blocking attacking castle
+    bitboard ownPawn = coordinateToState("f1");
+    bitboard attackingCastles =
+        coordinateToState("h1") | coordinateToState("e8");
+    team white = {ownPawn, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, attackingCastles, 0, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black));
+}

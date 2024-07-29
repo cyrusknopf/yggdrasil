@@ -41,14 +41,34 @@ int getFile(bitboard state) {
     return 8 - exp;
 }
 
+// https://www.chessprogramming.org/Square_Attacked_By
+bitboard getBetween(bitboard board1, bitboard board2) {
+    const bitboard m1 = 0xFFFFFFFFFFFFFFFF;
+    const bitboard a2a7 = 0x0001010101010100;
+    const bitboard b2g7 = 0x0040201008040200;
+    const bitboard h1b7 = 0x0002040810204080;
+    // Get trainling zeros; analagous to the square index
+    const int sq1 = __builtin_ctzll(board1);
+    const int sq2 = __builtin_ctzll(board2);
+
+    bitboard btwn, line, rank, file;
+    btwn = (m1 << sq1) ^ (m1 << sq2);
+    file = (sq2 & 7) - (sq1 & 7);
+    rank = ((sq2 | 7) - sq1) >> 3;
+    line = ((file & 7) - 1) & a2a7;            /* a2a7 if same file */
+    line += 2 * (((rank & 7) - 1) >> 58);      /* b1g1 if same rank */
+    line += (((rank - file) & 15) - 1) & b2g7; /* b2g7 if same diagonal */
+    line += (((rank + file) & 15) - 1) & h1b7; /* h1b7 if same antidiag */
+    line *= btwn & -btwn; /* mul acts like shift by smaller square */
+    return line & btwn;   /* return the bits on that line in-between */
+}
+
 bitboard coordinateToState(const std::string& coord) {
     // Get rank and file to determine how many times we must shift
     int file = coord.at(0) - 'a';
     int rank = coord.at(1) - '1';
-
     // Start at h1 i.e. bottom right
     bitboard state = 1;
-
     // Shift the appropriate number of times left and up
     for (int j = 0; j < 7 - file; j++) {
         state = slideWest(state);
@@ -56,21 +76,8 @@ bitboard coordinateToState(const std::string& coord) {
     for (int i = 0; i < rank; i++) {
         state = slideNorth(state);
     }
-
     return state;
 }
-
-// constexpr bitboard slideNorth(bitboard state) { return state <<= 8; }
-
-// constexpr bitboard slideSouth(bitboard state) { return state >>= 8; }
-
-/*constexpr bitboard slideEast(bitboard state) {
-    return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
-}*/
-
-/*constexpr bitboard slideWest(uint64_t state) {
-    return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
-}*/
 
 std::vector<bitboard> getAllPieces(bitboard state) {
     bitboard initState = state;

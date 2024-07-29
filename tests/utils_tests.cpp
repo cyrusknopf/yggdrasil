@@ -99,8 +99,43 @@ TEST(slideWest, a4) {
     ASSERT_EQ(correctState, state);
 }
 
+// Test diagonal
+TEST(getBetween, f6c3) {
+    bitboard f6 = coordinateToState("f6");
+    bitboard c3 = coordinateToState("c3");
+    bitboard between = getBetween(f6, c3);
+    bitboard real = 0x10000000 | 0x800000000;
+    ASSERT_EQ(between, real);
+}
+// Test antidiagonal
+TEST(getBetween, g2d5) {
+    bitboard g2 = coordinateToState("g2");
+    bitboard d5 = coordinateToState("d5");
+    bitboard between = getBetween(g2, d5);
+    bitboard real = coordinateToState("f3") | coordinateToState("e4");
+    ASSERT_EQ(between, real);
+}
+
+// Test vertical
+TEST(getBetween, a1a8) {
+    bitboard a1 = coordinateToState("a1");
+    bitboard a8 = coordinateToState("a8");
+    bitboard between = getBetween(a1, a8);
+    bitboard real = 0x0080808080808000;
+    ASSERT_EQ(between, real);
+}
+
+// Test horizontal
+TEST(getBetween, a1h1) {
+    bitboard a1 = coordinateToState("a1");
+    bitboard h1 = coordinateToState("h1");
+    bitboard between = getBetween(a1, h1);
+    bitboard real = 0x000000000000007E;
+    ASSERT_EQ(between, real);
+}
+
 TEST(getAllPieces, e4) {
-    bitboard state = 0x0000000008000000;
+    bitboard state = coordinateToState("e4");
     std::vector<bitboard> pieces = getAllPieces(state);
 
     ASSERT_EQ(1, pieces.size());
