@@ -205,3 +205,144 @@ TEST(isOwnKingInCheck, kingVsKingWest) {
     team black = {0, 0, 0, 0, 0, oppKing};
     ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
 }
+
+TEST(isOwnKingInCheck, queenCheckDiagonal) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingQueen = coordinateToState("h4");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, attackingQueen, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, queenCheckVertical) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingQueen = coordinateToState("e8");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, attackingQueen, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, queenCheckHorizontal) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingQueen = coordinateToState("a1");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, attackingQueen, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, queenCheckBlockedOwnPiece) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard ownPawn = coordinateToState("d2");
+    bitboard attackingQueen = coordinateToState("c3");
+    team white = {ownPawn, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, attackingQueen, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, knightCheckLShape) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingKnight = coordinateToState("g2");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, attackingKnight, 0, 0, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, checkPawnNotBlocked) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingPawn = coordinateToState("d2");
+    bitboard ownPawn = coordinateToState("d3");
+    team white = {ownPawn, 0, 0, 0, 0, ownKing};
+    team black = {attackingPawn, 0, 0, 0, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, rookCheckHorizontalBlocked) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingRook = coordinateToState("h1");
+    bitboard ownKnight = coordinateToState("f1");
+    team white = {0, ownKnight, 0, 0, 0, ownKing};
+    team black = {0, 0, attackingRook, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, rookCheckVerticalBlocked) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingRook = coordinateToState("e8");
+    bitboard ownBishop = coordinateToState("e3");
+    team white = {0, 0, 0, ownBishop, 0, ownKing};
+    team black = {0, 0, attackingRook, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, kingCheckAdjacent) {
+    bitboard ownKing = coordinateToState("e4");
+    bitboard oppKing = coordinateToState("e5");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, oppKing};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, kingCheckDiagonal) {
+    bitboard ownKing = coordinateToState("e4");
+    bitboard oppKing = coordinateToState("d5");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, oppKing};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, noCheckEmptyBoard) {
+    bitboard ownKing = coordinateToState("e1");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, checkFarPieces) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard oppBishop = coordinateToState("a5");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, oppBishop, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, checkMultipleAttackers) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard oppRook = coordinateToState("h1");
+    bitboard oppBishop = coordinateToState("a5");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, oppRook, oppBishop, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, noCheckOwnPieceBlock) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard ownRook = coordinateToState("f1");
+    bitboard oppRook = coordinateToState("h1");
+    team white = {0, 0, ownRook, 0, 0, ownKing};
+    team black = {0, 0, oppRook, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, pawnCheckWhite) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingPawn = coordinateToState("d2");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {attackingPawn, 0, 0, 0, 0, 0};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, pawnCheckBlack) {
+    bitboard attackingPawn = coordinateToState("d2");
+    bitboard ownKing = coordinateToState("e3");
+    team white = {attackingPawn, 0, 0, 0, 0, 0};
+    team black = {0, 0, 0, 0, 0, ownKing};
+    ASSERT_EQ(true, isOwnKingInCheck(black, white, false));
+}
+
+TEST(isOwnKingInCheck, noCheckKnightFar) {
+    bitboard ownKing = coordinateToState("e1");
+    bitboard attackingKnight = coordinateToState("c6");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, attackingKnight, 0, 0, 0, 0};
+    ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
+}

@@ -442,9 +442,13 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
 
     // Check King
     if ((king & slideNorth(opp.at(5))) != 0) return true;
+    if ((king & slideNorth(slideEast(opp.at(5)))) != 0) return true;
     if ((king & slideEast(opp.at(5))) != 0) return true;
+    if ((king & slideSouth(slideEast(opp.at(5)))) != 0) return true;
     if ((king & slideSouth(opp.at(5))) != 0) return true;
+    if ((king & slideSouth(slideWest(opp.at(5)))) != 0) return true;
     if ((king & slideWest(opp.at(5))) != 0) return true;
+    if ((king & slideNorth(slideWest(opp.at(5)))) != 0) return true;
 
     return false;
 }
