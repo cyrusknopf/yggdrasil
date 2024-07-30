@@ -173,3 +173,35 @@ TEST(isOwnKingInCheck, whitePawnBlackKing) {
     team black = {0, 0, 0, 0, 0, ownKing};
     ASSERT_EQ(true, isOwnKingInCheck(black, white, false));
 }
+
+TEST(isOwnKingInCheck, kingVsKingNorth) {
+    bitboard ownKing = coordinateToState("e4");
+    bitboard oppKing = coordinateToState("e3");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, oppKing};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, kingVsKingSouth) {
+    bitboard ownKing = coordinateToState("e4");
+    bitboard oppKing = coordinateToState("e5");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, oppKing};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, kingVsKingEast) {
+    bitboard ownKing = coordinateToState("e4");
+    bitboard oppKing = coordinateToState("d4");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, oppKing};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}
+
+TEST(isOwnKingInCheck, kingVsKingWest) {
+    bitboard ownKing = coordinateToState("e4");
+    bitboard oppKing = coordinateToState("f4");
+    team white = {0, 0, 0, 0, 0, ownKing};
+    team black = {0, 0, 0, 0, 0, oppKing};
+    ASSERT_EQ(true, isOwnKingInCheck(white, black, true));
+}

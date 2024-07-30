@@ -377,6 +377,7 @@ diagonal OR same antidiagonal: getBetween returns 0. This means the
 evaluation of (inbetween & piece) will always result in 0 and therefore
 appropriately not return true, as no valid sightline from queen to king
 */
+// XXX Not most efficient in general
 bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard ownState = 0;
     for (bitboard piece : own) {
@@ -438,5 +439,12 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
             if ((king & slideNorth(slideWest(piece))) != 0) return true;
         }
     }
+
+    // Check King
+    if ((king & slideNorth(opp.at(5))) != 0) return true;
+    if ((king & slideEast(opp.at(5))) != 0) return true;
+    if ((king & slideSouth(opp.at(5))) != 0) return true;
+    if ((king & slideWest(opp.at(5))) != 0) return true;
+
     return false;
 }
