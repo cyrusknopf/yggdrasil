@@ -11,6 +11,9 @@
 #include "game/moves.h"
 #include "utils.h"
 
+std::optional<bitboard> getRandomLegalMove(team& white, team& black, bool turn,
+                                           int pieceIndex) {}
+
 std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
                                       int pieceIndex) {
     std::random_device rd;

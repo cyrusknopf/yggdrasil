@@ -27,7 +27,7 @@ TEST(getFile, rank1file3) {
     ASSERT_EQ(3, file);
 }
 
-// TODO: Expand tests for rank
+// TODO: Expand test for rank
 
 TEST(getRank, rank1file1) {
     bitboard state = 0x1;
@@ -41,7 +41,7 @@ TEST(getRank, rank2file1) {
     ASSERT_EQ(2, rank);
 }
 
-// TODO: Expand tests for file
+// TODO: Expand test for file
 
 TEST(slideNorth, e4) {
     bitboard state = 0x0000000008000000;

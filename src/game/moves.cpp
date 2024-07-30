@@ -1,9 +1,11 @@
 #include "game/moves.h"
 
 #include <array>
+#include <utility>
 #include <vector>
 
 #include "game/chess.h"
+#include "mcts/rollout.h"
 #include "utils.h"
 
 // TODO Include en passant
@@ -369,6 +371,41 @@ std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
         default:
             return std::vector<bitboard>{};
     }
+}
+
+std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
+                                          bool colour) {
+    bitboard ownState;
+    bitboard oppState;
+    if (colour) {
+        ownState = getTeamState(white);
+        oppState = getTeamState(black);
+    } else {
+        ownState = getTeamState(black);
+        oppState = getTeamState(white);
+    }
+
+    std::vector<bitboard> moves =
+        pseudoLegalFromIndex(idx, white, black, colour);
+
+    for (auto it = moves.begin(); it != moves.end();) {
+        std::pair<team, team> newBoards =
+            makeSimulatedMove(white, black, *it, idx, colour);
+        team own;
+        team opp;
+        if (colour) {
+            own = newBoards.first;
+            opp = newBoards.second;
+        } else {
+            opp = newBoards.first;
+            own = newBoards.second;
+        }
+        if (isOwnKingInCheck(own, opp, colour))
+            moves.erase(it);
+        else
+            it++;
+    }
+    return moves;
 }
 
 /*

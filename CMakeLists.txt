@@ -50,7 +50,7 @@ if (test)
 # Remove driver.cpp from SRC_SOURCES
 list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
 list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
-# Add the executable for tests
+# Add the executable for test
 add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
 # Link libraries to the test executable
 target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)

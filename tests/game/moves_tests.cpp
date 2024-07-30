@@ -346,3 +346,20 @@ TEST(isOwnKingInCheck, noCheckKnightFar) {
     team black = {0, attackingKnight, 0, 0, 0, 0};
     ASSERT_EQ(false, isOwnKingInCheck(white, black, true));
 }
+
+TEST(legalMovesFromIndex, kingMoveIntoCastles) {
+    bitboard whiteKing = coordinateToState("a1");
+    bitboard attackingCastles =
+        coordinateToState("b3") | coordinateToState("c2");
+    team white = {0, 0, 0, 0, 0, whiteKing};
+    team black = {0, 0, attackingCastles, 0, 0, 0};
+    ASSERT_EQ(0, legalMovesFromIndex(5, white, black, true).size());
+}
+
+TEST(legalMovesFromIndex, kingFreeToMove) {
+    bitboard whiteKing = coordinateToState("e4");
+    team white = {0, 0, 0, 0, 0, whiteKing};
+    team black = {0, 0, 0, 0, 0, 0};
+    ASSERT_EQ(pseudoLegalFromIndex(5, white, black, true).size(),
+              legalMovesFromIndex(5, white, black, true).size());
+}
