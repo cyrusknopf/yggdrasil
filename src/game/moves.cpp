@@ -372,10 +372,10 @@ std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
 }
 
 /*
-n.b. if king and piece are not on: same file, same rank, same
+n.b. if king and a piece are not on: same file, same rank, same
 diagonal OR same antidiagonal: getBetween returns 0. This means the
 evaluation of (inbetween & piece) will always result in 0 and therefore
-appropriately not return true, as no valid sightline from piece to king
+appropriately not return true, as no valid sightline from queen to king
 */
 bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard ownState = 0;
@@ -408,22 +408,20 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     // Check bishops
     for (bitboard& bishop : getAllPieces(opp.at(3))) {
         // Bishops require same diagonal or antidiagonal to capture
-        bitboard between = getBetween(king, bishop);
         if (!isDiagonal(bishop, king)) continue;
         // If there is not a piece blocking the sight of a bishop, then in check
-        if ((between & (ownState | oppState)) == 0) return true;
+        if ((getBetween(king, bishop) & (ownState | oppState)) == 0)
+            return true;
     }
 
     // Check horses
     std::array<int, 4> horseShifts = {17, 15, 6, 10};
-    for (bitboard horse : getAllPieces(opp.at(2))) {
-        for (int shift : horseShifts) {
-            if ((king << shift & opp.at(2)) != 0) return true;
-        }
-        for (int shift : horseShifts) {
-            if ((king >> shift & opp.at(2)) != 0) return true;
+    for (bitboard horse : getAllPieces(opp.at(1))) {
+        std::vector<bitboard> moves =
+            horsePseudoLegalMoves(oppState, ownState, horse);
+        for (bitboard move : moves) {
+            if ((king & move) != 0) return true;
         }
     }
-
     return false;
 }
