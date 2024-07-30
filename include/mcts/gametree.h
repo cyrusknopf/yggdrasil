@@ -6,13 +6,21 @@
 #include "utils.h"
 
 class GameNode {
+    // Pointer to parent of this node
     GameNode* parent;
+    // Vec of pointers to the children of this node
     std::vector<GameNode*> children;
+    // The move in the game which this node represents
     bitboard move;
+    // Team array of white after the move is made
     team white;
+    // Team array of black after the move is made
     team black;
+    // Number of wins of games played from this node
     int wins;
+    // Number of games played from this node
     int visits;
+    // Turn of player at this node (true = white)
     bool turn;
 
    public:
@@ -20,7 +28,6 @@ class GameNode {
              bool turn)
         : parent(parent),
           children(),
-          // children(std::vector<GameNode*>{}),
           move(move),
           white(white),
           black(black),
@@ -28,6 +35,8 @@ class GameNode {
           visits(1),
           turn(turn){};
 
+    // Deletes all children. `changeRoot` should be called to update root of
+    // game tree
     ~GameNode() {
         if (children.size() != 0) {
             for (GameNode* child : children) {

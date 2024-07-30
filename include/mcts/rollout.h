@@ -1,5 +1,6 @@
 #include <optional>
 
+#include "game/chess.h"
 #include "mcts/gametree.h"
 
 /*

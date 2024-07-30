@@ -27,7 +27,7 @@ TEST(makeSimulatedMove, capture) {
 }
 
 TEST(simulate, whiteWin) {
-    team white = {1, 0, 0, 0, 0, 3};
+    team white = {1, 0, 0, 0, 0, 32};
     team black = {8, 0, 0, 0, 0, 0};
 
     GameNode* root = initialiseTree(white, black);

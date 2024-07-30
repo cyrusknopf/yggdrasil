@@ -144,15 +144,6 @@ std::pair<team, team> makeMove(team& whiteBitboards, team& blackBitboards,
     return std::make_pair(whiteBitboards, blackBitboards);
 }
 
-std::optional<bool> getWinner(team& white, team& black) {
-    if (white.at(5) == 0)
-        return false;
-    else if (black.at(5) == 0)
-        return true;
-    else
-        return std::nullopt;
-}
-
 void gameLoop() {
     // General game setup
     std::pair<team, team> teams = initGame();

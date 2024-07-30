@@ -21,6 +21,7 @@ set(TEST_SOURCES
     tests/utils_tests.cpp
 
     tests/game/moves_tests.cpp
+        tests/game/chess_tests.cpp
 
     tests/mcts/gametree_tests.cpp
     tests/mcts/selection_tests.cpp

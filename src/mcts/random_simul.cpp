@@ -7,7 +7,7 @@ void fromRoot() {
 
     GameNode* root = initialiseTree(starts.first, starts.second);
 
-    simulate(root, false);
+    simulate(root, true);
 }
 
 void pawnCheckMate() {
@@ -16,7 +16,7 @@ void pawnCheckMate() {
 
     GameNode* node = initialiseTree(white, black);
 
-    simulate(node, false);
+    simulate(node, true);
 }
 
 int main() {

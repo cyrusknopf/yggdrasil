@@ -65,24 +65,10 @@ bool simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();
     bool turn = node->getTurn();
-    while (true) {
-        // Black wins
-        if (white.at(5) == 0) {
-            bool winner = false;
-            if (node->getTurn() == winner) {
-                node->incrWins();
-            }
-            return winner;
-        }
-        // White wins
-        if (black.at(5) == 0) {
-            bool winner = true;
-            if (node->getTurn() == winner) {
-                node->incrWins();
-            }
-            return winner;
-        }
-
+    std::optional<bool> winner = std::nullopt;
+    int ply;
+    while (!winner.has_value()) {
+        winner = getWinner(white, black);
         std::optional<bitboard> randomMove = std::nullopt;
         int randomPieceIndex;
         std::random_device rd;
@@ -102,4 +88,9 @@ bool simulate(GameNode* node, bool quiet) {
 
         turn = !turn;
     }
+    winner = winner.value();
+    if (node->getTurn() == winner.value()) {
+        node->incrWins();
+    }
+    return winner.value();
 }
