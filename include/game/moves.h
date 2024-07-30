@@ -99,4 +99,13 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
 std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
                                            bool colour);
 
+/*
+ * Given two team arrays and the colour of the `own` team, checks whether the
+ * `own` team is in check
+ *
+ * @param [own] team array which is checked for check
+ * @param [opp] opponent team array
+ * @param [colour] colour of the team which is being queried for check
+ * @returns true if in check, false if not
+ */
 bool isOwnKingInCheck(team& own, team& opp, bool colour);
