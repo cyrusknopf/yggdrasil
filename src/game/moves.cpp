@@ -423,5 +423,20 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
             if ((king & move) != 0) return true;
         }
     }
+
+    // Check pawns
+    if (colour) {
+        // Looking for black pawns that are north diagonal
+        for (bitboard piece : getAllPieces(opp.at(0))) {
+            if ((king & slideSouth(slideEast(piece))) != 0) return true;
+            if ((king & slideSouth(slideWest(piece))) != 0) return true;
+        }
+    } else {
+        // Looking for white pawns that are south diagonal
+        for (bitboard piece : getAllPieces(opp.at(0))) {
+            if ((king & slideNorth(slideEast(piece))) != 0) return true;
+            if ((king & slideNorth(slideWest(piece))) != 0) return true;
+        }
+    }
     return false;
 }
