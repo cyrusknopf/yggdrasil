@@ -12,7 +12,20 @@
 #include "utils.h"
 
 std::optional<bitboard> getRandomLegalMove(team& white, team& black, bool turn,
-                                           int pieceIndex) {}
+                                           int pieceIndex) {
+    std::random_device rd;
+    std::vector<bitboard> moves =
+        legalMovesFromIndex(pieceIndex, white, black, turn);
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
+    std::size_t randomMoveIndex = dist(rng);
+
+    if (moves.size() == 0) {
+        return std::nullopt;
+    }
+
+    return moves[randomMoveIndex];
+}
 
 std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
                                       int pieceIndex) {
@@ -99,7 +112,8 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         std::random_device rd;
         while (!randomMove.has_value()) {
             randomPieceIndex = rd() % 6;  // TODO better method
-            randomMove = getRandomMove(white, black, turn, randomPieceIndex);
+            randomMove =
+                getRandomLegalMove(white, black, turn, randomPieceIndex);
         }
         std::pair<team, team> newBoards = makeSimulatedMove(
             white, black, randomMove.value(), randomPieceIndex, turn);
