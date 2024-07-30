@@ -74,6 +74,9 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
     bool turn = node->getTurn();
     int ply;
     while (true) {
+        if (!quiet) {
+            std::cout << gameStateToString(white, black) << std::endl;
+        }
         // Black wins
         if (white.at(5) == 0) {
             bool winner = false;
@@ -111,11 +114,10 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         else
             ply = 0;  // Else reset it
 
-        if (!quiet) {
-            std::cout << gameStateToString(white, black) << std::endl;
-        }
-
         if (ply >= 100) return std::nullopt;
+
+        white = newWhite;
+        black = newBlack;
 
         turn = !turn;
     }
