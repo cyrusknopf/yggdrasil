@@ -39,6 +39,6 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
  *
  * @param [node] gamenode state to play from
  * @param [quiet] if false, prints board each move to stdout
- * @returns 1=white win, 0=draw, -1= black win
+ * @returns true = white win, false = black win, nullopt = draw
  */
 std::optional<bool> simulate(GameNode* node, bool quiet);

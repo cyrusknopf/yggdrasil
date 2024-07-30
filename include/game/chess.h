@@ -1,5 +1,6 @@
-#include "utils.h"
 #include <utility>
+
+#include "utils.h"
 
 /*
  * Initialises the two arrays for bitboards for each team and returns them as a
@@ -10,6 +11,8 @@
  */
 std::pair<team, team> initGame();
 
+bool isMated(team& white, team& black, bool colour);
+
 /*
  * Retuns a single bitboard with a 1 in each location which there is a piece.
  * Loss of information as to which piece is at each location
@@ -18,7 +21,7 @@ std::pair<team, team> initGame();
  * @param [black] array of black bitboards
  * @return bitboard of every piece on the board, from both teams
  */
-bitboard getGameState(team &white, team &black);
+bitboard getGameState(team& white, team& black);
 
 /*
  * Returns a single bitboard with a 1 in each location where there is a piece
@@ -29,7 +32,7 @@ bitboard getGameState(team &white, team &black);
  * @param [colour] colour to return state of (white=true)
  * @return bitboard of every piece on the board, from specified team
  */
-bitboard getGameState(team &white, team &black, bool colour);
+bitboard getGameState(team& white, team& black, bool colour);
 
 /*
  * Returns a single bitboard with a 1 in each location where there is a piece in
@@ -38,4 +41,4 @@ bitboard getGameState(team &white, team &black, bool colour);
  * @param [pieces] team array of bitboards to get state of
  * @return bitboard of every piece on the provided team
  */
-bitboard getTeamState(team &pieces);
+bitboard getTeamState(team& pieces);

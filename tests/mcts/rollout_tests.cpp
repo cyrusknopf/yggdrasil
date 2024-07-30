@@ -26,24 +26,31 @@ TEST(makeSimulatedMove, capture) {
     ASSERT_EQ(captureMove, newBoards.first.at(5));
 }
 
-TEST(simulate, whiteWin) {
-    team white = {1, 0, 0, 0, 0, 3};
-    team black = {8, 0, 0, 0, 0, 0};
-
-    GameNode* root = initialiseTree(white, black);
-
-    std::optional<bool> res = simulate(root, true);
-
-    ASSERT_EQ(true, res);
-}
-
 TEST(simulate, blackWin) {
-    team black = {1, 0, 0, 0, 0, 3};
-    team white = {8, 0, 0, 0, 0, 0};
+    bitboard whiteKing = coordinateToState("a1");
+    bitboard blackCastles = coordinateToState("a3") | coordinateToState("c1");
+    bitboard blackBishop = coordinateToState("c3");
+    team white = {0, 0, 0, 0, 0, whiteKing};
+    team black = {0, 0, blackCastles, blackBishop, 0, 0};
 
     GameNode* root = initialiseTree(white, black);
 
     std::optional<bool> res = simulate(root, true);
 
     ASSERT_EQ(false, res);
+}
+
+TEST(simulate, whiteWin) {
+    bitboard blackKing = coordinateToState("a1");
+    bitboard whiteCastles = coordinateToState("a3") | coordinateToState("c1");
+    bitboard whiteBishop = coordinateToState("c3");
+    team black = {0, 0, 0, 0, 0, blackKing};
+    team white = {0, 0, whiteCastles, whiteBishop, 0, 0};
+
+    GameNode* root = initialiseTree(white, black);
+    root->nextTurn();
+
+    std::optional<bool> res = simulate(root, true);
+
+    ASSERT_EQ(true, res);
 }

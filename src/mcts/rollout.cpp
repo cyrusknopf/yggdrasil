@@ -7,6 +7,7 @@
 #include <random>
 #include <utility>
 
+#include "game/chess.h"
 #include "game/moves.h"
 #include "utils.h"
 
@@ -78,19 +79,15 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             std::cout << gameStateToString(white, black) << std::endl;
         }
         // Black wins
-        if (white.at(5) == 0) {
+        if (isMated(white, black, true)) {
             bool winner = false;
-            if (node->getTurn() == winner) {
-                node->incrWins();
-            }
+            if (node->getTurn() == winner) node->incrWins();
             return winner;
         }
         // White wins
-        if (black.at(5) == 0) {
+        if (isMated(white, black, false)) {
             bool winner = true;
-            if (node->getTurn() == winner) {
-                node->incrWins();
-            }
+            if (node->getTurn() == winner) node->incrWins();
             return winner;
         }
 
