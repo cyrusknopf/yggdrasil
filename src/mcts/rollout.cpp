@@ -61,10 +61,18 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         return std::make_pair(opp, own);
 }
 
-bool simulate(GameNode* node, bool quiet) {
+bool checkIfCapture(team& oldBoards, team& newBoards) {
+    for (int i = 0; i < 6; i++) {
+        if (oldBoards.at(i) != newBoards.at(i)) return true;
+    }
+    return false;
+}
+
+std::optional<bool> simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();
     bool turn = node->getTurn();
+    int ply;
     while (true) {
         // Black wins
         if (white.at(5) == 0) {
@@ -93,12 +101,21 @@ bool simulate(GameNode* node, bool quiet) {
         std::pair<team, team> newBoards = makeSimulatedMove(
             white, black, randomMove.value(), randomPieceIndex, turn);
 
-        white = newBoards.first;
-        black = newBoards.second;
+        team newWhite = newBoards.first;
+        team newBlack = newBoards.second;
+
+        // If there is no capture, increment ply
+        if (!checkIfCapture(white, newWhite) &&
+            !checkIfCapture(black, newBlack))
+            ply++;
+        else
+            ply = 0;  // Else reset it
 
         if (!quiet) {
             std::cout << gameStateToString(white, black) << std::endl;
         }
+
+        if (ply >= 100) return std::nullopt;
 
         turn = !turn;
     }

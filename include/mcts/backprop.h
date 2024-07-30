@@ -7,4 +7,4 @@
  * @param [node] terminal game node
  * @param [winner] winner at this node
  */
-void backpropagate(GameNode* node, bool winner);
+void backpropagate(GameNode* node, std::optional<bool> winner);

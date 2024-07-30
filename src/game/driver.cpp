@@ -210,7 +210,7 @@ void gameLoop() {
                 expansion(L);
                 std::random_device rd;
                 GameNode* C = L->getRandomChild(rd());
-                int res = simulate(C, true);
+                std::optional<bool> res = simulate(C, true);
                 gamesSimulated++;
                 backpropagate(C, res);
             }

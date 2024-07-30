@@ -32,7 +32,7 @@ TEST(simulate, whiteWin) {
 
     GameNode* root = initialiseTree(white, black);
 
-    bool res = simulate(root, true);
+    std::optional<bool> res = simulate(root, true);
 
     ASSERT_EQ(true, res);
 }
@@ -43,7 +43,7 @@ TEST(simulate, blackWin) {
 
     GameNode* root = initialiseTree(white, black);
 
-    bool res = simulate(root, true);
+    std::optional<bool> res = simulate(root, true);
 
     ASSERT_EQ(false, res);
 }

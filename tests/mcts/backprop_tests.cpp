@@ -29,7 +29,7 @@ TEST(backprop, threeGenerations) {
     ASSERT_EQ(child->getWins(), 0);
     ASSERT_EQ(gchild->getWins(), 0);
 
-    backpropagate(gchild, 1);
+    backpropagate(gchild, true);
 
     // Leaf values are actually updated in `simulate` so should still be 0
     // Root is opponent to leaf so should also be 0
