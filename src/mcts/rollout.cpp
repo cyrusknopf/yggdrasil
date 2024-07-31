@@ -90,13 +90,6 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
         return std::make_pair(opp, own);
 }
 
-bool checkIfCapture(team& oldBoards, team& newBoards) {
-    for (int i = 0; i < 6; i++) {
-        if (oldBoards.at(i) != newBoards.at(i)) return true;
-    }
-    return false;
-}
-
 std::optional<bool> simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();

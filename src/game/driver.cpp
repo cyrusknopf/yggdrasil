@@ -163,9 +163,10 @@ void gameLoop() {
     expansion(root);
     // Keep track of last move
     bitboard lastMove = 0;
+    int ply = 0;
 
     // TODO add ply
-    while (!gameOver) {
+    while (!gameOver && ply <= 100) {
         // User turn
         if (turn) {
             message = "";
@@ -181,8 +182,14 @@ void gameLoop() {
                 makeMove(whiteBitboards, blackBitboards, movingTo, movingBoard,
                          movingIdx, turn);
 
+            if (!checkIfCapture(blackBitboards, newBoards.second))
+                ply++;
+            else
+                ply = 0;
+
             whiteBitboards = newBoards.first;
             blackBitboards = newBoards.second;
+
             // Update UI for white's move
             clearTerm();
             std::cout << gameStateToString(whiteBitboards, blackBitboards)
@@ -196,10 +203,9 @@ void gameLoop() {
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
-                /*
                 std::cout << "\rSimulated games played: " << gamesSimulated
                           << std::flush;
-                          */
+
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
@@ -209,6 +215,14 @@ void gameLoop() {
                 backpropagate(C, res);
             }
             GameNode* newState = getMostVisitedChild(root);
+
+            // Remove const for check capture
+            team newWhite = newState->getWhite();
+
+            if (!checkIfCapture(whiteBitboards, newWhite))
+                ply++;
+            else
+                ply = 0;
 
             whiteBitboards = newState->getWhite();
             blackBitboards = newState->getBlack();
@@ -223,9 +237,10 @@ void gameLoop() {
         turn = !turn;
     }
 
-    assert(winner.has_value() && "Game over before winner");
     std::cout << "Game over" << std::endl;
-    if (winner)
+    if (!winner.has_value())
+        std::cout << "Stalemate" << std::endl;
+    else if (winner)
         std::cout << "White wins!" << std::endl;
     else
         std::cout << "Black wins!" << std::endl;

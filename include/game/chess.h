@@ -11,6 +11,8 @@
  */
 std::pair<team, team> initGame();
 
+bool checkIfCapture(team& oldBoards, team& newBoards);
+
 bool isMated(team& white, team& black, bool colour);
 
 std::optional<bool> getWinner(team& white, team& black);

@@ -16,6 +16,13 @@ std::pair<team, team> initGame() {
     return std::make_pair(whiteBitboards, blackBitboards);
 }
 
+bool checkIfCapture(team& oldBoards, team& newBoards) {
+    for (int i = 0; i < 6; i++) {
+        if (oldBoards.at(i) != newBoards.at(i)) return true;
+    }
+    return false;
+}
+
 bool isMated(team& white, team& black, bool colour) {
     team own;
     team opp;
