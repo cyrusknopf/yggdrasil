@@ -13,6 +13,8 @@ std::pair<team, team> initGame();
 
 bool isMated(team& white, team& black, bool colour);
 
+std::optional<bool> getWinner(team& white, team& black);
+
 /*
  * Retuns a single bitboard with a 1 in each location which there is a piece.
  * Loss of information as to which piece is at each location

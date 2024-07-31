@@ -100,13 +100,12 @@ bool checkIfCapture(team& oldBoards, team& newBoards) {
 std::optional<bool> simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();
-    if (white.at(5) ==0) {
-    assert(white.at(5) != 0);
+    if (white.at(5) == 0) {
+        assert(white.at(5) != 0);
+    } else if (black.at(5) == 0) {
+        assert(black.at(5) != 0);
     }
-    else if (black.at(5) == 0) {
-   assert(black.at(5) != 0);
-    }
-    bool turn = !node->getTurn();
+    bool turn = node->getTurn();
     int ply = 0;
     while (true) {
         if (!quiet) {

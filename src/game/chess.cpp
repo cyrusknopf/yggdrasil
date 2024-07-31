@@ -40,6 +40,21 @@ bool isMated(team& white, team& black, bool colour) {
     return true;
 }
 
+std::optional<bool> getWinner(team& white, team& black) {
+    // Black wins
+    if (isMated(white, black, true)) {
+        bool winner = false;
+        return winner;
+    }
+    // White wins
+    if (isMated(white, black, false)) {
+        bool winner = true;
+        return winner;
+    } else {
+        return std::nullopt;
+    }
+}
+
 bitboard getGameState(team& white, team& black) {
     return getGameState(white, black, true) | getGameState(white, black, false);
 }

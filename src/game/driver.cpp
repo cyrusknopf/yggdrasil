@@ -144,15 +144,6 @@ std::pair<team, team> makeMove(team& whiteBitboards, team& blackBitboards,
     return std::make_pair(whiteBitboards, blackBitboards);
 }
 
-std::optional<bool> getWinner(team& white, team& black) {
-    if (white.at(5) == 0)
-        return false;
-    else if (black.at(5) == 0)
-        return true;
-    else
-        return std::nullopt;
-}
-
 void gameLoop() {
     // General game setup
     std::pair<team, team> teams = initGame();
@@ -173,6 +164,7 @@ void gameLoop() {
     // Keep track of last move
     bitboard lastMove = 0;
 
+    // TODO add ply
     while (!gameOver) {
         // User turn
         if (turn) {
@@ -204,8 +196,10 @@ void gameLoop() {
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
-                //std::cout << "\rSimulated games played: " << gamesSimulated
-                //          << std::flush;
+                /*
+                std::cout << "\rSimulated games played: " << gamesSimulated
+                          << std::flush;
+                          */
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
