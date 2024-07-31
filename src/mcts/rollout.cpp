@@ -6,6 +6,7 @@
 #include <optional>
 #include <random>
 #include <utility>
+#include <vector>
 
 #include "game/chess.h"
 #include "game/moves.h"
@@ -16,15 +17,29 @@ std::optional<bitboard> getRandomLegalMove(team& white, team& black, bool turn,
     std::random_device rd;
     std::vector<bitboard> moves =
         legalMovesFromIndex(pieceIndex, white, black, turn);
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
-    std::size_t randomMoveIndex = dist(rng);
 
     if (moves.size() == 0) {
         return std::nullopt;
     }
 
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
+    std::size_t randomMoveIndex = dist(rng);
+
     return moves[randomMoveIndex];
+}
+
+std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
+                                                       bool colour) {
+    std::vector<std::pair<bitboard, int>> moves;
+    for (int piece = 0; piece < 6; piece++) {
+        std::vector<bitboard> thisMoves =
+            legalMovesFromIndex(piece, white, black, colour);
+        for (bitboard move : thisMoves) {
+            moves.emplace_back(move, piece);
+        }
+    }
+    return moves;
 }
 
 std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
@@ -59,9 +74,6 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
     // Get the square which the moving piece moves to
     bitboard destinationSquare = ~(~move | own.at(index));
     if (destinationSquare == 0) {
-        std::cout << "move: " << move << std::endl;
-        std::cout << "own.at(" << index << "): " << own.at(index) << std::endl;
-        std::cout << "move: " << move << std::endl;
     }
     // Determine if the enemy is on the moved to piece i.e. there is a capture
     std::pair<bitboard, int> captureInfo = findPiece(destinationSquare, opp);
@@ -88,8 +100,14 @@ bool checkIfCapture(team& oldBoards, team& newBoards) {
 std::optional<bool> simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();
+    if (white.at(5) ==0) {
+    assert(white.at(5) != 0);
+    }
+    else if (black.at(5) == 0) {
+   assert(black.at(5) != 0);
+    }
     bool turn = node->getTurn();
-    int ply;
+    int ply = 0;
     while (true) {
         if (!quiet) {
             std::cout << gameStateToString(white, black) << std::endl;
@@ -107,26 +125,28 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             return winner;
         }
 
-        std::optional<bitboard> randomMove = std::nullopt;
-        int randomPieceIndex;
+        std::vector<std::pair<bitboard, int>> legalMoves =
+            getAllLegalMoves(white, black, turn);
+        // No legals: stalemate
+        if (legalMoves.empty()) return std::nullopt;
         std::random_device rd;
-        while (!randomMove.has_value()) {
-            randomPieceIndex = rd() % 6;  // TODO better method
-            randomMove =
-                getRandomLegalMove(white, black, turn, randomPieceIndex);
-        }
-        std::pair<team, team> newBoards = makeSimulatedMove(
-            white, black, randomMove.value(), randomPieceIndex, turn);
+        const int randomIdx = rd() % legalMoves.size();  // TODO better method
+        const bitboard randomMove = legalMoves.at(randomIdx).first;
+        int pieceIdx = legalMoves.at(randomIdx).second;
+        std::pair<team, team> newBoards =
+            makeSimulatedMove(white, black, randomMove, pieceIdx, turn);
 
         team newWhite = newBoards.first;
         team newBlack = newBoards.second;
 
+        int oldPly = ply;
         // If there is no capture, increment ply
-        if (!checkIfCapture(white, newWhite) &&
-            !checkIfCapture(black, newBlack))
-            ply++;
-        else
-            ply = 0;  // Else reset it
+        if (turn) {
+            if (!checkIfCapture(black, newBlack)) ply++;
+        } else {
+            if (!checkIfCapture(white, newWhite)) ply++;
+        }
+        if (oldPly == ply) ply = 0;
 
         if (ply >= 100) return std::nullopt;
 

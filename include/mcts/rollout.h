@@ -2,18 +2,20 @@
 
 #include "mcts/gametree.h"
 
+std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
+                                                       bool colour);
 /*
  * Given both team arrays ,generates a random move
- * for the piece at provided index. Index should be a random number between 0
- * and 5. Returns a move wrapped in an optional: optional is nullopt if there
- * are no legal moves from the piece at the provided index
+ * for the piece at provided index. Index should be a random number between
+ * 0 and 5. Returns a move wrapped in an optional: optional is nullopt if
+ * there are no legal moves from the piece at the provided index
  *
  * @param [white] team array of white pieces
  * @param [black] team array of black pieces
  * @param [turn] turn of moving piece (white = true)
  * @param [pieceIndex] piece index of team array to get move for
- * @returns nullopt if no moves for piece at provided index, bitboard containg
- * move otherwise
+ * @returns nullopt if no moves for piece at provided index, bitboard
+ * containg move otherwise
  */
 
 std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
@@ -26,7 +28,8 @@ std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
  * @param [white] team array of white pieces
  * @param [black] team array of black pieces
  * @param [move] bitboard containg the state of the piece after the move
- * @param [index] index in team array of the moving piece (1=pawn, ...,  5=king)
+ * @param [index] index in team array of the moving piece (1=pawn, ...,
+ * 5=king)
  * @param [turn] turn of moving piece (white = true)
  * @returns pair containg the new team arrays: <white, black>
  */
@@ -34,8 +37,8 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
                                         int index, bool turn);
 
 /*
- * Randomly plays moves until a winner, from the state specified by the provided
- * game node
+ * Randomly plays moves until a winner, from the state specified by the
+ * provided game node
  *
  * @param [node] gamenode state to play from
  * @param [quiet] if false, prints board each move to stdout

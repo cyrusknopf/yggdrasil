@@ -12,9 +12,9 @@ include_directories(${GTEST_INCLUDE_DIRS} include)
 
 
 
-option(test "Build test" ON)
+option(test "Build test" OFF)
 
-option(simul "Run random simulation" ON)
+option(simul "Run random simulation" OFF)
 
 # Gather all test source files
 set(TEST_SOURCES

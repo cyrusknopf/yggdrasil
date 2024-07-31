@@ -363,3 +363,12 @@ TEST(legalMovesFromIndex, kingFreeToMove) {
     ASSERT_EQ(pseudoLegalFromIndex(5, white, black, true).size(),
               legalMovesFromIndex(5, white, black, true).size());
 }
+
+TEST(getBetween, edgeCase1) {
+    bitboard whiteKing = 8;
+    bitboard blackQueen = 16777216;
+    bitboard ownState = 2223012799;
+    bitboard oppState = 17291298090422108160;
+    bitboard btwn = getBetween(whiteKing, blackQueen);
+    ASSERT_EQ(0, btwn & (ownState | oppState));
+}

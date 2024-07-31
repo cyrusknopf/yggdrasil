@@ -402,8 +402,10 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
         }
         if (isOwnKingInCheck(own, opp, colour))
             moves.erase(it);
+        else if (own.at(5) == 0 || opp.at(5) == 0)
+            moves.erase(it);
         else
-            it++;
+            ++it;
     }
     return moves;
 }
@@ -427,9 +429,16 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard king = own.at(5);
 
     // Check queens
-    for (bitboard& queen : getAllPieces(opp.at(4))) {
+    for (bitboard queen : getAllPieces(opp.at(4))) {
+        // If not on a diagonal or on the same rank OR file then not attacking king
+        if (!isDiagonal(king, queen)) {
+            if (!(getRank(king) == getRank(queen) || getFile(king) == getFile(queen))) {
+            continue;
+            }
+        }
         // If there is not a piece blocking the sight of a queen, then in check
-        if ((getBetween(king, queen) & (ownState | oppState)) == 0) return true;
+        bitboard btwn = (getBetween(king, queen) & (ownState | oppState));
+        if (btwn == 0) return true;
     }
 
     // Check castles
