@@ -113,3 +113,10 @@ TEST(getAllLegalMoves, edgeCase3) {
     team black = {71776119061217280, 144115188075864064, 9295429630892703744, 2594073385365405696, 1152921504606846976, 576460752303423488};
     ASSERT_FALSE(isOwnKingInCheck(white, black, true));
 }
+
+TEST(getAllLegalMoves, edgeCase4) {
+    team white = {2147512064, 66, 129, 36,2251799813685248, 8 };
+    team black = {33215696519299072, 144115188344291328, 108086391056891904, 2594073385365405696, 1152921504606846976, 576460752303423488};
+    std::cout << gameStateToString(white, black) << std::endl;
+    std::vector<std::pair<bitboard, int>> legalMoves = getAllLegalMoves(white, black, false);
+}

@@ -106,7 +106,7 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
     else if (black.at(5) == 0) {
    assert(black.at(5) != 0);
     }
-    bool turn = node->getTurn();
+    bool turn = !node->getTurn();
     int ply = 0;
     while (true) {
         if (!quiet) {

@@ -204,8 +204,8 @@ void gameLoop() {
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
-                std::cout << "\rSimulated games played: " << gamesSimulated
-                          << std::flush;
+                //std::cout << "\rSimulated games played: " << gamesSimulated
+                //          << std::flush;
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
