@@ -1,6 +1,7 @@
 #include "game/chess.h"
 
 #include <utility>
+#include <mcts/rollout.h>
 
 #include "game/inits.h"
 #include "game/moves.h"
@@ -37,10 +38,10 @@ bool isMated(team& white, team& black, bool colour) {
     if (!isOwnKingInCheck(own, opp, colour)) return false;
     for (int piece = 5; piece > 0; piece--) {
         for (bitboard move :
-             pseudoLegalFromIndex(piece, white, black, colour)) {
-            team tempOwn = own;
-            team tempOpp = opp;
-            tempOwn[piece] = move;
+             legalMovesFromIndex(piece, white, black, colour)) {
+            auto [newWhite, newBlack] = makeSimulatedMove(white ,black, move, piece, colour);
+            team tempOwn = colour ? white : black;
+            team tempOpp = colour ? black : white;
             if (!isOwnKingInCheck(tempOwn, tempOpp, colour)) return false;
         }
     }

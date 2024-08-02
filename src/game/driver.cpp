@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <iostream>
 #include <optional>
-#include <ostream>
 #include <random>
 #include <regex>
 #include <string>
@@ -178,9 +177,8 @@ void gameLoop() {
             int movingIdx = std::get<1>(movingPiece);
             bitboard movingTo = std::get<2>(movingPiece);
 
-            std::pair<team, team> newBoards =
-                makeMove(whiteBitboards, blackBitboards, movingTo, movingBoard,
-                         movingIdx, turn);
+            std::pair<team, team> newBoards = makeSimulatedMove(
+                whiteBitboards, blackBitboards, movingBoard, movingIdx, turn);
 
             if (!checkIfCapture(blackBitboards, newBoards.second))
                 ply++;
@@ -202,7 +200,7 @@ void gameLoop() {
             root = updateRootOnMove(lastMove, root);
 
             time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 10) {
+            while (time(NULL) < startTime + 100) {
                 std::cout << "\rSimulated games played: " << gamesSimulated
                           << std::flush;
 
@@ -210,6 +208,7 @@ void gameLoop() {
                 expansion(L);
                 std::random_device rd;
                 GameNode* C = L->getRandomChild(rd());
+                assert(C != nullptr);
                 std::optional<bool> res = simulate(C, true);
                 gamesSimulated++;
                 backpropagate(C, res);
