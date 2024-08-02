@@ -11,7 +11,7 @@ Bitboard chess engine with Monte Carlo Tree Search, written in C++
 2. `cd yggradasil`
 3. `mkdir build`
 4. `cd build/`
-5. `cmake -Dtest=OFF -Dsimul=OFF..;make`
+5. `cmake ..;make`
 6. `./driver`
 
 > Developed on Apple Silicon. For issues running on macOS set the environment variable `MallocNanoZone` to `0`
