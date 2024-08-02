@@ -11,7 +11,7 @@ def run_program(command):
     return elapsed_time
 
 def write_to_csv(filename, tag, time_data):
-    with open(filename, 'a', newline='') as csvfile:
+    with open('data/'+filename, 'a', newline='') as csvfile:
         fieldnames = ['tag', 'cpu_time']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         
