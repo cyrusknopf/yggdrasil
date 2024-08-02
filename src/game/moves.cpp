@@ -1,5 +1,7 @@
 #include "game/moves.h"
 
+#include <omp.h>
+
 #include <array>
 #include <utility>
 #include <vector>
@@ -430,10 +432,12 @@ bool isOwnKingInCheck(team& own, team& opp, bool colour) {
 
     // Check queens
     for (bitboard queen : getAllPieces(opp.at(4))) {
-        // If not on a diagonal or on the same rank OR file then not attacking king
+        // If not on a diagonal or on the same rank OR file then not attacking
+        // king
         if (!isDiagonal(king, queen)) {
-            if (!(getRank(king) == getRank(queen) || getFile(king) == getFile(queen))) {
-            continue;
+            if (!(getRank(king) == getRank(queen) ||
+                  getFile(king) == getFile(queen))) {
+                continue;
             }
         }
         // If there is not a piece blocking the sight of a queen, then in check

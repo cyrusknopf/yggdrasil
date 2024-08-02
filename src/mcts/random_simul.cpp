@@ -19,7 +19,7 @@ void fromRoot() {
 
     GameNode* root = initialiseTree(starts.first, starts.second);
 
-    std::optional<bool> res = simulate(root, false);
+    std::optional<bool> res = simulate(root, true);
     printWinner(res);
 }
 
@@ -29,7 +29,7 @@ void pawnCheckMate() {
 
     GameNode* node = initialiseTree(white, black);
 
-    std::optional<bool> res = simulate(node, false);
+    std::optional<bool> res = simulate(node, true);
     printWinner(res);
 }
 
