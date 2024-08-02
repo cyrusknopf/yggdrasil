@@ -10,7 +10,6 @@
 #include <regex>
 #include <string>
 #include <tuple>
-#include <utility>
 #include <vector>
 
 #include "game/chess.h"
@@ -200,14 +199,18 @@ void gameLoop() {
             root = updateRootOnMove(lastMove, root);
 
             time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 100) {
+            while (time(NULL) < startTime + 15) {
                 std::cout << "\rSimulated games played: " << gamesSimulated
                           << std::flush;
 
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
-                GameNode* C = L->getRandomChild(rd());
+                GameNode* C = nullptr;
+                while (true) {
+                    C = L->getRandomChild(rd());
+                    if (!C->getTerminal()) break;
+                }
                 assert(C != nullptr);
                 std::optional<bool> res = simulate(C, true);
                 gamesSimulated++;

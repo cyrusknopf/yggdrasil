@@ -14,6 +14,7 @@ class GameNode {
     int wins;
     int visits;
     bool turn;
+    bool terminal;
 
    public:
     GameNode(GameNode* parent, bitboard move, team& white, team& black,
@@ -26,7 +27,8 @@ class GameNode {
           black(black),
           wins(0),
           visits(1),
-          turn(turn){};
+          turn(turn),
+          terminal(false){};
 
     ~GameNode() {
         if (children.size() != 0) {
@@ -73,6 +75,10 @@ class GameNode {
     bool getTurn() const;
 
     void nextTurn();
+
+    bool getTerminal() const;
+
+    void setTerminal();
 
     double evaluate(double constantofInquisitiveness);
 

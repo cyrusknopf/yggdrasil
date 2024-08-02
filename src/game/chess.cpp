@@ -25,23 +25,16 @@ bool checkIfCapture(team& oldBoards, team& newBoards) {
 }
 
 bool isMated(team& white, team& black, bool colour) {
-    team own;
-    team opp;
-    if (colour) {
-        own = white;
-        opp = black;
-    } else {
-        own = black;
-        opp = white;
-    }
+    team own = colour ? white : black;
+    team opp = colour ? black : white;
 
     if (!isOwnKingInCheck(own, opp, colour)) return false;
     for (int piece = 5; piece > 0; piece--) {
         for (bitboard move :
              legalMovesFromIndex(piece, white, black, colour)) {
             auto [newWhite, newBlack] = makeSimulatedMove(white ,black, move, piece, colour);
-            team tempOwn = colour ? white : black;
-            team tempOpp = colour ? black : white;
+            team tempOwn = colour ? newWhite : newBlack;
+            team tempOpp = colour ? newBlack : newWhite;
             if (!isOwnKingInCheck(tempOwn, tempOpp, colour)) return false;
         }
     }

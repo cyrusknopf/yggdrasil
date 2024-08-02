@@ -108,12 +108,14 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         if (isMated(white, black, true)) {
             bool winner = false;
             if (node->getTurn() == winner) node->incrWins();
+            node->setTerminal();
             return winner;
         }
         // White wins
         if (isMated(white, black, false)) {
             bool winner = true;
             if (node->getTurn() == winner) node->incrWins();
+            node->setTerminal();
             return winner;
         }
 

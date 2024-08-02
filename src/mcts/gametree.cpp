@@ -69,6 +69,10 @@ bool GameNode::getTurn() const { return turn; }
 
 void GameNode::nextTurn() { turn = !turn; }
 
+bool GameNode::getTerminal() const { return terminal; }
+
+void GameNode::setTerminal() { terminal = true; }
+
 double GameNode::evaluate(double constantOfInquisitiveness) {
     assert(parent != nullptr && "Evaluating node without parent");
     assert(parent->visits != 0 && "Parent never visited");
