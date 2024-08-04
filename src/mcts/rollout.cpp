@@ -122,7 +122,10 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         std::vector<std::pair<bitboard, int>> legalMoves =
             getAllLegalMoves(white, black, turn);
         // No legals: stalemate
-        if (legalMoves.empty()) return std::nullopt;
+        if (legalMoves.empty()) {
+            node->setTerminal();
+            return std::nullopt;
+        }
         std::random_device rd;
         const int randomIdx = rd() % legalMoves.size();  // TODO better method
         const bitboard randomMove = legalMoves.at(randomIdx).first;
@@ -142,7 +145,11 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         }
         if (oldPly == ply) ply = 0;
 
-        if (ply >= 100) return std::nullopt;
+        // Stalemate
+        if (ply >= 100) {
+            node->setTerminal();
+            return std::nullopt;
+        }
 
         white = newWhite;
         black = newBlack;

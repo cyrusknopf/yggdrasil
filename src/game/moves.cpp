@@ -404,8 +404,10 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
         }
         if (isOwnKingInCheck(own, opp, colour))
             moves.erase(it);
+        /*
         else if (own.at(5) == 0 || opp.at(5) == 0)
             moves.erase(it);
+            */
         else
             ++it;
     }

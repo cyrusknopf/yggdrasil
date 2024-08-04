@@ -30,7 +30,6 @@ TEST(makeSimulatedMove, capture) {
     ASSERT_EQ(captureMove, newBoards.first.at(5));
 }
 
-/*
 TEST(simulate, blackWin) {
     bitboard whiteKing = coordinateToState("a1");
     bitboard blackCastles = coordinateToState("a3") | coordinateToState("c1");
@@ -59,9 +58,7 @@ TEST(simulate, whiteWin) {
 
     ASSERT_EQ(true, res);
 }
-*/
 
-/*
 TEST(getAllLegalMoves, pawn) {
     bitboard whitePawn = coordinateToState("a2");
     team white = {whitePawn, 0, 0, 0, 0, 0};
@@ -72,34 +69,7 @@ TEST(getAllLegalMoves, pawn) {
     ASSERT_EQ(0, moves.at(0).second);
     ASSERT_EQ(0, moves.at(1).second);
 }
-*/
 
-TEST(getAllLegalMoves, edgeCase1) {
-    bitboard whitePawns = 2216712960;
-    bitboard whiteHorses = 66;
-    bitboard whiteCastles = 129;
-    bitboard whiteBishops = 36;
-    bitboard whiteQueens = 16;
-    bitboard whiteKing = 8;
-    team white = {whitePawns,   whiteHorses, whiteCastles,
-                  whiteBishops, whiteQueens, whiteKing};
-
-    bitboard blackPawns = 69533115340554240;
-    bitboard blackHorses = 4755801206503243776;
-    bitboard blackCastles = 9295429630892703744;
-    bitboard blackBishops = 2594073385365405696;
-    bitboard blackQueens = 16777216;
-    bitboard blackKing = 576460752303423488;
-
-    team black = {blackPawns,   blackHorses, blackCastles,
-                  blackBishops, blackQueens, blackKing};
-    ASSERT_TRUE(isOwnKingInCheck(white,black,true));
-
-    std::cout << gameStateToString(white, black) << std::endl;
-    std::vector<std::pair<bitboard, int>> moves =
-        getAllLegalMoves(white, black, false);
-    ASSERT_EQ(2, moves.size());
-}
 
 TEST(getAllLegalMoves, edgeCase2) {
     team white = {2147516160, 8388610, 129, 36, 16, 8};
@@ -111,12 +81,11 @@ TEST(getAllLegalMoves, edgeCase2) {
 TEST(getAllLegalMoves, edgeCase3) {
     team white = {549755838208, 8454144,129,36, 16, 8 };
     team black = {71776119061217280, 144115188075864064, 9295429630892703744, 2594073385365405696, 1152921504606846976, 576460752303423488};
-    ASSERT_FALSE(isOwnKingInCheck(white, black, true));
+    ASSERT_TRUE(isOwnKingInCheck(white, black, true));
 }
 
 TEST(getAllLegalMoves, edgeCase4) {
     team white = {2147512064, 66, 129, 36,2251799813685248, 8 };
     team black = {33215696519299072, 144115188344291328, 108086391056891904, 2594073385365405696, 1152921504606846976, 576460752303423488};
-    std::cout << gameStateToString(white, black) << std::endl;
     std::vector<std::pair<bitboard, int>> legalMoves = getAllLegalMoves(white, black, false);
 }

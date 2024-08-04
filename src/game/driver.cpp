@@ -199,19 +199,18 @@ void gameLoop() {
             root = updateRootOnMove(lastMove, root);
 
             time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 15) {
+            while (time(NULL) < startTime + 10) {
+                /*
                 std::cout << "\rSimulated games played: " << gamesSimulated
                           << std::flush;
+                          */
 
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
-                GameNode* C = nullptr;
-                while (true) {
-                    C = L->getRandomChild(rd());
-                    if (!C->getTerminal()) break;
-                }
-                assert(C != nullptr);
+                GameNode* C = L->getRandomChild(rd());
+                // Next iter if the node is terminal
+                if (!C->getTerminal()) continue;
                 std::optional<bool> res = simulate(C, true);
                 gamesSimulated++;
                 backpropagate(C, res);

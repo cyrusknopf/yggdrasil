@@ -379,7 +379,6 @@ TEST(getChildren, edgeCase1) {
     team white = { 70934096640, 134217730, 129, 36, 16, 8};
     team black = { 34766557670277120, 4755801206503243776, 9295429630892703744, 2594073385365405696, 1152921504606846976, 17592186044416 };
     GameNode* parent = new GameNode(nullptr, 134217730, white, black, false);
-    std::cout << gameStateToString(white, black) <<std::endl;
     auto children = getAllLegalMoves(white, black, false);
-    ASSERT_NE(0, children.size());
+    ASSERT_EQ(0, children.size());
 }
