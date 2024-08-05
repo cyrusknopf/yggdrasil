@@ -1,6 +1,5 @@
 import sys
 
-
 def state_to_string(state):
     stateBuilder = []
 
