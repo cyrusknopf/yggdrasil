@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "game/chess.h"
-#include "game/inits.h"
 #include "game/moves.h"
 #include "mcts/backprop.h"
 #include "mcts/expansion.h"
@@ -159,11 +158,8 @@ void gameLoop() {
     // Add all moves for white to the tree
     expansion(root);
     // Keep track of last move
-    bitboard lastMove = 0;
-    int ply = 0;
 
-    // TODO add ply
-    while (!gameOver && ply <= 100) {
+    while (!gameOver && halfMoveClock <= 100) {
         // User turn
         if (turn) {
             message = "";
@@ -171,7 +167,6 @@ void gameLoop() {
                 takeMove(whiteBitboards, blackBitboards, turn, message);
 
             bitboard movingBoard = std::get<0>(movingPiece);
-            lastMove = movingBoard;
             int movingIdx = std::get<1>(movingPiece);
             bitboard movingTo = std::get<2>(movingPiece);
 
@@ -179,9 +174,9 @@ void gameLoop() {
                 whiteBitboards, blackBitboards, movingBoard, movingIdx, turn);
 
             if (!checkIfCapture(blackBitboards, newBoards.second))
-                ply++;
+                halfMoveClock++;
             else
-                ply = 0;
+                halfMoveClock = 0;
 
             whiteBitboards = newBoards.first;
             blackBitboards = newBoards.second;
@@ -199,17 +194,15 @@ void gameLoop() {
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
-                /*
                 std::cout << "\rSimulated games played: " << gamesSimulated
                           << std::flush;
-                          */
 
                 GameNode* L = heursiticSelectLeaf(root);
                 expansion(L);
                 std::random_device rd;
                 GameNode* C = L->getRandomChild(rd());
                 // Next iter if the node is terminal
-                if (!C->getTerminal()) continue;
+                if (C->getTerminal()) continue;
                 std::optional<bool> res = simulate(C, true);
                 gamesSimulated++;
                 backpropagate(C, res);
@@ -220,9 +213,9 @@ void gameLoop() {
             team newWhite = newState->getWhite();
 
             if (!checkIfCapture(whiteBitboards, newWhite))
-                ply++;
+                halfMoveClock++;
             else
-                ply = 0;
+                halfMoveClock = 0;
 
             whiteBitboards = newState->getWhite();
             blackBitboards = newState->getBlack();
@@ -246,136 +239,4 @@ void gameLoop() {
         std::cout << "Black wins!" << std::endl;
 }
 
-void gameLoopTemp() {
-    bitboard whitePawn = 0;
-    whitePawn |= coordinateToState("a4");
-    whitePawn |= coordinateToState("b2");
-    whitePawn |= coordinateToState("c2");
-    whitePawn |= coordinateToState("d2");
-    whitePawn |= coordinateToState("e4");
-    whitePawn |= coordinateToState("f2");
-    whitePawn |= coordinateToState("h2");
-    whitePawn |= coordinateToState("h3");
-    bitboard whiteHorse = 0;
-    whiteHorse |= coordinateToState("b1");
-    whiteHorse |= coordinateToState("f3");
-    bitboard whiteCastle = 0;
-    whiteCastle |= coordinateToState("f5");
-    bitboard whiteQueen = coordinateToState("f6");
-    team whiteBitboards = {whitePawn,       whiteHorse, whiteCastle,
-                           whiteBishopInit, whiteQueen, whiteKingInit};
-
-    bitboard blackPawns = 0;
-    blackPawns |= coordinateToState("a7");
-    blackPawns |= coordinateToState("b7");
-    blackPawns |= coordinateToState("c7");
-    blackPawns |= coordinateToState("d3");
-    blackPawns |= coordinateToState("f4");
-    bitboard blackCastle = coordinateToState("a8");
-    bitboard blackHorse = coordinateToState("b8");
-    blackHorse |= coordinateToState("e7");
-    bitboard blackBishop = coordinateToState("c8");
-    team blackBitboards = {blackPawns,  blackHorse,     blackCastle,
-                           blackBishop, blackQueenInit, blackKingInit};
-    // General game setup
-    bool gameOver = false;
-    bool turn = true;
-    int halfMoveClock = 0;
-    std::optional<bool> winner = std::nullopt;
-
-    // IO setup
-    std::string message = "";
-
-    // MCTS setup
-    GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
-    // Add all moves for white to the tree
-    expansion(root);
-    // Keep track of last move
-    bitboard lastMove = 0;
-    int ply = 0;
-
-    // TODO add ply
-    while (!gameOver && ply <= 100) {
-        // User turn
-        if (turn) {
-            message = "";
-            std::tuple<bitboard, int, bitboard> movingPiece =
-                takeMove(whiteBitboards, blackBitboards, turn, message);
-
-            bitboard movingBoard = std::get<0>(movingPiece);
-            lastMove = movingBoard;
-            int movingIdx = std::get<1>(movingPiece);
-            bitboard movingTo = std::get<2>(movingPiece);
-
-            std::pair<team, team> newBoards = makeSimulatedMove(
-                whiteBitboards, blackBitboards, movingBoard, movingIdx, turn);
-
-            if (!checkIfCapture(blackBitboards, newBoards.second))
-                ply++;
-            else
-                ply = 0;
-
-            whiteBitboards = newBoards.first;
-            blackBitboards = newBoards.second;
-
-            // Update UI for white's move
-            clearTerm();
-            std::cout << gameStateToString(whiteBitboards, blackBitboards)
-                      << std::endl;
-        }
-        // Agent turn
-        else {
-            int gamesSimulated = 0;
-            std::cout << "Agent thinking..." << std::endl;
-            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
-
-            time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 10) {
-                /*
-                std::cout << "\rSimulated games played: " << gamesSimulated
-                          << std::flush;
-                          */
-
-                GameNode* L = heursiticSelectLeaf(root);
-                expansion(L);
-                std::random_device rd;
-                GameNode* C = L->getRandomChild(rd());
-                // Next iter if the node is terminal
-                if (!C->getTerminal()) continue;
-                std::optional<bool> res = simulate(C, true);
-                gamesSimulated++;
-                backpropagate(C, res);
-            }
-            GameNode* newState = getMostVisitedChild(root);
-
-            // Remove const for check capture
-            team newWhite = newState->getWhite();
-
-            if (!checkIfCapture(whiteBitboards, newWhite))
-                ply++;
-            else
-                ply = 0;
-
-            whiteBitboards = newState->getWhite();
-            blackBitboards = newState->getBlack();
-            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
-        }
-
-        winner = getWinner(whiteBitboards, blackBitboards);
-        if (winner.has_value()) {
-            gameOver = true;
-        }
-
-        turn = !turn;
-    }
-
-    std::cout << "Game over" << std::endl;
-    if (!winner.has_value())
-        std::cout << "Stalemate" << std::endl;
-    else if (winner)
-        std::cout << "White wins!" << std::endl;
-    else
-        std::cout << "Black wins!" << std::endl;
-}
-
-int main() { gameLoopTemp(); }
+int main() { gameLoop(); }
