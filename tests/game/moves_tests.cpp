@@ -382,3 +382,39 @@ TEST(getChildren, edgeCase1) {
     auto children = getAllLegalMoves(white, black, false);
     ASSERT_EQ(0, children.size());
 }
+
+TEST(legalMoves, edgeCaseDoubleMove) {
+    bitboard whitePawn = 0;
+    whitePawn |= coordinateToState("a4");
+    whitePawn |= coordinateToState("b2");
+    whitePawn |= coordinateToState("c2");
+    whitePawn |= coordinateToState("d2");
+    whitePawn |= coordinateToState("e4");
+    whitePawn |= coordinateToState("f2");
+    whitePawn |= coordinateToState("h2");
+    whitePawn |= coordinateToState("h3");
+    bitboard whiteHorse = 0;
+    whiteHorse |= coordinateToState("b1");
+    whiteHorse |= coordinateToState("f3");
+    bitboard whiteCastle = 0;
+    whiteCastle |= coordinateToState("f5");
+    bitboard whiteQueen = coordinateToState("f8");
+    team white = {whitePawn, whiteHorse, whiteCastle, whiteBishopInit, whiteQueen, whiteKingInit};
+
+    bitboard blackPawns = 0;
+    blackPawns |= coordinateToState("a7");
+    blackPawns |= coordinateToState("b7");
+    blackPawns |= coordinateToState("c7");
+    blackPawns |= coordinateToState("d3");
+    blackPawns |= coordinateToState("f4");
+    bitboard blackCastle = coordinateToState("a8");
+    bitboard blackHorse = coordinateToState("b8");
+    blackHorse |= coordinateToState("e7");
+    bitboard blackBishop = coordinateToState("c8");
+    team black = {blackPawns, blackHorse, blackCastle, blackBishop, blackQueenInit, blackKingInit};
+
+    auto moves = getAllLegalMoves(white, black, false);
+    ASSERT_EQ(1, moves.size());
+    auto [move, idx] = moves.at(0);
+    ASSERT_EQ(coordinateToState("d7"), move);
+}

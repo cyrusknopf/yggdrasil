@@ -60,34 +60,26 @@ std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
 
 std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
                                         int index, bool turn) {
-    team own;
-    team opp;
+    team own = turn ? white : black;
+    team opp = turn ? black : white;
 
-    if (turn) {
-        own = white;
-        opp = black;
-    } else {
-        own = black;
-        opp = white;
-    }
+    team newOwn = own;
+    team newOpp = opp;
 
     // Get the square which the moving piece moves to
     bitboard destinationSquare = ~(~move | own.at(index));
-    if (destinationSquare == 0) {
-    }
     // Determine if the enemy is on the moved to piece i.e. there is a capture
-    std::pair<bitboard, int> captureInfo = findPiece(destinationSquare, opp);
-    int capturedIdx = captureInfo.second;
+    auto [captureInfo, capturedIdx] = findPiece(destinationSquare, opp);
     // If there is a capture, perform the capture
     if (capturedIdx != -1) {
-        opp[capturedIdx] = performCapture(opp[capturedIdx], destinationSquare);
+        newOpp[capturedIdx] = performCapture(newOpp[capturedIdx], destinationSquare);
     };
     // Update the move mode
-    own[index] = move;
+    newOwn[index] = move;
     if (turn)
-        return std::make_pair(own, opp);
+        return std::make_pair(newOwn, newOpp);
     else
-        return std::make_pair(opp, own);
+        return std::make_pair(newOpp, newOwn);
 }
 
 std::optional<bool> simulate(GameNode* node, bool quiet) {

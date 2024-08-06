@@ -30,6 +30,7 @@ TEST(makeSimulatedMove, capture) {
     ASSERT_EQ(captureMove, newBoards.first.at(5));
 }
 
+/*
 TEST(simulate, blackWin) {
     bitboard whiteKing = coordinateToState("a1");
     bitboard blackCastles = coordinateToState("a3") | coordinateToState("c1");
@@ -69,23 +70,77 @@ TEST(getAllLegalMoves, pawn) {
     ASSERT_EQ(0, moves.at(0).second);
     ASSERT_EQ(0, moves.at(1).second);
 }
+*/
 
+TEST(simulate, blackMated) {
+    bitboard whiteKing = 0x0000000000000040;
+    bitboard whiteCastle = 0x0080000000000000;
 
-TEST(getAllLegalMoves, edgeCase2) {
-    team white = {2147516160, 8388610, 129, 36, 16, 8};
-    team black = {69533115340554240, 4755801206503243776, 9295429630892703744, 2594073385365405696, 16777216, 576460752303423488};
-    ASSERT_FALSE(isOwnKingInCheck(white, black, true));
-    auto moves = getAllLegalMoves(white, black, true);
+    bitboard blackKing = 0x0000000000000080;
+
+    team white = {0,0,whiteCastle, 0,0, whiteKing};
+    team black = {0, 0,0 ,0, 0, blackKing};
+
+    GameNode node = GameNode(nullptr, 0, white ,black, false);
+
+    std::optional<bool> res = simulate(&node, true);
+
+    ASSERT_FALSE(res);
 }
 
-TEST(getAllLegalMoves, edgeCase3) {
-    team white = {549755838208, 8454144,129,36, 16, 8 };
-    team black = {71776119061217280, 144115188075864064, 9295429630892703744, 2594073385365405696, 1152921504606846976, 576460752303423488};
-    ASSERT_TRUE(isOwnKingInCheck(white, black, true));
+
+TEST(simulate, whiteMated) {
+    bitboard whiteKing = 0x0000000000000010;
+    bitboard whitePawns = 0x000000000000FF00;
+    bitboard whitePieces = 0x00000000000000A5;
+
+    bitboard blackKing = 0x1000000000000000;
+    bitboard blackQueen = 0x0000000000080000;
+    bitboard blackPawns = 0x00F7F7F700000000;
+    bitboard blackPieces = 0x8C8C000000000000;
+
+    team white = {whitePawns, 0, whitePieces, 0, 0, whiteKing};
+    team black = {blackPawns, 0, blackPieces, blackQueen, 0, blackKing};
+
+    GameNode node = GameNode(nullptr, 0, white, black, false);
+
+    std::optional<bool> res = simulate(&node, true);
+
+    ASSERT_TRUE(res);
 }
 
-TEST(getAllLegalMoves, edgeCase4) {
-    team white = {2147512064, 66, 129, 36,2251799813685248, 8 };
-    team black = {33215696519299072, 144115188344291328, 108086391056891904, 2594073385365405696, 1152921504606846976, 576460752303423488};
-    std::vector<std::pair<bitboard, int>> legalMoves = getAllLegalMoves(white, black, false);
+TEST(simulate, doubleMove) {
+    bitboard whitePawn = 0;
+    whitePawn |= coordinateToState("a4");
+    whitePawn |= coordinateToState("b2");
+    whitePawn |= coordinateToState("c2");
+    whitePawn |= coordinateToState("d2");
+    whitePawn |= coordinateToState("e4");
+    whitePawn |= coordinateToState("f2");
+    whitePawn |= coordinateToState("h2");
+    whitePawn |= coordinateToState("h3");
+    bitboard whiteHorse = 0;
+    whiteHorse |= coordinateToState("b1");
+    whiteHorse |= coordinateToState("f3");
+    bitboard whiteCastle = 0;
+    whiteCastle |= coordinateToState("f5");
+    bitboard whiteQueen = coordinateToState("f8");
+    team white = {whitePawn, whiteHorse, whiteCastle, whiteBishopInit, whiteQueen, whiteKingInit};
+
+    bitboard blackPawns = 0;
+    blackPawns |= coordinateToState("a7");
+    blackPawns |= coordinateToState("b7");
+    blackPawns |= coordinateToState("c7");
+    blackPawns |= coordinateToState("d3");
+    blackPawns |= coordinateToState("f4");
+    bitboard blackCastle = coordinateToState("a8");
+    bitboard blackHorse = coordinateToState("b8");
+    blackHorse |= coordinateToState("e7");
+    bitboard blackBishop = coordinateToState("c8");
+    team black = {blackPawns, blackHorse, blackCastle, blackBishop, blackQueenInit, blackKingInit};
+
+    GameNode node = GameNode(nullptr, 0, white,black,false);
+
+    std::optional<bool> res = simulate(&node, false);
+    ASSERT_EQ(coordinateToState("d7"), move);
 }

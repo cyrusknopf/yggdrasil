@@ -48,7 +48,7 @@ std::optional<bool> getWinner(team& white, team& black) {
         return winner;
     }
     // White wins
-    if (isMated(white, black, false)) {
+    else if (isMated(white, black, false)) {
         bool winner = true;
         return winner;
     } else {
