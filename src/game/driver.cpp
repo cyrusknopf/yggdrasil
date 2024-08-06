@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "game/chess.h"
+#include "game/inits.h"
 #include "game/moves.h"
 #include "mcts/backprop.h"
 #include "mcts/expansion.h"
@@ -18,7 +19,6 @@
 #include "mcts/rollout.h"
 #include "mcts/selection.h"
 #include "utils.h"
-#include "game/inits.h"
 
 std::optional<bitboard> readSquare() {
     std::string square;
@@ -195,7 +195,7 @@ void gameLoop() {
         else {
             int gamesSimulated = 0;
             std::cout << "Agent thinking..." << std::endl;
-            root = updateRootOnMove(lastMove, root);
+            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
@@ -226,7 +226,7 @@ void gameLoop() {
 
             whiteBitboards = newState->getWhite();
             blackBitboards = newState->getBlack();
-            root = updateRootOnMove(newState->getMove(), root);
+            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);
@@ -262,7 +262,8 @@ void gameLoopTemp() {
     bitboard whiteCastle = 0;
     whiteCastle |= coordinateToState("f5");
     bitboard whiteQueen = coordinateToState("f6");
-    team whiteBitboards = {whitePawn, whiteHorse, whiteCastle, whiteBishopInit, whiteQueen, whiteKingInit};
+    team whiteBitboards = {whitePawn,       whiteHorse, whiteCastle,
+                           whiteBishopInit, whiteQueen, whiteKingInit};
 
     bitboard blackPawns = 0;
     blackPawns |= coordinateToState("a7");
@@ -274,7 +275,8 @@ void gameLoopTemp() {
     bitboard blackHorse = coordinateToState("b8");
     blackHorse |= coordinateToState("e7");
     bitboard blackBishop = coordinateToState("c8");
-    team blackBitboards = {blackPawns, blackHorse, blackCastle, blackBishop, blackQueenInit, blackKingInit};
+    team blackBitboards = {blackPawns,  blackHorse,     blackCastle,
+                           blackBishop, blackQueenInit, blackKingInit};
     // General game setup
     bool gameOver = false;
     bool turn = true;
@@ -325,7 +327,7 @@ void gameLoopTemp() {
         else {
             int gamesSimulated = 0;
             std::cout << "Agent thinking..." << std::endl;
-            root = updateRootOnMove(lastMove, root);
+            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
 
             time_t startTime = time(NULL);
             while (time(NULL) < startTime + 10) {
@@ -356,7 +358,7 @@ void gameLoopTemp() {
 
             whiteBitboards = newState->getWhite();
             blackBitboards = newState->getBlack();
-            root = updateRootOnMove(newState->getMove(), root);
+            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);
@@ -375,6 +377,5 @@ void gameLoopTemp() {
     else
         std::cout << "Black wins!" << std::endl;
 }
-
 
 int main() { gameLoopTemp(); }

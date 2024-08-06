@@ -87,7 +87,8 @@ class GameNode {
 
 GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot);
 
-GameNode* updateRootOnMove(bitboard move, GameNode* currentRoot);
+GameNode* updateRootOnMove(GameNode* currentRoot, team& newWhite,
+                           team& newBlack);
 
 GameNode* initialiseTree(team& white, team& black);
 

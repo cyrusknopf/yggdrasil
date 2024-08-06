@@ -104,13 +104,18 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
     return newRoot;
 }
 
-GameNode* updateRootOnMove(bitboard move, GameNode* currentRoot) {
+GameNode* updateRootOnMove(GameNode* currentRoot, team& white, team& black) {
+    // Assume the node we are deleting is a root i.e. no parent
     assert(currentRoot->getParent() == nullptr);
+    // Check each child for the one who has the new gamestate
     for (GameNode* child : currentRoot->getChildren()) {
-        if (child->getMove() == move) {
+        if (child->getWhite() == white && child->getBlack() == black) {
             return changeRoot(currentRoot, child);
         }
     }
+    // Should never reach here as `expansion` should have always been called
+    // TODO replace with generating a new child: we have all the information we
+    // need
     assert(1 == 2 && "Child not found");
     return nullptr;
 }

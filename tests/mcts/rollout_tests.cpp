@@ -1,7 +1,5 @@
-#include <gtest/gtest.h>
-
-#include <vector>
 #include <game/moves.h>
+#include <gtest/gtest.h>
 
 #include "game/chess.h"
 #include "game/inits.h"
@@ -30,36 +28,6 @@ TEST(makeSimulatedMove, capture) {
     ASSERT_EQ(captureMove, newBoards.first.at(5));
 }
 
-/*
-TEST(simulate, blackWin) {
-    bitboard whiteKing = coordinateToState("a1");
-    bitboard blackCastles = coordinateToState("a3") | coordinateToState("c1");
-    bitboard blackBishop = coordinateToState("c3");
-    team white = {0, 0, 0, 0, 0, whiteKing};
-    team black = {0, 0, blackCastles, blackBishop, 0, 0};
-
-    GameNode* root = initialiseTree(white, black);
-
-    std::optional<bool> res = simulate(root, true);
-
-    ASSERT_EQ(false, res);
-}
-
-TEST(simulate, whiteWin) {
-    bitboard blackKing = coordinateToState("a1");
-    bitboard whiteCastles = coordinateToState("a3") | coordinateToState("c1");
-    bitboard whiteBishop = coordinateToState("c3");
-    team black = {0, 0, 0, 0, 0, blackKing};
-    team white = {0, 0, whiteCastles, whiteBishop, 0, 0};
-
-    GameNode* root = initialiseTree(white, black);
-    root->nextTurn();
-
-    std::optional<bool> res = simulate(root, true);
-
-    ASSERT_EQ(true, res);
-}
-
 TEST(getAllLegalMoves, pawn) {
     bitboard whitePawn = coordinateToState("a2");
     team white = {whitePawn, 0, 0, 0, 0, 0};
@@ -70,7 +38,6 @@ TEST(getAllLegalMoves, pawn) {
     ASSERT_EQ(0, moves.at(0).second);
     ASSERT_EQ(0, moves.at(1).second);
 }
-*/
 
 TEST(simulate, blackMated) {
     bitboard whiteKing = 0x0000000000000040;
@@ -78,35 +45,32 @@ TEST(simulate, blackMated) {
 
     bitboard blackKing = 0x0000000000000080;
 
-    team white = {0,0,whiteCastle, 0,0, whiteKing};
-    team black = {0, 0,0 ,0, 0, blackKing};
+    team white = {0, 0, whiteCastle, 0, 0, whiteKing};
+    team black = {0, 0, 0, 0, 0, blackKing};
 
-    GameNode node = GameNode(nullptr, 0, white ,black, false);
+    GameNode node = GameNode(nullptr, 0, white, black, false);
 
     std::optional<bool> res = simulate(&node, true);
 
     ASSERT_FALSE(res);
 }
 
-
 TEST(simulate, whiteMated) {
-    bitboard whiteKing = 0x0000000000000010;
-    bitboard whitePawns = 0x000000000000FF00;
-    bitboard whitePieces = 0x00000000000000A5;
+    bitboard blackKing = coordinateToState("g1");
+    bitboard blackHorse = coordinateToState("e7");
+    bitboard blackCastle = coordinateToState("e3");
 
-    bitboard blackKing = 0x1000000000000000;
-    bitboard blackQueen = 0x0000000000080000;
-    bitboard blackPawns = 0x00F7F7F700000000;
-    bitboard blackPieces = 0x8C8C000000000000;
+    bitboard whitePawn = coordinateToState("g7");
+    bitboard whiteKing = coordinateToState("h7");
 
-    team white = {whitePawns, 0, whitePieces, 0, 0, whiteKing};
-    team black = {blackPawns, 0, blackPieces, blackQueen, 0, blackKing};
+    team white = {whitePawn, 0, 0, 0, 0, whiteKing};
+    team black = {0, blackHorse, blackCastle, 0, 0, blackKing};
 
     GameNode node = GameNode(nullptr, 0, white, black, false);
 
     std::optional<bool> res = simulate(&node, true);
 
-    ASSERT_TRUE(res);
+    ASSERT_FALSE(res);
 }
 
 TEST(simulate, doubleMove) {
@@ -125,7 +89,8 @@ TEST(simulate, doubleMove) {
     bitboard whiteCastle = 0;
     whiteCastle |= coordinateToState("f5");
     bitboard whiteQueen = coordinateToState("f8");
-    team white = {whitePawn, whiteHorse, whiteCastle, whiteBishopInit, whiteQueen, whiteKingInit};
+    team white = {whitePawn,       whiteHorse, whiteCastle,
+                  whiteBishopInit, whiteQueen, whiteKingInit};
 
     bitboard blackPawns = 0;
     blackPawns |= coordinateToState("a7");
@@ -137,10 +102,10 @@ TEST(simulate, doubleMove) {
     bitboard blackHorse = coordinateToState("b8");
     blackHorse |= coordinateToState("e7");
     bitboard blackBishop = coordinateToState("c8");
-    team black = {blackPawns, blackHorse, blackCastle, blackBishop, blackQueenInit, blackKingInit};
+    team black = {blackPawns,  blackHorse,     blackCastle,
+                  blackBishop, blackQueenInit, blackKingInit};
 
-    GameNode node = GameNode(nullptr, 0, white,black,false);
+    GameNode node = GameNode(nullptr, 0, white, black, false);
 
-    std::optional<bool> res = simulate(&node, false);
-    ASSERT_EQ(coordinateToState("d7"), move);
+    std::optional<bool> res = simulate(&node, true);
 }

@@ -142,7 +142,10 @@ TEST(updateRootOnMove, whiteSinglePawnPush) {
 
     GameNode* child = root->getChildren().at(0);
 
-    GameNode* newRoot = updateRootOnMove(slideNorth(pawn), root);
+    bitboard newPawn = slideNorth(pawn);
+    team newWhite = {newPawn, 0, 0, 0, 0, 0};
+
+    GameNode* newRoot = updateRootOnMove(root, newWhite, black);
 
     ASSERT_EQ(child, newRoot);
 }
@@ -156,12 +159,83 @@ TEST(updateRootOnMove, whiteDoublePawnPush) {
 
     expansion(root);
 
-    // Should have one child after expansion (single pawn push)
+    // Should have two children after expansion (single and double pawn push)
     ASSERT_EQ(2, root->getChildren().size());
 
-    GameNode* child = root->getChildren().at(1);
+    // Get the second child: should be gamestate where the pawn double pushed
+    GameNode* correctChild = root->getChildren().at(1);
 
-    GameNode* newRoot = updateRootOnMove(slideNorth(slideNorth(pawn)), root);
+    // Simulate gamestate where pawn double pushes
+    bitboard movedPawn = slideNorth(slideNorth(pawn));
+    team newWhite = {movedPawn, 0, 0, 0, 0, 0};
 
-    ASSERT_EQ(child, newRoot);
+    // Peform update
+    GameNode* newRoot = updateRootOnMove(root, newWhite, black);
+
+    ASSERT_EQ(correctChild, newRoot);
+}
+
+// Test to check if the correct root is updated in a situation where two pieces
+// can move to the same spot
+TEST(updateRootOnMove, possibleDoubleMove) {
+    bitboard whiteCastle = coordinateToState("a8");
+    bitboard whiteQueen = coordinateToState("b7");
+
+    bitboard blackPawns = coordinateToState("a7") | coordinateToState("b8") |
+                          coordinateToState("c7") | coordinateToState("b6") |
+                          coordinateToState("c6");
+
+    team white = {0, 0, whiteCastle, 0, whiteQueen, 0};
+    team black = {blackPawns, 0, 0, 0, 0, 0};
+    GameNode* root = initialiseTree(white, black);
+    expansion(root);
+
+    // 2 moves for the rook + 7 for the queen (cannot move northwesterly as
+    // castle is there): both surrounded by black pawns
+    ASSERT_EQ(2 + 7, root->getChildren().size());
+    // Check the first move is the castle eastwards capture
+    // (Not necessary but in current implementation this is expected behaviour)
+    GameNode* correctChild = root->getChildren().at(0);
+    ASSERT_EQ(coordinateToState("b8"), correctChild->getMove());
+
+    // Make the castle eastwards capture move
+    auto [newWhite, newBlack] =
+        makeSimulatedMove(white, black, coordinateToState("b8"), 2, true);
+
+    // Get the new root
+    GameNode* newRoot = updateRootOnMove(root, newWhite, newBlack);
+
+    // Ensure we the new root is the expected one
+    ASSERT_EQ(correctChild, newRoot);
+}
+
+TEST(updateRootOnMove, possibleDoubleMoveSamePiece) {
+    bitboard whiteCastle = coordinateToState("a8") | coordinateToState("b7");
+
+    bitboard blackPawns = coordinateToState("a7") | coordinateToState("b8") |
+                          coordinateToState("c7") | coordinateToState("b6");
+
+    team white = {0, 0, whiteCastle, 0, 0, 0};
+    team black = {blackPawns, 0, 0, 0, 0, 0};
+
+    GameNode* root = initialiseTree(white, black);
+    expansion(root);
+
+    // 2 moves for rook a8 4 moves for rook b7
+    ASSERT_EQ(2 + 4, root->getChildren().size());
+    // Check the first move is the castle northwards capture
+    // (Not necessary but in current implementation this is expected behaviour)
+    GameNode* correctChild = root->getChildren().at(0);
+    bitboard correctMove = coordinateToState("b8") | coordinateToState("a8");
+    ASSERT_EQ(correctMove, correctChild->getMove());
+
+    // Make the castle eastwards capture move
+    auto [newWhite, newBlack] =
+        makeSimulatedMove(white, black, correctMove, 2, true);
+
+    // Get the new root
+    GameNode* newRoot = updateRootOnMove(root, newWhite, newBlack);
+
+    // Ensure we the new root is the expected one
+    ASSERT_EQ(correctChild, newRoot);
 }
