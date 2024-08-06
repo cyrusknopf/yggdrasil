@@ -26,7 +26,7 @@ std::optional<bitboard> getRandomLegalMove(team& white, team& black, bool turn,
     std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
     std::size_t randomMoveIndex = dist(rng);
 
-    return moves[randomMoveIndex];
+    return moves.at(randomMoveIndex);
 }
 
 std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
@@ -55,7 +55,7 @@ std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
         return std::nullopt;
     }
 
-    return moves[randomMoveIndex];
+    return moves.at(randomMoveIndex);
 }
 
 std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
@@ -72,7 +72,8 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
     auto [captureInfo, capturedIdx] = findPiece(destinationSquare, opp);
     // If there is a capture, perform the capture
     if (capturedIdx != -1) {
-        newOpp[capturedIdx] = performCapture(newOpp[capturedIdx], destinationSquare);
+        newOpp[capturedIdx] =
+            performCapture(newOpp[capturedIdx], destinationSquare);
     };
     // Update the move mode
     newOwn[index] = move;
