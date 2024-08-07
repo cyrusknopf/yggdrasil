@@ -1,6 +1,11 @@
 #include <optional>
+#include <utility>
 
 #include "mcts/gametree.h"
+#include "utils.h"
+
+std::pair<bitboard, int> getRandomLegalMove(
+    std::vector<std::pair<bitboard, int>> moves, bool turn);
 
 std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
                                                        bool colour);

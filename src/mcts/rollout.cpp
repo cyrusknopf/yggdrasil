@@ -12,15 +12,9 @@
 #include "game/moves.h"
 #include "utils.h"
 
-std::optional<bitboard> getRandomLegalMove(team& white, team& black, bool turn,
-                                           int pieceIndex) {
+std::pair<bitboard, int> getRandomLegalMove(
+    std::vector<std::pair<bitboard, int>> moves, bool turn) {
     std::random_device rd;
-    std::vector<bitboard> moves =
-        legalMovesFromIndex(pieceIndex, white, black, turn);
-
-    if (moves.size() == 0) {
-        return std::nullopt;
-    }
 
     std::mt19937 rng(rd());
     std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
@@ -116,18 +110,13 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             node->setTerminal();
             return std::nullopt;
         }
-        std::random_device rd;
-        const int randomIdx = rd() % legalMoves.size();  // TODO better method
-        const bitboard randomMove = legalMoves.at(randomIdx).first;
-        int pieceIdx = legalMoves.at(randomIdx).second;
-        std::pair<team, team> newBoards =
+
+        auto [randomMove, pieceIdx] = getRandomLegalMove(legalMoves, turn);
+        auto [newWhite, newBlack] =
             makeMove(white, black, randomMove, pieceIdx, turn);
 
-        team newWhite = newBoards.first;
-        team newBlack = newBoards.second;
-
         int oldPly = halfMoveClock;
-        // If there is no capture, increment ply
+        // If there is no capture, increment half move clock
         if (turn) {
             if (!checkIfCapture(black, newBlack)) halfMoveClock++;
         } else {

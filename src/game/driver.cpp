@@ -2,12 +2,14 @@
 
 #include <unistd.h>
 
+#include <cstdlib>
 #include <iostream>
 #include <optional>
 #include <random>
 #include <regex>
 #include <string>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 #include "game/chess.h"
@@ -112,7 +114,7 @@ std::tuple<bitboard, int, bitboard> takeMove(team& whiteBitboards,
     }
 }
 
-void gameLoop() {
+void userVsMCTS() {
     // General game setup
     std::pair<team, team> teams = initGame();
     team whiteBitboards = teams.first;
@@ -211,4 +213,107 @@ void gameLoop() {
         std::cout << "Black wins!" << std::endl;
 }
 
-int main() { gameLoop(); }
+void randomVsMCTS(int moveTime) {
+    // General game setup
+    std::pair<team, team> teams = initGame();
+    team whiteBitboards = teams.first;
+    team blackBitboards = teams.second;
+    bool gameOver = false;
+    bool turn = true;
+    int halfMoveClock = 0;
+    std::optional<bool> winner = std::nullopt;
+
+    // IO setup
+    std::string message = "";
+
+    // MCTS setup
+    GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
+    // Add all moves for white to the tree
+    expansion(root);
+    // Keep track of last move
+
+    while (!gameOver && halfMoveClock <= 100) {
+        if (turn) {
+            clearTerm();
+            std::cout << gameStateToString(whiteBitboards, blackBitboards)
+                      << std::endl;
+            std::vector<std::pair<bitboard, int>> moves =
+                getAllLegalMoves(whiteBitboards, blackBitboards, turn);
+            auto [randomMove, randomMoveIdx] = getRandomLegalMove(moves, turn);
+            auto [newWhite, newBlack] =
+                makeMove(whiteBitboards, blackBitboards, randomMove,
+                         randomMoveIdx, turn);
+
+            // Check if capture, increment halfmove clock appropriately
+            if (!checkIfCapture(blackBitboards, newBlack))
+                halfMoveClock++;
+            else
+                halfMoveClock = 0;
+
+            whiteBitboards = newWhite;
+            blackBitboards = newBlack;
+        }
+        // Agent turn
+        else {
+            clearTerm();
+            std::cout << gameStateToString(whiteBitboards, blackBitboards)
+                      << std::endl;
+            int gamesSimulated = 0;
+            std::cout << "Agent thinking..." << std::endl;
+            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
+
+            time_t startTime = time(NULL);
+            while (time(NULL) < startTime + moveTime) {
+                std::cout << "\rSimulated games played: " << gamesSimulated
+                          << std::flush;
+
+                GameNode* L = heursiticSelectLeaf(root);
+                expansion(L);
+                std::random_device rd;
+                GameNode* C = L->getRandomChild(rd());
+                // Next iter if the node is terminal
+                if (C->getTerminal()) continue;
+                std::optional<bool> res = simulate(C, true);
+                gamesSimulated++;
+                backpropagate(C, res);
+            }
+            GameNode* newState = getMostVisitedChild(root);
+
+            // Remove const for check capture
+            team newWhite = newState->getWhite();
+
+            if (!checkIfCapture(whiteBitboards, newWhite))
+                halfMoveClock++;
+            else
+                halfMoveClock = 0;
+
+            whiteBitboards = newState->getWhite();
+            blackBitboards = newState->getBlack();
+            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
+        }
+
+        winner = getWinner(whiteBitboards, blackBitboards);
+        if (winner.has_value()) {
+            gameOver = true;
+        }
+
+        turn = !turn;
+    }
+
+    std::cout << "Game over" << std::endl;
+    if (!winner.has_value())
+        std::cout << "Stalemate" << std::endl;
+    else if (winner)
+        std::cout << "White wins!" << std::endl;
+    else
+        std::cout << "Black wins!" << std::endl;
+}
+
+int main(int argc, char* argv[]) {
+    int moveTime;
+    if (argc != 2)
+        exit(1);
+    else
+        moveTime = atoi(argv[1]);
+    randomVsMCTS(moveTime);
+}

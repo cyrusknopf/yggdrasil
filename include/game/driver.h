@@ -73,8 +73,11 @@ std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
                                   const std::string& symbol);
 
 /*
- * Contains logic for running a game
+ * Contains logic for running a game where the user is white and MCTS agent is
+ * black
  */
-void gameLoop();
+void userVsMCTS();
+
+void randomVsMCTS(int moveTime);
 
 #endif
