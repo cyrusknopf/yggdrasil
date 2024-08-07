@@ -392,7 +392,7 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
 
     for (auto it = moves.begin(); it != moves.end();) {
         std::pair<team, team> newBoards =
-            makeSimulatedMove(white, black, *it, idx, colour);
+            makeMove(white, black, *it, idx, colour);
         team own;
         team opp;
         if (colour) {
@@ -402,8 +402,7 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
             opp = newBoards.first;
             own = newBoards.second;
         }
-        if (isOwnKingInCheck(own, opp, colour))
-            moves.erase(it);
+        if (isOwnKingInCheck(own, opp, colour)) moves.erase(it);
         /*
         else if (own.at(5) == 0 || opp.at(5) == 0)
             moves.erase(it);

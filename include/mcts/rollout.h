@@ -33,8 +33,8 @@ std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
  * @param [turn] turn of moving piece (white = true)
  * @returns pair containg the new team arrays: <white, black>
  */
-std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
-                                        int index, bool turn);
+std::pair<team, team> makeMove(team& white, team& black, bitboard move,
+                               int index, bool turn);
 
 /*
  * Randomly plays moves until a winner, from the state specified by the

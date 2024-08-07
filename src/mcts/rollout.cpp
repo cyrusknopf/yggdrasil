@@ -58,8 +58,8 @@ std::optional<bitboard> getRandomMove(team& white, team& black, bool turn,
     return moves.at(randomMoveIndex);
 }
 
-std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
-                                        int index, bool turn) {
+std::pair<team, team> makeMove(team& white, team& black, bitboard move,
+                               int index, bool turn) {
     team own = turn ? white : black;
     team opp = turn ? black : white;
 
@@ -86,13 +86,10 @@ std::pair<team, team> makeSimulatedMove(team& white, team& black, bitboard move,
 std::optional<bool> simulate(GameNode* node, bool quiet) {
     team white = node->getWhite();
     team black = node->getBlack();
-    if (white.at(5) == 0) {
-        assert(white.at(5) != 0);
-    } else if (black.at(5) == 0) {
-        assert(black.at(5) != 0);
-    }
+    assert(white.at(5) != 0);
+    assert(black.at(5) != 0);
     bool turn = node->getTurn();
-    int ply = 0;
+    int halfMoveClock = 0;
     while (true) {
         if (!quiet) {
             std::cout << gameStateToString(white, black) << std::endl;
@@ -124,22 +121,22 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         const bitboard randomMove = legalMoves.at(randomIdx).first;
         int pieceIdx = legalMoves.at(randomIdx).second;
         std::pair<team, team> newBoards =
-            makeSimulatedMove(white, black, randomMove, pieceIdx, turn);
+            makeMove(white, black, randomMove, pieceIdx, turn);
 
         team newWhite = newBoards.first;
         team newBlack = newBoards.second;
 
-        int oldPly = ply;
+        int oldPly = halfMoveClock;
         // If there is no capture, increment ply
         if (turn) {
-            if (!checkIfCapture(black, newBlack)) ply++;
+            if (!checkIfCapture(black, newBlack)) halfMoveClock++;
         } else {
-            if (!checkIfCapture(white, newWhite)) ply++;
+            if (!checkIfCapture(white, newWhite)) halfMoveClock++;
         }
-        if (oldPly == ply) ply = 0;
+        if (oldPly == halfMoveClock) halfMoveClock = 0;
 
         // Stalemate
-        if (ply >= 100) {
+        if (halfMoveClock >= 100) {
             node->setTerminal();
             return std::nullopt;
         }

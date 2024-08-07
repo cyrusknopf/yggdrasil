@@ -112,34 +112,6 @@ std::tuple<bitboard, int, bitboard> takeMove(team& whiteBitboards,
     }
 }
 
-std::pair<team, team> makeMove(team& whiteBitboards, team& blackBitboards,
-                               bitboard toSquare, bitboard newBoard,
-                               int fromIdx, bool turn) {
-    team opp;
-    // Update the game state, formally
-    if (turn) {
-        whiteBitboards[fromIdx] = newBoard;
-        opp = blackBitboards;
-    } else {
-        blackBitboards[fromIdx] = newBoard;
-        opp = whiteBitboards;
-    }
-
-    std::pair<bitboard, int> captured = findPiece(toSquare, opp);
-    int capturedIdx = captured.second;
-
-    if (capturedIdx != -1) {
-        bitboard capturedBoard = captured.first;
-        capturedBoard = performCapture(capturedBoard, toSquare);
-
-        if (turn)
-            blackBitboards[capturedIdx] = capturedBoard;
-        else
-            whiteBitboards[capturedIdx] = capturedBoard;
-    }
-    return std::make_pair(whiteBitboards, blackBitboards);
-}
-
 void gameLoop() {
     // General game setup
     std::pair<team, team> teams = initGame();
@@ -170,7 +142,7 @@ void gameLoop() {
             int movingIdx = std::get<1>(movingPiece);
             bitboard movingTo = std::get<2>(movingPiece);
 
-            std::pair<team, team> newBoards = makeSimulatedMove(
+            std::pair<team, team> newBoards = makeMove(
                 whiteBitboards, blackBitboards, movingBoard, movingIdx, turn);
 
             if (!checkIfCapture(blackBitboards, newBoards.second))

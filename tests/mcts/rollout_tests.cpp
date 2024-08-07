@@ -7,7 +7,7 @@
 #include "mcts/rollout.h"
 #include "utils.h"
 
-TEST(makeSimulatedMove, capture) {
+TEST(makeMove, capture) {
     // White to move
     bool turn = true;
     // White king at a2
@@ -20,7 +20,7 @@ TEST(makeSimulatedMove, capture) {
     int idx = 5;
 
     std::pair<team, team> newBoards =
-        makeSimulatedMove(white, black, captureMove, idx, turn);
+        makeMove(white, black, captureMove, idx, turn);
 
     // Black king should've been captured
     ASSERT_EQ(0, newBoards.second.at(5));

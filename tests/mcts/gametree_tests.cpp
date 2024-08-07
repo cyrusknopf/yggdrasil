@@ -200,7 +200,7 @@ TEST(updateRootOnMove, possibleDoubleMove) {
 
     // Make the castle eastwards capture move
     auto [newWhite, newBlack] =
-        makeSimulatedMove(white, black, coordinateToState("b8"), 2, true);
+        makeMove(white, black, coordinateToState("b8"), 2, true);
 
     // Get the new root
     GameNode* newRoot = updateRootOnMove(root, newWhite, newBlack);
@@ -230,8 +230,7 @@ TEST(updateRootOnMove, possibleDoubleMoveSamePiece) {
     ASSERT_EQ(correctMove, correctChild->getMove());
 
     // Make the castle eastwards capture move
-    auto [newWhite, newBlack] =
-        makeSimulatedMove(white, black, correctMove, 2, true);
+    auto [newWhite, newBlack] = makeMove(white, black, correctMove, 2, true);
 
     // Get the new root
     GameNode* newRoot = updateRootOnMove(root, newWhite, newBlack);

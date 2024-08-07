@@ -14,15 +14,15 @@ void expansion(GameNode* parent) {
     team white = parent->getWhite();
     team black = parent->getBlack();
 
-        std::vector<std::pair<bitboard, int>> moves = getAllLegalMoves(white, black, parent->getTurn());
+    std::vector<std::pair<bitboard, int>> moves =
+        getAllLegalMoves(white, black, parent->getTurn());
 
-        for (auto&[move, pieceIndex] : moves) {
-            assert(move != 0);
+    for (auto& [move, pieceIndex] : moves) {
+        assert(move != 0);
 
-            std::pair<team, team> newBoards =
-                makeSimulatedMove(white, black, move, pieceIndex, parent->getTurn());
+        std::pair<team, team> newBoards =
+            makeMove(white, black, move, pieceIndex, parent->getTurn());
 
-            parent->addChild(parent, move, newBoards.first, newBoards.second);
-        }
+        parent->addChild(parent, move, newBoards.first, newBoards.second);
+    }
 }
-
