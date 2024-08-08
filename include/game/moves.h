@@ -12,7 +12,7 @@
  * @param [oppState] single bitboard of all enemy pieces
  * @param [state] single bitboard of pawn pieces
  * @param [colour] colour of the pawn to get moves of; white = true
- * @return vector of bitboards, each with a single unique pseudolegal move
+ * @returns vector of bitboards, each with a single unique pseudolegal move
  */
 std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
                                            bitboard state, bool colour);
@@ -25,7 +25,7 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
  * @param [ownState] single bitboard of all friendly pieces
  * @param [oppState] single bitboard of all enemy pieces
  * @param [state] single bitboard of horse pieces
- * @return vector of bitboards, each with a single unique pseudolegal move
+ * @returns vector of bitboards, each with a single unique pseudolegal move
  */
 std::vector<bitboard> horsePseudoLegalMoves(bitboard ownState,
                                             bitboard oppState, bitboard state);
@@ -38,7 +38,7 @@ std::vector<bitboard> horsePseudoLegalMoves(bitboard ownState,
  * @param [ownState] single bitboard of all friendly pieces
  * @param [oppState] single bitboard of all enemy pieces
  * @param [state] single bitboard of castle pieces
- * @return vector of bitboards, each with a single unique pseudolegal move
+ * @returns vector of bitboards, each with a single unique pseudolegal move
  */
 std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
                                              bitboard blackState,
@@ -53,7 +53,7 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard whiteState,
  * @param [ownState] single bitboard of all friendly pieces
  * @param [oppState] single bitboard of all enemy pieces
  * @param [state] single bitboard of bishop pieces
- * @return vector of bitboards, each with a single unique pseudolegal move
+ * @returns vector of bitboards, each with a single unique pseudolegal move
  */
 std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
                                              bitboard blackState,
@@ -68,7 +68,7 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard whiteState,
  * @param [ownState] single bitboard of all friendly pieces
  * @param [oppState] single bitboard of all enemy pieces
  * @param [state] single bitboard of queen pieces
- * @return vector of bitboards, each with a single unique pseudolegal move
+ * @returns vector of bitboards, each with a single unique pseudolegal move
  */
 std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
                                             bitboard blackState,
@@ -82,7 +82,7 @@ std::vector<bitboard> queenPseudoLegalMoves(bitboard whiteState,
  * @param [ownState] single bitboard of all friendly pieces
  * @param [oppState] single bitboard of all enemy pieces
  * @param [state] single bitboard of king piece
- * @return vector of bitboards, each with a single unique pseudolegal move
+ * @returns vector of bitboards, each with a single unique pseudolegal move
  */
 std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
                                            bitboard state);
@@ -95,10 +95,23 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
  * @param [white] reference to array of white piece bitboards
  * @param [black] reference to array of black piece bitboards
  * @param [colour] colour of piece to get moves of, white=true
+ * @returns vector of bitboards, each with a single unique pseudolegal move of
+ * the piece at `idx`
  */
 std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
                                            bool colour);
 
+/*
+ * Gets the legal move of the piece specified with `idx` parameter
+ * 0: pawn, 1:horse, 2:castle, 3:bishop, 4:queen, 5:king
+ *
+ * @param [idx] index of piece to get moves of
+ * @param [white] team array of white piece bitboards
+ * @param [black] team array of black piece bitboards
+ * @param [colour] colour of piece to get moves of, white=true
+ * @returns vector of bitboards, each with a single unique legal move of
+ * the piece at `idx`
+ */
 std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
                                           bool colour);
 /*

@@ -18,6 +18,7 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
     bitboard both = ownState | oppState;
 
     if (colour) {
+        // White pawns
         for (auto& piece : getAllPieces(state)) {
             // Single push
             move = slideNorth(piece);
@@ -34,17 +35,22 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
                 }
             }
 
+            // Northeasterly capture
             move = slideNorth(slideEast(piece));
+            // No friendly collision and a opp collision
             if ((move & ownState) == 0 && (move & oppState) != 0 && move != 0) {
                 moves.push_back(move | state & ~piece);
             }
 
+            // Northwesterly capture
             move = slideNorth(slideWest(piece));
+            // No friendly collision and a opp collision
             if ((move & ownState) == 0 && (move & oppState) != 0 && move != 0) {
                 moves.push_back(move | state & ~piece);
             }
         }
     } else {
+        // Black pawns
         for (auto& piece : getAllPieces(state)) {
             // Single push
             move = slideSouth(piece);
@@ -61,19 +67,23 @@ std::vector<bitboard> pawnPseudoLegalMoves(bitboard ownState, bitboard oppState,
                 }
             }
 
+            // Southeasterly capture
             move = slideSouth(slideEast(piece));
+            // No friendly collision and a opp collision
             if ((move & ownState) == 0 && (move & oppState) != 0 && move != 0) {
                 moves.push_back(move | state & ~piece);
             }
 
+            // Southwesterly capture
             move = slideSouth(slideWest(piece));
+            // No friendly collision and a opp collision
             if ((move & ownState) == 0 && (move & oppState) != 0 && move != 0) {
                 moves.push_back(move | state & ~piece);
             }
         }
     }
     return moves;
-};
+}
 
 std::vector<bitboard> horsePseudoLegalMoves(bitboard own, bitboard opp,
                                             bitboard state) {
@@ -82,6 +92,7 @@ std::vector<bitboard> horsePseudoLegalMoves(bitboard own, bitboard opp,
 
     std::vector<bitboard> pieces = getAllPieces(state);
 
+    // Each move requires no collisions with friendly pieces
     for (auto& piece : pieces) {
         move = slideEast(piece);
         move = slideNorth(move);
@@ -156,9 +167,11 @@ std::vector<bitboard> castlePseudoLegalMoves(bitboard ownState,
         move = piece;
         while (slideNorth(move) != 0) {
             move = slideNorth(move);
+            // If hit friend: don't add this move and stop
             if ((move & ownState) != 0) {
                 break;
             }
+            // If hit enemy:  add this move and stop
             moves.push_back(move | state & ~piece);
             if ((move & oppState) != 0) {
                 break;
@@ -220,9 +233,11 @@ std::vector<bitboard> bishopPseudoLegalMoves(bitboard ownState,
         move = piece;
         while (slideNorth(slideEast(move)) != 0) {
             move = slideNorth(slideEast(move));
+            // If hit friend: don't add this move and stop
             if ((move & ownState) != 0) {
                 break;
             }
+            // If hit enemy:  add this move and stop
             moves.push_back(move | state & ~piece);
             if ((move & oppState) != 0) {
                 break;
@@ -275,6 +290,7 @@ std::vector<bitboard> queenPseudoLegalMoves(bitboard ownState,
                                             bitboard oppState, bitboard state) {
     std::vector<bitboard> moves;
 
+    // Queen moves equivalent to those of bishop and castle
     for (auto& piece : getAllPieces(state)) {
         std::vector<bitboard> diagonals =
             bishopPseudoLegalMoves(ownState, oppState, state);
@@ -343,18 +359,10 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
 
 std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
                                            bool colour) {
-    bitboard ownState;
-    bitboard oppState;
-    team thisTeam;
-    if (colour) {
-        ownState = getGameState(white, black, true);
-        oppState = getGameState(white, black, false);
-        thisTeam = white;
-    } else {
-        ownState = getGameState(white, black, false);
-        oppState = getGameState(white, black, true);
-        thisTeam = black;
-    }
+    team thisTeam = colour ? white : black;
+
+    bitboard ownState = colour ? getTeamState(white) : getTeamState(black);
+    bitboard oppState = colour ? getTeamState(black) : getTeamState(white);
 
     switch (idx) {
         case 0:
@@ -380,26 +388,19 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
     bitboard ownState = colour ? getTeamState(white) : getTeamState(black);
     bitboard oppState = colour ? getTeamState(black) : getTeamState(white);
 
+    // Get the psuedo legals for this piece
     std::vector<bitboard> moves =
         pseudoLegalFromIndex(idx, white, black, colour);
 
     for (auto it = moves.begin(); it != moves.end();) {
+        // Make the move
         std::pair<team, team> newBoards =
             makeMove(white, black, *it, idx, colour);
-        team own;
-        team opp;
-        if (colour) {
-            own = newBoards.first;
-            opp = newBoards.second;
-        } else {
-            opp = newBoards.first;
-            own = newBoards.second;
-        }
-        if (isOwnKingInCheck(own, opp, colour)) moves.erase(it);
-        /*
-        else if (own.at(5) == 0 || opp.at(5) == 0)
+        team own = colour ? white : black;
+        team opp = colour ? black : white;
+        // Check if this piece's king is in check after move: remove it if it is
+        if (isOwnKingInCheck(own, opp, colour))
             moves.erase(it);
-            */
         else
             ++it;
     }
