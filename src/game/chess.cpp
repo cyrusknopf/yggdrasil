@@ -19,6 +19,7 @@ std::pair<team, team> initGame() {
 }
 
 bool checkIfCapture(team& oldBoards, team& newBoards) {
+    // Check if each piece is the same before and after
     for (int i = 0; i < 6; i++) {
         if (oldBoards.at(i) != newBoards.at(i)) return true;
     }
@@ -29,32 +30,34 @@ bool isMated(team& white, team& black, bool colour) {
     team own = colour ? white : black;
     team opp = colour ? black : white;
 
+    // If not in check, cannot be mated
     if (!isOwnKingInCheck(own, opp, colour)) return false;
+    // Check each piece's possible moves to see if we can get out of check
     for (int piece = 5; piece > 0; piece--) {
         for (bitboard move : legalMovesFromIndex(piece, white, black, colour)) {
             auto [newWhite, newBlack] =
                 makeMove(white, black, move, piece, colour);
             team tempOwn = colour ? newWhite : newBlack;
             team tempOpp = colour ? newBlack : newWhite;
+            // If we can get out of check, then not mated
             if (!isOwnKingInCheck(tempOwn, tempOpp, colour)) return false;
         }
     }
+    // Otherwise mated
     return true;
 }
 
+// TODO refactor to be consistent with the fact that nullopt is used for
+// stalemate
 std::optional<bool> getWinner(team& white, team& black) {
     // Black wins
-    if (isMated(white, black, true)) {
-        bool winner = false;
-        return winner;
-    }
+    if (isMated(white, black, true)) return false;
+
     // White wins
-    else if (isMated(white, black, false)) {
-        bool winner = true;
-        return winner;
-    } else {
+    else if (isMated(white, black, false))
+        return true;
+    else
         return std::nullopt;
-    }
 }
 
 bitboard getGameState(team& white, team& black) {

@@ -1,3 +1,6 @@
+#ifndef _CHESS_H_
+#define _CHESS_H_
+
 #include <utility>
 
 #include "utils.h"
@@ -11,10 +14,33 @@
  */
 std::pair<team, team> initGame();
 
+/*
+ * Given two team arrays (of the same colour), determines whether there has been
+ * capture
+ *
+ * @param [oldBoards] team array before move
+ * @param [newBoards] team array after move; where a possible capture may have
+ * occured
+ * @returns true if there has been a capture, false other if not
+ */
 bool checkIfCapture(team& oldBoards, team& newBoards);
 
+/*
+ * Checks whether the player of the specified `colour` is is mated
+ *
+ * @param [white] white team array
+ * @param [black] black team array
+ * @param [colour] player to check if mated: true = white
+ * @returns true if player `colour` is in checkmate, false otheriwse
+ */
 bool isMated(team& white, team& black, bool colour);
 
+/*
+ * Checks whether either player has won
+ * @param [white] white team array
+ * @param [black] black team array
+ * @returns true if white has won, false if black has won, nullopt if neither
+ */
 std::optional<bool> getWinner(team& white, team& black);
 
 /*
@@ -46,3 +72,4 @@ bitboard getGameState(team& white, team& black, bool colour);
  * @return bitboard of every piece on the provided team
  */
 bitboard getTeamState(team& pieces);
+#endif  // !_CHESS_H_
