@@ -1,120 +1,45 @@
 #include "game/driver.h"
 
-#include <unistd.h>
-
 #include <cstdlib>
 #include <iostream>
 #include <optional>
-#include <random>
-#include <regex>
 #include <string>
-#include <tuple>
 #include <utility>
-#include <vector>
 
+#include "agents/mcts_agent.h"
+#include "agents/random_agent.h"
+#include "agents/user_agent.h"
 #include "game/chess.h"
 #include "game/moves.h"
 #include "mcts/backprop.h"
 #include "mcts/expansion.h"
 #include "mcts/gametree.h"
-#include "mcts/rollout.h"
-#include "mcts/selection.h"
-#include "utils.h"
 
-std::optional<bitboard> readSquare() {
-    std::string square;
-    std::cin >> square;
-    std::smatch matches;
-
-    if (!std::regex_match(square, matches, squareRe)) {
-        return std::nullopt;
-    } else {
-        return coordinateToState(square);
-    }
+void clearAndPrintState(team white, team black) {
+    clearTerm();
+    std::cout << gameStateToString(white, black) << std::endl;
 }
 
-std::pair<bitboard, bitboard> takeToAndFrom(team& white, team& black,
-                                            std::string& message) {
-    std::optional<bitboard> fromSquare = std::nullopt;
-    std::optional<bitboard> toSquare = std::nullopt;
-
-    while (!fromSquare.has_value() || !toSquare.has_value()) {
-        clearTerm();
-        std::cout << gameStateToString(white, black) << std::endl;
-        std::cout << message;
-        std::cout << "Please enter a move" << std::endl;
-        fromSquare = readSquare();
-        if (!fromSquare.has_value()) {
-            std::cout << "Not a position" << std::endl;
-            continue;
-        }
-
-        std::cout << "↓" << std::endl;
-        toSquare = readSquare();
-        if (!toSquare.has_value()) {
-            std::cout << "Not a position" << std::endl;
-            continue;
-        }
-    }
-
-    return std::make_pair(fromSquare.value(), toSquare.value());
+void printWinner(std::optional<bool> winner) {
+    std::cout << "Game over" << std::endl;
+    if (!winner.has_value())
+        std::cout << "Stalemate" << std::endl;
+    else if (winner)
+        std::cout << "White wins!" << std::endl;
+    else
+        std::cout << "Black wins!" << std::endl;
 }
 
-std::tuple<bitboard, int, bitboard> takeMove(team& whiteBitboards,
-                                             team& blackBitboards, bool turn,
-                                             std::string& message) {
-    team own;
-    team opp;
-    bitboard newBoard;
+int updateHalfMoveClock(team oldTeam, team newTeam, int clock) {
+    if (!checkIfCapture(oldTeam, newTeam))
+        clock++;
+    else
+        clock = 0;
 
-    // Repeat until a legal move is provided, at which point return the changed
-    // board
-    while (true) {
-        if (turn)
-            message += "\nWhite to move\n";
-        else
-            message += "\nBlack to move\n";
-
-        std::pair<bitboard, bitboard> toAndFrom =
-            takeToAndFrom(whiteBitboards, blackBitboards, message);
-        bitboard fromSquare = toAndFrom.first;
-        bitboard toSquare = toAndFrom.second;
-
-        if (turn) {
-            own = whiteBitboards;
-            opp = blackBitboards;
-        } else {
-            own = blackBitboards;
-            opp = whiteBitboards;
-        }
-
-        std::pair<bitboard, int> fromPiece = findPiece(fromSquare, own);
-        bitboard fromBoard = fromPiece.first;
-        bitboard fromIdx = fromPiece.second;
-
-        if (fromIdx == -1) {
-            message = "No piece at from square";
-            continue;
-        }
-
-        bitboard newBoard = ~(~fromBoard | fromSquare);
-        newBoard = newBoard | toSquare;
-
-        std::vector<bitboard> moves =
-            pseudoLegalFromIndex(fromIdx, whiteBitboards, blackBitboards, turn);
-
-        std::vector<bitboard>::iterator it =
-            std::find(moves.begin(), moves.end(), newBoard);
-
-        if (it == moves.end()) {
-            message = "Illegal move";
-            continue;
-        }
-        return std::make_tuple(newBoard, fromIdx, toSquare);
-    }
+    return clock;
 }
 
-void userVsMCTS() {
+void userVsMCTS(int moveTime) {
     // General game setup
     std::pair<team, team> teams = initGame();
     team whiteBitboards = teams.first;
@@ -127,90 +52,49 @@ void userVsMCTS() {
     // IO setup
     std::string message = "";
 
+    // User setup
+    UserAgent usrAgent = UserAgent();
+
     // MCTS setup
     GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
     // Add all moves for white to the tree
     expansion(root);
-    // Keep track of last move
+    MCTSAgent mctsAgent = MCTSAgent(moveTime);
 
     while (!gameOver && halfMoveClock <= 100) {
         // User turn
         if (turn) {
-            message = "";
-            std::tuple<bitboard, int, bitboard> movingPiece =
-                takeMove(whiteBitboards, blackBitboards, turn, message);
+            clearAndPrintState(whiteBitboards, blackBitboards);
 
-            bitboard movingBoard = std::get<0>(movingPiece);
-            int movingIdx = std::get<1>(movingPiece);
-            bitboard movingTo = std::get<2>(movingPiece);
+            auto [newWhite, newBlack] = UserAgent().takeTurn(
+                whiteBitboards, blackBitboards, turn, message);
 
-            std::pair<team, team> newBoards = makeMove(
-                whiteBitboards, blackBitboards, movingBoard, movingIdx, turn);
+            halfMoveClock =
+                updateHalfMoveClock(blackBitboards, newBlack, halfMoveClock);
 
-            if (!checkIfCapture(blackBitboards, newBoards.second))
-                halfMoveClock++;
-            else
-                halfMoveClock = 0;
+            whiteBitboards = newWhite;
+            blackBitboards = newBlack;
 
-            whiteBitboards = newBoards.first;
-            blackBitboards = newBoards.second;
-
-            // Update UI for white's move
-            clearTerm();
-            std::cout << gameStateToString(whiteBitboards, blackBitboards)
-                      << std::endl;
         }
         // Agent turn
         else {
-            int gamesSimulated = 0;
-            std::cout << "Agent thinking..." << std::endl;
-            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
+            clearAndPrintState(whiteBitboards, blackBitboards);
 
-            time_t startTime = time(NULL);
-            while (time(NULL) < startTime + 10) {
-                std::cout << "\rSimulated games played: " << gamesSimulated
-                          << std::flush;
+            root =
+                mctsAgent.takeTurn(root, whiteBitboards, blackBitboards, false);
 
-                GameNode* L = heursiticSelectLeaf(root);
-                expansion(L);
-                std::random_device rd;
-                GameNode* C = L->getRandomChild(rd());
-                // Next iter if the node is terminal
-                if (C->getTerminal()) continue;
-                std::optional<bool> res = simulate(C, true);
-                gamesSimulated++;
-                backpropagate(C, res);
-            }
-            GameNode* newState = getMostVisitedChild(root);
+            halfMoveClock = updateHalfMoveClock(
+                whiteBitboards, root->getWhite(), halfMoveClock);
 
-            // Remove const for check capture
-            team newWhite = newState->getWhite();
-
-            if (!checkIfCapture(whiteBitboards, newWhite))
-                halfMoveClock++;
-            else
-                halfMoveClock = 0;
-
-            whiteBitboards = newState->getWhite();
-            blackBitboards = newState->getBlack();
-            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
+            whiteBitboards = root->getWhite();
+            blackBitboards = root->getBlack();
         }
 
         winner = getWinner(whiteBitboards, blackBitboards);
-        if (winner.has_value()) {
-            gameOver = true;
-        }
-
+        if (winner.has_value()) gameOver = true;
         turn = !turn;
     }
-
-    std::cout << "Game over" << std::endl;
-    if (!winner.has_value())
-        std::cout << "Stalemate" << std::endl;
-    else if (winner)
-        std::cout << "White wins!" << std::endl;
-    else
-        std::cout << "Black wins!" << std::endl;
+    printWinner(winner);
 }
 
 void randomVsMCTS(int moveTime) {
@@ -223,96 +107,48 @@ void randomVsMCTS(int moveTime) {
     int halfMoveClock = 0;
     std::optional<bool> winner = std::nullopt;
 
-    // IO setup
-    std::string message = "";
-
     // MCTS setup
     GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
     // Add all moves for white to the tree
     expansion(root);
-    // Keep track of last move
+    MCTSAgent mctsAgent = MCTSAgent(moveTime);
+
+    // Random Agent
+    RandomAgent rdmAgent = RandomAgent();
 
     while (!gameOver && halfMoveClock <= 100) {
         // Random agent turn
         if (turn) {
-            clearTerm();
-            std::cout << gameStateToString(whiteBitboards, blackBitboards)
-                      << std::endl;
-            std::vector<std::pair<bitboard, int>> moves =
-                getAllLegalMoves(whiteBitboards, blackBitboards, turn);
-            auto [randomMove, randomMoveIdx] = getRandomLegalMove(moves, turn);
-            auto [newWhite, newBlack] =
-                makeMove(whiteBitboards, blackBitboards, randomMove,
-                         randomMoveIdx, turn);
+            clearAndPrintState(whiteBitboards, blackBitboards);
 
-            // Check if capture, increment halfmove clock appropriately
-            if (!checkIfCapture(blackBitboards, newBlack))
-                halfMoveClock++;
-            else
-                halfMoveClock = 0;
+            auto [newWhite, newBlack] =
+                rdmAgent.takeTurn(whiteBitboards, blackBitboards, turn);
+
+            halfMoveClock =
+                updateHalfMoveClock(blackBitboards, newBlack, halfMoveClock);
 
             whiteBitboards = newWhite;
             blackBitboards = newBlack;
         }
         // MCTS agent turn
         else {
-            clearTerm();
-            std::cout << gameStateToString(whiteBitboards, blackBitboards)
-                      << std::endl;
-            int gamesSimulated = 0;
-            std::cout << "Agent thinking..." << std::endl;
-            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
+            clearAndPrintState(whiteBitboards, blackBitboards);
 
-            time_t startTime = time(nullptr);
-            while (time(nullptr) < startTime + moveTime) {
-                std::cout << "\rSimulated games played: " << gamesSimulated
-                          << std::flush;
-                GameNode* L = heursiticSelectLeaf(root);
-                if (L->getTerminal()) {
-                    backpropagate(L, !L->getWinner());
-                    continue;
-                }
-                expansion(L);
-                std::random_device rd;
-                GameNode* C = L->getRandomChild(rd());
-                // Next iter if the node is terminal
-                if (C->getTerminal()) {
-                    continue;
-                }
-                std::optional<bool> res = simulate(C, true);
-                gamesSimulated++;
-                backpropagate(C, !res);
-            }
-            GameNode* newState = getMostVisitedChild(root);
+            root =
+                mctsAgent.takeTurn(root, whiteBitboards, blackBitboards, false);
 
-            // Remove const for check capture
-            team newWhite = newState->getWhite();
+            halfMoveClock = updateHalfMoveClock(
+                whiteBitboards, root->getWhite(), halfMoveClock);
 
-            if (!checkIfCapture(whiteBitboards, newWhite))
-                halfMoveClock++;
-            else
-                halfMoveClock = 0;
-
-            whiteBitboards = newState->getWhite();
-            blackBitboards = newState->getBlack();
-            root = updateRootOnMove(root, whiteBitboards, blackBitboards);
+            whiteBitboards = root->getWhite();
+            blackBitboards = root->getBlack();
         }
-
         winner = getWinner(whiteBitboards, blackBitboards);
-        if (winner.has_value()) {
-            gameOver = true;
-        }
-
+        if (winner.has_value()) gameOver = true;
         turn = !turn;
     }
 
-    std::cout << "Game over" << std::endl;
-    if (!winner.has_value())
-        std::cout << "Stalemate" << std::endl;
-    else if (winner)
-        std::cout << "White wins!" << std::endl;
-    else
-        std::cout << "Black wins!" << std::endl;
+    printWinner(winner);
 }
 
 int main(int argc, char* argv[]) {
@@ -321,5 +157,6 @@ int main(int argc, char* argv[]) {
         exit(1);
     else
         moveTime = atoi(argv[1]);
-    randomVsMCTS(moveTime);
+    // randomVsMCTS(moveTime);
+    userVsMCTS(moveTime);
 }

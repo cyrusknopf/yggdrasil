@@ -29,7 +29,7 @@ endif()
 set(TEST_SOURCES
     tests/utils_tests.cpp
     tests/game/moves_tests.cpp
-        tests/game/chess_tests.cpp
+    tests/game/chess_tests.cpp
     tests/mcts/gametree_tests.cpp
     tests/mcts/selection_tests.cpp
     tests/mcts/rollout_tests.cpp
@@ -40,9 +40,15 @@ set(TEST_SOURCES
 # Gather all source files
 set(SRC_SOURCES
     src/utils.cpp
+
+    src/agents/random_agent.cpp
+    src/agents/mcts_agent.cpp
+    src/agents/user_agent.cpp
+
     src/game/chess.cpp
     src/game/driver.cpp
     src/game/moves.cpp
+
     src/mcts/gametree.cpp
     src/mcts/selection.cpp
     src/mcts/rollout.cpp

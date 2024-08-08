@@ -113,6 +113,19 @@ std::pair<bitboard, int> findPiece(bitboard square,
 bitboard performCapture(bitboard victim, bitboard captor);
 
 /*
+ * Given a single bitboard (possibly with multiple pieces), adds the
+ * provided symbol to each location on the provided string board
+ * representation
+ *
+ * @param [board] string representation of the board
+ * @param [pieceBitboard] bitboard to add to the string representation
+ * @param [symbol] symbol to use as representation at each location
+ * @return updated string representation of the board
+ */
+std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
+                                  const std::string& symbol);
+
+/*
  * Given the two team arrays, creates the string representation of the board
  *
  * @param [whitePieces] white pieces bitboard array
