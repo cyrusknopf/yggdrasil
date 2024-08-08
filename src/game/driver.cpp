@@ -233,6 +233,7 @@ void randomVsMCTS(int moveTime) {
     // Keep track of last move
 
     while (!gameOver && halfMoveClock <= 100) {
+        // Random agent turn
         if (turn) {
             clearTerm();
             std::cout << gameStateToString(whiteBitboards, blackBitboards)
@@ -253,7 +254,7 @@ void randomVsMCTS(int moveTime) {
             whiteBitboards = newWhite;
             blackBitboards = newBlack;
         }
-        // Agent turn
+        // MCTS agent turn
         else {
             clearTerm();
             std::cout << gameStateToString(whiteBitboards, blackBitboards)
@@ -262,20 +263,25 @@ void randomVsMCTS(int moveTime) {
             std::cout << "Agent thinking..." << std::endl;
             root = updateRootOnMove(root, whiteBitboards, blackBitboards);
 
-            time_t startTime = time(NULL);
-            while (time(NULL) < startTime + moveTime) {
+            time_t startTime = time(nullptr);
+            while (time(nullptr) < startTime + moveTime) {
                 std::cout << "\rSimulated games played: " << gamesSimulated
                           << std::flush;
-
                 GameNode* L = heursiticSelectLeaf(root);
+                if (L->getTerminal()) {
+                    backpropagate(L, !L->getWinner());
+                    continue;
+                }
                 expansion(L);
                 std::random_device rd;
                 GameNode* C = L->getRandomChild(rd());
                 // Next iter if the node is terminal
-                if (C->getTerminal()) continue;
+                if (C->getTerminal()) {
+                    continue;
+                }
                 std::optional<bool> res = simulate(C, true);
                 gamesSimulated++;
-                backpropagate(C, res);
+                backpropagate(C, !res);
             }
             GameNode* newState = getMostVisitedChild(root);
 

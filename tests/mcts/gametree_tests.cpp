@@ -7,6 +7,7 @@
 #include "mcts/expansion.h"
 #include "mcts/gametree.h"
 #include "mcts/rollout.h"
+#include "mcts/selection.h"
 #include "utils.h"
 
 TEST(getChildren, onlyChild) {
@@ -185,8 +186,8 @@ TEST(updateRootOnMove, possibleDoubleMove) {
                           coordinateToState("c7") | coordinateToState("b6") |
                           coordinateToState("c6");
 
-    team white = {0, 0, whiteCastle, 0, whiteQueen, 0};
-    team black = {blackPawns, 0, 0, 0, 0, 0};
+    team white = {0, 0, whiteCastle, 0, whiteQueen, 1};
+    team black = {blackPawns, 0, 0, 0, 0, 1};
     GameNode* root = initialiseTree(white, black);
     expansion(root);
 
@@ -215,8 +216,8 @@ TEST(updateRootOnMove, possibleDoubleMoveSamePiece) {
     bitboard blackPawns = coordinateToState("a7") | coordinateToState("b8") |
                           coordinateToState("c7") | coordinateToState("b6");
 
-    team white = {0, 0, whiteCastle, 0, 0, 0};
-    team black = {blackPawns, 0, 0, 0, 0, 0};
+    team white = {0, 0, whiteCastle, 0, 0, 1};
+    team black = {blackPawns, 0, 0, 0, 0, 1};
 
     GameNode* root = initialiseTree(white, black);
     expansion(root);

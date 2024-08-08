@@ -69,3 +69,6 @@ TEST(heuristicSelectLeaf, oneGeneration) {
     // Should be the child with the highest value
     ASSERT_EQ(bestChild, child4);
 }
+
+TEST(heuristicSelectLeaf, terminalChildren) {
+}

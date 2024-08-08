@@ -1,6 +1,7 @@
 #ifndef _GAMETREE_H_
 #define _GAMETREE_H_
 
+#include <optional>
 #include <vector>
 
 #include "utils.h"
@@ -15,6 +16,7 @@ class GameNode {
     int visits;
     bool turn;
     bool terminal;
+    std::optional<bool> winner;
 
    public:
     GameNode(GameNode* parent, bitboard move, team& white, team& black,
@@ -28,7 +30,8 @@ class GameNode {
           wins(0),
           visits(1),
           turn(turn),
-          terminal(false){};
+          terminal(false),
+          winner(std::nullopt){};
 
     ~GameNode() {
         if (children.size() != 0) {
@@ -79,6 +82,10 @@ class GameNode {
     bool getTerminal() const;
 
     void setTerminal();
+
+    std::optional<bool> getWinner() const;
+
+    void setWinner(bool victor);
 
     double evaluate(double constantofInquisitiveness);
 

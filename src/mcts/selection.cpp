@@ -2,6 +2,9 @@
 
 #include <float.h>
 
+#include <cassert>
+#include <cfloat>
+
 #include "mcts/gametree.h"
 
 GameNode* selectRandomLeaf(GameNode* node, int seed) {
@@ -18,6 +21,7 @@ GameNode* selectRandomLeaf(GameNode* node, int seed) {
 int findMaxIndex(std::vector<double> scores) {
     double largest = -DBL_MAX;
     int largestIdx = -1;
+    // int largestIdx = 0;  // Terrible
     for (int i = 0; i < scores.size(); i++) {
         if (scores[i] > largest) {
             largest = scores[i];
@@ -27,18 +31,15 @@ int findMaxIndex(std::vector<double> scores) {
     return largestIdx;
 }
 
-int findMinIndex(std::vector<double> scores) {
-    double smallest = DBL_MAX;
-    int smallestIdx = -1;
-    for (int i = 0; i < scores.size(); i++) {
-        if (scores[i] < smallest) {
-            smallest = scores[i];
-            smallestIdx = i;
-        }
-    }
-    return smallestIdx;
-}
+/*
+ Depth First Search w/ backtracking?
+ Each node:
+            Select best child:
+                if child is terminal:
+                try next child
 
+
+*/
 GameNode* heursiticSelectLeaf(GameNode* node) {
     // Find a node whose has no children i.e. a leaf
     while (node->getChildren().size() != 0) {
@@ -46,16 +47,13 @@ GameNode* heursiticSelectLeaf(GameNode* node) {
         std::vector<double> evals(children.size());
         // O(n)
         std::transform(children.begin(), children.end(), evals.begin(),
-                       [](GameNode* n) { return n->evaluate(1.414); });
+                       [](GameNode* n) { return n->evaluate(1.141); });
         int bestChildIndex;
         // O(n)
-        // if (node->getTurn())
         bestChildIndex = findMaxIndex(evals);
-        // else
-        // bestChildIndex = findMinIndex(evals);
-        GameNode* bestChild = children[bestChildIndex];
+        assert(bestChildIndex != -1);
+        GameNode* bestChild = children.at(bestChildIndex);
         return heursiticSelectLeaf(bestChild);
     }
-
     return node;
 }

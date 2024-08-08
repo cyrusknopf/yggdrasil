@@ -78,6 +78,7 @@ std::pair<team, team> makeMove(team& white, team& black, bitboard move,
 }
 
 std::optional<bool> simulate(GameNode* node, bool quiet) {
+    // assert(node->getParent() != nullptr);
     team white = node->getWhite();
     team black = node->getBlack();
     assert(white.at(5) != 0);
@@ -91,15 +92,13 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         // Black wins
         if (isMated(white, black, true)) {
             bool winner = false;
-            if (node->getTurn() == winner) node->incrWins();
-            node->setTerminal();
+            // node->getTurn = player to move now. So parent is winner
             return winner;
         }
         // White wins
         if (isMated(white, black, false)) {
             bool winner = true;
-            if (node->getTurn() == winner) node->incrWins();
-            node->setTerminal();
+            // node->getTurn = player to move now. So prev is winner
             return winner;
         }
 
@@ -107,7 +106,6 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             getAllLegalMoves(white, black, turn);
         // No legals: stalemate
         if (legalMoves.empty()) {
-            node->setTerminal();
             return std::nullopt;
         }
 
@@ -126,7 +124,6 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
 
         // Stalemate
         if (halfMoveClock >= 100) {
-            node->setTerminal();
             return std::nullopt;
         }
 

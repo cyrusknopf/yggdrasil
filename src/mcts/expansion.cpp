@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include "game/chess.h"
 #include "game/moves.h"
 #include "mcts/gametree.h"
 #include "mcts/rollout.h"
@@ -20,9 +21,26 @@ void expansion(GameNode* parent) {
     for (auto& [move, pieceIndex] : moves) {
         assert(move != 0);
 
-        std::pair<team, team> newBoards =
+        auto [newWhite, newBlack] =
             makeMove(white, black, move, pieceIndex, parent->getTurn());
 
-        parent->addChild(parent, move, newBoards.first, newBoards.second);
+        GameNode* child = parent->addChild(parent, move, newWhite, newBlack);
+        team childWhite = child->getWhite();
+        team childBlack = child->getBlack();
+        // TODO results in backprop the wrong value in driver
+        if (getAllLegalMoves(childWhite, childBlack, child->getTurn())
+                .empty()) {
+            child->setTerminal();
+            // Do not set winner, keep as nullopt to denote draw
+        };
+        // Black wins
+        if (isMated(newWhite, newBlack, true)) {
+            child->setTerminal();
+            child->setWinner(false);
+            // white wins
+        } else if (isMated(newWhite, newBlack, false)) {
+            child->setTerminal();
+            child->setWinner(true);
+        }
     }
 }

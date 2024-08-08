@@ -1,3 +1,4 @@
+#include <game/chess.h>
 #include <gtest/gtest.h>
 
 #include <vector>
@@ -41,4 +42,30 @@ TEST(expansion, startGame) {
     expansion(node);
     // Each pawn has two possible moves, plus each horse has one possible moves
     ASSERT_EQ(20, node->getChildren().size());
+}
+
+TEST(expansion, terminal) {
+    team white = {549755813888, 0, 4294967298, 0, 0, 4611686018427387904};
+    team black = {0, 0, 0, 0, 0, 281474976710656};
+
+    GameNode* terminalState = new GameNode(nullptr, 0, white, black, false);
+    ASSERT_EQ(0, terminalState->getChildren().size());
+    expansion(terminalState);
+    ASSERT_EQ(0, terminalState->getChildren().size());
+}
+
+TEST(expansion, mateIn1) {
+    team white = {0, 0, coordinateToState("a7"), 0, 0, 35184372088832};
+    team black = {0, 0, 0, 0, 0, 2305843009213693952};
+
+    GameNode* parent = new GameNode(nullptr, 0, white, black, true);
+    ASSERT_EQ(0, parent->getChildren().size());
+    expansion(parent);
+    std::vector<GameNode*> children = parent->getChildren();
+    // Castle moving north : mate
+    GameNode* mate = children.at(0);
+    ASSERT_TRUE(mate->getTerminal());
+    for (int i = 1; i < children.size(); i++) {
+        ASSERT_FALSE(children.at(i)->getTerminal());
+    }
 }

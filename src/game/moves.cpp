@@ -377,15 +377,8 @@ std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
 
 std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
                                           bool colour) {
-    bitboard ownState;
-    bitboard oppState;
-    if (colour) {
-        ownState = getTeamState(white);
-        oppState = getTeamState(black);
-    } else {
-        ownState = getTeamState(black);
-        oppState = getTeamState(white);
-    }
+    bitboard ownState = colour ? getTeamState(white) : getTeamState(black);
+    bitboard oppState = colour ? getTeamState(black) : getTeamState(white);
 
     std::vector<bitboard> moves =
         pseudoLegalFromIndex(idx, white, black, colour);

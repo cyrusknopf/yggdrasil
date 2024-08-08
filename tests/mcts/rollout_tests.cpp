@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 
 #include "game/chess.h"
-#include "game/inits.h"
 #include "mcts/gametree.h"
 #include "mcts/rollout.h"
 #include "utils.h"
@@ -73,39 +72,12 @@ TEST(simulate, whiteMated) {
     ASSERT_FALSE(res);
 }
 
-TEST(simulate, doubleMove) {
-    bitboard whitePawn = 0;
-    whitePawn |= coordinateToState("a4");
-    whitePawn |= coordinateToState("b2");
-    whitePawn |= coordinateToState("c2");
-    whitePawn |= coordinateToState("d2");
-    whitePawn |= coordinateToState("e4");
-    whitePawn |= coordinateToState("f2");
-    whitePawn |= coordinateToState("h2");
-    whitePawn |= coordinateToState("h3");
-    bitboard whiteHorse = 0;
-    whiteHorse |= coordinateToState("b1");
-    whiteHorse |= coordinateToState("f3");
-    bitboard whiteCastle = 0;
-    whiteCastle |= coordinateToState("f5");
-    bitboard whiteQueen = coordinateToState("f8");
-    team white = {whitePawn,       whiteHorse, whiteCastle,
-                  whiteBishopInit, whiteQueen, whiteKingInit};
+TEST(simulate, terminal) {
+    team white = {0, 0, 9223372036854775808ULL, 0, 0, 35184372088832};
+    team black = {0, 0, 0, 0, 0, 2305843009213693952};
 
-    bitboard blackPawns = 0;
-    blackPawns |= coordinateToState("a7");
-    blackPawns |= coordinateToState("b7");
-    blackPawns |= coordinateToState("c7");
-    blackPawns |= coordinateToState("d3");
-    blackPawns |= coordinateToState("f4");
-    bitboard blackCastle = coordinateToState("a8");
-    bitboard blackHorse = coordinateToState("b8");
-    blackHorse |= coordinateToState("e7");
-    bitboard blackBishop = coordinateToState("c8");
-    team black = {blackPawns,  blackHorse,     blackCastle,
-                  blackBishop, blackQueenInit, blackKingInit};
-
-    GameNode node = GameNode(nullptr, 0, white, black, false);
-
-    std::optional<bool> res = simulate(&node, true);
+    GameNode* node = new GameNode(nullptr, 0, white, black, false);
+    ASSERT_FALSE(node->getTerminal());
+    std::optional<bool> res = simulate(node, true);
+    ASSERT_TRUE(res);
 }

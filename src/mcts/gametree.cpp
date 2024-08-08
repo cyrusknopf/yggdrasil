@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <optional>
 #include <random>
 #include <vector>
 
@@ -44,7 +45,7 @@ GameNode* GameNode::getRandomChild(int seed) {
     std::uniform_int_distribution<std::size_t> dist(0, children.size() - 1);
     std::size_t index = dist(rng);
 
-    return children[index];
+    return children.at(index);
 }
 
 bitboard GameNode::getMove() const { return move; }
@@ -72,6 +73,10 @@ void GameNode::nextTurn() { turn = !turn; }
 bool GameNode::getTerminal() const { return terminal; }
 
 void GameNode::setTerminal() { terminal = true; }
+
+std::optional<bool> GameNode::getWinner() const { return winner; }
+
+void GameNode::setWinner(bool victor) { winner = victor; }
 
 double GameNode::evaluate(double constantOfInquisitiveness) {
     assert(parent != nullptr && "Evaluating node without parent");
@@ -141,7 +146,7 @@ void GameNode::printGameNode(int indent) const {
 
 GameNode* getMostVisitedChild(GameNode* root) {
     int mostVisits = 0;
-    GameNode* mostVisitedChild = nullptr;
+    GameNode* mostVisitedChild = root;
 
     for (GameNode* child : root->getChildren()) {
         if (child->getVisits() > mostVisits) {
