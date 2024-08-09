@@ -33,16 +33,17 @@ TEST(isMated, realCase) {
     ASSERT_FALSE(isMated(white, black, false));
 }
 
-TEST(isMated, quasiterminal) {
+TEST(isMated, endGame1) {
     team white = {70940428800, 72, 128, 36, 8388608, 536870912};
     team black = {88665322160129,         4755801206503243776,
                   9295429630892703744ULL, 288371113640067072,
                   1152921504606846976,    576460752303423488};
-    ASSERT_FALSE(isMated(white, black, true));
+
+    ASSERT_TRUE(isMated(white, black, true));
     ASSERT_FALSE(isMated(white, black, false));
 }
 
-TEST(isMated, quasiterminal2) {
+TEST(isMated, endGame2) {
     team white = {0, 0, 9223372036854775808ULL, 0, 0, 35184372088832};
     team black = {1, 0, 0, 0, 0, 2305843009213693952};
 
@@ -50,10 +51,9 @@ TEST(isMated, quasiterminal2) {
     ASSERT_TRUE(isMated(white, black, false));
 }
 
-TEST(isMated, quasiterminal3) {
+TEST(isMated, endGame3) {
     team white = {4294967296, 2097152, 8192, 0, 256, 2048};
     team black = {0, 0, 0, 0, 0, 128};
-    std::cout << gameStateToString(white, black) << std::endl;
 
     ASSERT_FALSE(isMated(white, black, true));
     ASSERT_FALSE(isMated(white, black, false));
