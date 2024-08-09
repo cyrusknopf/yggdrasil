@@ -394,10 +394,9 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
 
     for (auto it = moves.begin(); it != moves.end();) {
         // Make the move
-        std::pair<team, team> newBoards =
-            makeMove(white, black, *it, idx, colour);
-        team own = colour ? white : black;
-        team opp = colour ? black : white;
+        auto [newWhite, newBlack] = makeMove(white, black, *it, idx, colour);
+        team own = colour ? newWhite : newBlack;
+        team opp = colour ? newBlack : newWhite;
         // Check if this piece's king is in check after move: remove it if it is
         if (isOwnKingInCheck(own, opp, colour))
             moves.erase(it);
