@@ -14,23 +14,40 @@ using team = std::array<bitboard, 6>;
 const std::regex squareRe{"[a-h][1-8]"};
 
 /*
- * Returns the file (column) of a piece
- *
- * @param [state] bitboard with a single piece (single 1)
- * @return integer corresponding to the file of the piece
- */
-int getRank(bitboard state);
-
-/*
  * Returns the rank (row) of a piece
  *
  * @param [state] bitboard with a single piece (single 1)
  * @return integer corresponding to the rank of the piece
  */
+int getRank(bitboard state);
+
+/*
+ * Returns the file (column) of a piece
+ *
+ * @param [state] bitboard with a single piece (single 1)
+ * @return integer corresponding to the file of the piece
+ */
 int getFile(bitboard state);
 
-bitboard getBetween(bitboard sq1, bitboard sq2);
+/*
+ * Given two singleton bitboards, gets the bitboard containing 1s in either a
+ * diagonal, horizontal or vertical line between the two pieces, piece exclusive
+ * If the two pieces are not on the same diagonal or rank or file, returns 0
+ *
+ * @param [board1] singleton bitboard
+ * @param [board2] singleton bitboard
+ * @returns bitboard containing ones in the line between two pieces
+ */
+bitboard getBetween(bitboard board1, bitboard board2);
 
+/*
+ * Given two singleton bitboards, returns true if the pieces are on the same
+ * diagonal, false otherwise
+ *
+ * @param [sq1] singleton bitboard
+ * @param [sq2] singleton bitboard
+ * @returns true if on diagonal, false otherwise
+ */
 bool isDiagonal(bitboard sq1, bitboard sq2);
 
 /*
@@ -42,40 +59,6 @@ bool isDiagonal(bitboard sq1, bitboard sq2);
  */
 bitboard coordinateToState(const std::string& coord);
 
-/*
- * Moves the provided piece north one square and returns it
- *
- * @param [state] bitboard with a single piece (single 1)
- * @return bitboard with the piece moved up one square
- */
-constexpr bitboard slideNorth(bitboard state) { return state <<= 8; }
-/*
- * Moves the provided piece south one square and returns it
- *
- * @param [state] bitboard with a single piece (single 1)
- * @return bitboard with the piece moved down one square
- */
-constexpr bitboard slideSouth(bitboard state) { return state >>= 8; }
-
-/*
- * Moves the provided piece east one square and returns it
- *
- * @param [state] bitboard with a single piece (single 1)
- * @return bitboard with the piece moved right one square
- */
-constexpr bitboard slideEast(bitboard state) {
-    return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
-}
-
-/*
- * Moves the provided piece west one square and returns it
- *
- * @param [state] bitboard with a single piece (single 1)
- * @return bitboard with the piece moved left one square
- */
-constexpr bitboard slideWest(uint64_t state) {
-    return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
-}
 /*
  * Returns an array of bitboards, each with a single piece, from a bitboard with
  * multiple pieces
@@ -136,4 +119,40 @@ std::string gameStateToString(team whitePieces, team blackPieces);
 
 // Clears the terminal window, intended to preceed printing of the board
 void clearTerm();
+
+/*
+ * Moves the provided piece north one square and returns it
+ *
+ * @param [state] bitboard with a single piece (single 1)
+ * @return bitboard with the piece moved up one square
+ */
+constexpr bitboard slideNorth(bitboard state) { return state <<= 8; }
+/*
+ * Moves the provided piece south one square and returns it
+ *
+ * @param [state] bitboard with a single piece (single 1)
+ * @return bitboard with the piece moved down one square
+ */
+constexpr bitboard slideSouth(bitboard state) { return state >>= 8; }
+
+/*
+ * Moves the provided piece east one square and returns it
+ *
+ * @param [state] bitboard with a single piece (single 1)
+ * @return bitboard with the piece moved right one square
+ */
+constexpr bitboard slideEast(bitboard state) {
+    return (state >>= 1) & 0x7F7F7F7F7F7F7F7FULL;
+}
+
+/*
+ * Moves the provided piece west one square and returns it
+ *
+ * @param [state] bitboard with a single piece (single 1)
+ * @return bitboard with the piece moved left one square
+ */
+constexpr bitboard slideWest(uint64_t state) {
+    return (state <<= 1) & 0xFEFEFEFEFEFEFEFE;
+}
+
 #endif  // !_UTILSH_

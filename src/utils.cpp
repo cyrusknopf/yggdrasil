@@ -47,7 +47,7 @@ bitboard getBetween(bitboard board1, bitboard board2) {
     const bitboard a2a7 = 0x0001010101010100;
     const bitboard b2g7 = 0x0040201008040200;
     const bitboard h1b7 = 0x0002040810204080;
-    // Get trainling zeros; analagous to the square index
+    // Get trailing zeros; analagous to the square index
     const int sq1 = __builtin_ctzll(board1);
     const int sq2 = __builtin_ctzll(board2);
 

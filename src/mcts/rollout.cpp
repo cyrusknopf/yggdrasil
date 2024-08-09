@@ -12,6 +12,7 @@
 #include "game/moves.h"
 #include "utils.h"
 
+// Assumes input is legal
 std::pair<bitboard, int> getRandomLegalMove(
     std::vector<std::pair<bitboard, int>> moves) {
     std::random_device rd;
@@ -26,6 +27,7 @@ std::pair<bitboard, int> getRandomLegalMove(
 std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
                                                        bool colour) {
     std::vector<std::pair<bitboard, int>> moves;
+    // Iterate through each piece, adding its legal moves
     for (int piece = 0; piece < 6; piece++) {
         std::vector<bitboard> thisMoves =
             legalMovesFromIndex(piece, white, black, colour);

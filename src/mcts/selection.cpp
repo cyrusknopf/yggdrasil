@@ -21,7 +21,6 @@ GameNode* selectRandomLeaf(GameNode* node, int seed) {
 int findMaxIndex(std::vector<double> scores) {
     double largest = -DBL_MAX;
     int largestIdx = -1;
-    // int largestIdx = 0;  // Terrible
     for (int i = 0; i < scores.size(); i++) {
         if (scores[i] > largest) {
             largest = scores[i];
@@ -31,15 +30,6 @@ int findMaxIndex(std::vector<double> scores) {
     return largestIdx;
 }
 
-/*
- Depth First Search w/ backtracking?
- Each node:
-            Select best child:
-                if child is terminal:
-                try next child
-
-
-*/
 GameNode* heursiticSelectLeaf(GameNode* node) {
     // Find a node whose has no children i.e. a leaf
     while (node->getChildren().size() != 0) {
