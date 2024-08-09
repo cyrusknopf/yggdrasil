@@ -3,7 +3,6 @@
 #include <iostream>
 #include <random>
 
-#include "game/chess.h"
 #include "mcts/backprop.h"
 #include "mcts/expansion.h"
 #include "mcts/gametree.h"
