@@ -4,12 +4,28 @@
 #include "mcts/gametree.h"
 #include "utils.h"
 
+/*
+ * Provided a vector of [move, pieceindex] pairs, selects a random one and
+ * returns that pair
+ * Provided moves should be legal
+ * @param [moves] vector of [move, pieceindex], output of `getAllLegalMoves`
+ * @returns [move, pieceindex] pair
+ */
 std::pair<bitboard, int> getRandomLegalMove(
-    std::vector<std::pair<bitboard, int>> moves, bool turn);
+    std::vector<std::pair<bitboard, int>> moves);
 
+/*
+ * Given two team arrays, gets all the legal moves, for all pieces, for the
+ * player specified by `colour`;
+ *
+ * @param [white] white team array
+ * @param [black] black team array
+ * @param [colour] player to find legal moves for: white = true
+ */
 std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
                                                        bool colour);
 /*
+ * DEPRECIATED
  * Given both team arrays ,generates a random move
  * for the piece at provided index. Index should be a random number between
  * 0 and 5. Returns a move wrapped in an optional: optional is nullopt if

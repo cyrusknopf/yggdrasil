@@ -13,7 +13,7 @@
 #include "utils.h"
 
 std::pair<bitboard, int> getRandomLegalMove(
-    std::vector<std::pair<bitboard, int>> moves, bool turn) {
+    std::vector<std::pair<bitboard, int>> moves) {
     std::random_device rd;
 
     std::mt19937 rng(rd());
@@ -109,7 +109,7 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             return std::nullopt;
         }
 
-        auto [randomMove, pieceIdx] = getRandomLegalMove(legalMoves, turn);
+        auto [randomMove, pieceIdx] = getRandomLegalMove(legalMoves);
         auto [newWhite, newBlack] =
             makeMove(white, black, randomMove, pieceIdx, turn);
 

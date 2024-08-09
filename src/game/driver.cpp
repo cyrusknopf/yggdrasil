@@ -147,7 +147,6 @@ void randomVsMCTS(int moveTime) {
         if (winner.has_value()) gameOver = true;
         turn = !turn;
     }
-
     printWinner(winner);
 }
 
@@ -157,6 +156,6 @@ int main(int argc, char* argv[]) {
         exit(1);
     else
         moveTime = atoi(argv[1]);
-    // randomVsMCTS(moveTime);
-    userVsMCTS(moveTime);
+    randomVsMCTS(moveTime);
+    // userVsMCTS(moveTime);
 }
