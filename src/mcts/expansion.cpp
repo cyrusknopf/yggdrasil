@@ -12,9 +12,11 @@
 #include "utils.h"
 
 void expansion(GameNode* parent) {
+    // Get the games state
     team white = parent->getWhite();
     team black = parent->getBlack();
 
+    // `parent`'s turn is the one to move next: get moves for that player
     std::vector<std::pair<bitboard, int>> moves =
         getAllLegalMoves(white, black, parent->getTurn());
 
@@ -27,17 +29,22 @@ void expansion(GameNode* parent) {
         GameNode* child = parent->addChild(parent, move, newWhite, newBlack);
         team childWhite = child->getWhite();
         team childBlack = child->getBlack();
-        // TODO results in backprop the wrong value in driver
+        // TODO? results in backprop the wrong value in driver
+        // Given the new gamestate, if there are now no legal moves to be made,
+        // the game is a stalemate
         if (getAllLegalMoves(childWhite, childBlack, child->getTurn())
                 .empty()) {
             child->setTerminal();
             // Do not set winner, keep as nullopt to denote draw
         };
-        // Black wins
+        // Given the new gamestate, if either player is mated, set the node to
+        // be terminal and set the winner of the node
+        // TODO only need to check one here: i.e. white can never be mated if
+        // white just moved
         if (isMated(newWhite, newBlack, true)) {
             child->setTerminal();
             child->setWinner(false);
-            // white wins
+            // White wins
         } else if (isMated(newWhite, newBlack, false)) {
             child->setTerminal();
             child->setWinner(true);
