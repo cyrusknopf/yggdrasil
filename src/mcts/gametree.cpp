@@ -11,6 +11,7 @@
 
 GameNode* GameNode::addChild(GameNode* parent, bitboard move, team& white,
                              team& black) {
+    // Turn of this node = ~parent turn
     GameNode* child =
         new GameNode(parent, move, white, black, !parent->getTurn());
     parent->children.push_back(child);
@@ -20,7 +21,6 @@ GameNode* GameNode::addChild(GameNode* parent, bitboard move, team& white,
 void GameNode::removeChild(GameNode* newOrphan) {
     for (auto it = children.begin(); it != children.end(); it++) {
         if (*it == newOrphan) {
-            // delete *it;
             children.erase(it);
             break;
         }
@@ -123,25 +123,6 @@ GameNode* updateRootOnMove(GameNode* currentRoot, team& white, team& black) {
     // need
     assert(1 == 2 && "Child not found");
     return nullptr;
-}
-
-void GameNode::printGameNode(int indent) const {
-    // Print indentation
-    for (int i = 0; i < indent; ++i) {
-        std::cout << "  ";
-    }
-
-    // Print node information
-    std::cout << "Move: " << move << ", wins: " << wins
-              << ", Visits: " << visits
-              << ", Turn: " << (turn ? "White" : "Black") << std::endl;
-
-    // std::cout << gameStateToString(white, black) << std::endl;
-
-    // Recursively print children
-    for (GameNode* child : children) {
-        child->printGameNode(indent + 1);
-    }
 }
 
 GameNode* getMostVisitedChild(GameNode* root) {
