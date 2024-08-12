@@ -5,10 +5,10 @@ Bitboard chess engine with Monte Carlo tree search, written in C++
 Written with Google C++ Style in mind, so most documentaiton can be found in headers at `include/`
 
 Currently experimenting with different optimisation techniques to improve performance of MCTS algorithm.
-
+<!--
 ## Demo
 <img src="demo.gif" alt="demo turn" width="200"/>
-
+-->
 ## Running the engine
 1. Clone the repo
 2. `cd yggradasil`
