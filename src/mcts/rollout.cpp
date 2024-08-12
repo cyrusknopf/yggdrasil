@@ -12,7 +12,6 @@
 #include "utils.h"
 
 std::optional<bool> simulate(GameNode* node, bool quiet) {
-    // assert(node->getParent() != nullptr);
     team white = node->getWhite();
     team black = node->getBlack();
     assert(white.at(5) != 0);
