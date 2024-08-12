@@ -2,6 +2,7 @@
 #define _CHESS_H_
 
 #include <utility>
+#include <vector>
 
 #include "utils.h"
 
@@ -24,6 +25,11 @@ std::pair<team, team> initGame();
  * @returns true if there has been a capture, false other if not
  */
 bool checkIfCapture(team& oldBoards, team& newBoards);
+
+std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool turn);
+
+std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
+                                  team& white, team& black, bool promoted);
 
 /*
  * Checks whether the player of the specified `colour` is is mated

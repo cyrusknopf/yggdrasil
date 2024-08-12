@@ -58,3 +58,75 @@ TEST(isMated, endGame3) {
     ASSERT_FALSE(isMated(white, black, true));
     ASSERT_FALSE(isMated(white, black, false));
 }
+
+TEST(getPromotions, singleWhitePawn) {
+    bitboard whitePawn = coordinateToState("a7");
+    team white = {whitePawn, 0, 0, 0, 0, 0};
+
+    ASSERT_EQ(0, getPromotions(white, true).size());
+
+    white.at(0) = slideNorth(whitePawn);
+
+    ASSERT_EQ(4, getPromotions(white, true).size());
+}
+
+TEST(getPromotions, singleBlackPawn) {
+    bitboard blackPawn = coordinateToState("a2");
+    team black = {blackPawn, 0, 0, 0, 0, 0};
+
+    ASSERT_EQ(0, getPromotions(black, false).size());
+
+    black.at(0) = slideSouth(blackPawn);
+
+    ASSERT_EQ(4, getPromotions(black, false).size());
+}
+
+TEST(getPromotions, eightWeightPawns) {
+    bitboard whitePawns = whitePawnInit;
+    team white = {whitePawns, 0, 0, 0, 0, 0};
+
+    ASSERT_EQ(0, getPromotions(white, true).size());
+
+    // Push to rank 8
+    white.at(0) = whitePawns << 8 * 6;
+
+    ASSERT_EQ(8 * 4, getPromotions(white, true).size());
+}
+
+TEST(promotePawn, singleWhitePawn) {
+    bitboard whitePawn = coordinateToState("a8");
+    team white = {whitePawn, 0, 0, 0, 0, 0};
+    team black = {0, 0, 0, 0, 0, 0};
+
+    auto promotions = getPromotions(white, true);
+
+    ASSERT_EQ(4, promotions.size());
+
+    // Promote to horse
+    auto [newWhite, newBlack] =
+        promotePawn(promotions.at(0), white, black, true);
+
+    // Assert horse is there
+    ASSERT_EQ(coordinateToState("a8"), newWhite.at(1));
+    // Assert pawn is no longer there
+    ASSERT_EQ(0, newWhite.at(0));
+}
+
+TEST(promotePawn, singleBlackPawn) {
+    bitboard blackPawn = coordinateToState("a1");
+    team black = {blackPawn, 0, 0, 0, 0, 0};
+    team white = {0, 0, 0, 0, 0, 0};
+
+    auto promotions = getPromotions(black, false);
+
+    ASSERT_EQ(4, promotions.size());
+
+    // Promote to horse
+    auto [newWhite, newBlack] =
+        promotePawn(promotions.at(1), white, black, false);
+
+    // Assert horse is there
+    ASSERT_EQ(coordinateToState("a1"), newBlack.at(2));
+    // Assert pawn is no longer there
+    ASSERT_EQ(0, newBlack.at(0));
+}

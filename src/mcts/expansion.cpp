@@ -26,10 +26,10 @@ void expansion(GameNode* parent) {
         auto [newWhite, newBlack] =
             makeMove(white, black, move, pieceIndex, parent->getTurn());
 
+        // TODO check promotes empty here:yes->add one else add one per promote
         GameNode* child = parent->addChild(parent, move, newWhite, newBlack);
         team childWhite = child->getWhite();
         team childBlack = child->getBlack();
-        // TODO? results in backprop the wrong value in driver
         // Given the new gamestate, if there are now no legal moves to be made,
         // the game is a stalemate
         if (getAllLegalMoves(childWhite, childBlack, child->getTurn())
