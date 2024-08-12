@@ -1,9 +1,6 @@
 #include "game/moves.h"
 
-#include <omp.h>
-
 #include <array>
-#include <utility>
 #include <vector>
 
 #include "game/chess.h"
@@ -154,6 +151,7 @@ std::vector<bitboard> horsePseudoLegalMoves(bitboard own, bitboard opp,
     return moves;
 }
 
+// TODO include castling
 std::vector<bitboard> castlePseudoLegalMoves(bitboard ownState,
                                              bitboard oppState,
                                              bitboard state) {
@@ -406,13 +404,7 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
     return moves;
 }
 
-/*
-n.b. if king and a piece are not on: same file, same rank, same
-diagonal OR same antidiagonal: getBetween returns 0. This means the
-evaluation of (inbetween & piece) will always result in 0 and therefore
-appropriately not return true, as no valid sightline from queen to king
-*/
-// XXX Not most efficient in general
+// XXX Not most efficient
 bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard ownState = 0;
     for (bitboard piece : own) {

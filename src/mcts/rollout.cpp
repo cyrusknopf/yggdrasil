@@ -112,17 +112,22 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         }
 
         auto [randomMove, pieceIdx] = getRandomLegalMove(legalMoves);
+
         auto [newWhite, newBlack] =
             makeMove(white, black, randomMove, pieceIdx, turn);
 
-        int oldPly = halfMoveClock;
         // If there is no capture, increment half move clock
         if (turn) {
-            if (!checkIfCapture(black, newBlack)) halfMoveClock++;
+            if (!checkIfCapture(black, newBlack))
+                halfMoveClock++;
+            else
+                halfMoveClock = 0;
         } else {
-            if (!checkIfCapture(white, newWhite)) halfMoveClock++;
+            if (!checkIfCapture(white, newWhite))
+                halfMoveClock++;
+            else
+                halfMoveClock = 0;
         }
-        if (oldPly == halfMoveClock) halfMoveClock = 0;
 
         // Stalemate
         if (halfMoveClock >= 100) {
