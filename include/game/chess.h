@@ -72,4 +72,5 @@ bitboard getGameState(team& white, team& black, bool colour);
  * @return bitboard of every piece on the provided team
  */
 bitboard getTeamState(team& pieces);
+
 #endif  // !_CHESS_H_

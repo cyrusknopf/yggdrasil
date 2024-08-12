@@ -22,16 +22,22 @@ GameNode* MCTSAgent::takeTurn(GameNode* root, team whiteBitboards,
             std::cout << "\rSimulated games played: " << gamesSimulated
                       << std::flush;
         }
+        // Select node to random simul from
         GameNode* L = heursiticSelectLeaf(root);
+        // If the selected node is terminal, just backprop the outcome...
         if (L->getTerminal()) {
             backpropagate(L, !L->getWinner());
+            // ... and chose a new node
             continue;
         }
+        // ... otherwise add the child moves
         expansion(L);
         std::random_device rd;
+        // Chose a random move
         GameNode* C = L->getRandomChild(rd());
         // Next iter if the node is terminal
         if (C->getTerminal()) {
+            backpropagate(C, !C->getWinner());
             continue;
         }
         std::optional<bool> res = simulate(C, true);
