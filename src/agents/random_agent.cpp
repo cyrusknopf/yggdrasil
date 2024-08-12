@@ -1,6 +1,7 @@
 #include "agents/random_agent.h"
 
-#include "mcts/rollout.h"
+#include "game/chess.h"
+#include "game/moves.h"
 
 std::pair<team, team> RandomAgent::takeTurn(team whiteBitboards,
                                             team blackBitboards, bool turn) {

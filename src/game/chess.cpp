@@ -85,3 +85,28 @@ bitboard getTeamState(team& pieces) {
     }
     return state;
 }
+
+std::pair<team, team> makeMove(team& white, team& black, bitboard move,
+                               int index, bool turn) {
+    team own = turn ? white : black;
+    team opp = turn ? black : white;
+
+    team newOwn = own;
+    team newOpp = opp;
+
+    // Get the square which the moving piece moves to
+    bitboard destinationSquare = ~(~move | own.at(index));
+    // Determine if the enemy is on the moved to piece i.e. there is a capture
+    auto [captureInfo, capturedIdx] = findPiece(destinationSquare, opp);
+    // If there is a capture, perform the capture
+    if (capturedIdx != -1) {
+        newOpp[capturedIdx] =
+            performCapture(newOpp[capturedIdx], destinationSquare);
+    };
+    // Update the move mode
+    newOwn[index] = move;
+    if (turn)
+        return std::make_pair(newOwn, newOpp);
+    else
+        return std::make_pair(newOpp, newOwn);
+}

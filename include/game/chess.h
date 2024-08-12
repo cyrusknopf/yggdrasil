@@ -73,4 +73,19 @@ bitboard getGameState(team& white, team& black, bool colour);
  */
 bitboard getTeamState(team& pieces);
 
+/*
+ * Updates team boards white and black given a move, the index of the piece
+ * making the move, and the turn of the moving piece (white = true)
+ *
+ * @param [white] team array of white pieces
+ * @param [black] team array of black pieces
+ * @param [move] bitboard containg the state of the piece after the move
+ * @param [index] index in team array of the moving piece (1=pawn, ...,
+ * 5=king)
+ * @param [turn] turn of moving piece (white = true)
+ * @returns pair containg the new team arrays: <white, black>
+ */
+std::pair<team, team> makeMove(team& white, team& black, bitboard move,
+                               int index, bool turn);
+
 #endif  // !_CHESS_H_

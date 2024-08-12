@@ -1,6 +1,7 @@
 #include "game/moves.h"
 
 #include <array>
+#include <random>
 #include <vector>
 
 #include "game/chess.h"
@@ -357,25 +358,25 @@ std::vector<bitboard> kingPseudoLegalMoves(bitboard ownState, bitboard oppState,
 
 std::vector<bitboard> pseudoLegalFromIndex(int idx, team& white, team& black,
                                            bool colour) {
-    team thisTeam = colour ? white : black;
+    team own = colour ? white : black;
 
     bitboard ownState = colour ? getTeamState(white) : getTeamState(black);
     bitboard oppState = colour ? getTeamState(black) : getTeamState(white);
 
     switch (idx) {
         case 0:
-            return pawnPseudoLegalMoves(ownState, oppState, thisTeam.at(idx),
+            return pawnPseudoLegalMoves(ownState, oppState, own.at(idx),
                                         colour);
         case 1:
-            return horsePseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
+            return horsePseudoLegalMoves(ownState, oppState, own.at(idx));
         case 2:
-            return castlePseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
+            return castlePseudoLegalMoves(ownState, oppState, own.at(idx));
         case 3:
-            return bishopPseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
+            return bishopPseudoLegalMoves(ownState, oppState, own.at(idx));
         case 4:
-            return queenPseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
+            return queenPseudoLegalMoves(ownState, oppState, own.at(idx));
         case 5:
-            return kingPseudoLegalMoves(ownState, oppState, thisTeam.at(idx));
+            return kingPseudoLegalMoves(ownState, oppState, own.at(idx));
         default:
             return std::vector<bitboard>{};
     }
@@ -402,6 +403,32 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
             ++it;
     }
     return moves;
+}
+
+std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
+                                                       bool colour) {
+    std::vector<std::pair<bitboard, int>> moves;
+    // Iterate through each piece, adding its legal moves
+    for (int piece = 0; piece < 6; piece++) {
+        std::vector<bitboard> thisMoves =
+            legalMovesFromIndex(piece, white, black, colour);
+        for (bitboard move : thisMoves) {
+            moves.emplace_back(move, piece);
+        }
+    }
+    return moves;
+}
+
+// Assumes input is legal
+std::pair<bitboard, int> getRandomLegalMove(
+    std::vector<std::pair<bitboard, int>> moves) {
+    std::random_device rd;
+
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
+    std::size_t randomMoveIndex = dist(rng);
+
+    return moves.at(randomMoveIndex);
 }
 
 // XXX Not most efficient
