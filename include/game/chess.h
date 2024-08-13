@@ -38,6 +38,17 @@ bool checkIfCapture(team& oldBoards, team& newBoards);
  */
 std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour);
 
+/*
+ * Given a promotion pair (from `getPromotions`), updates the provided team
+ * arrays by applying that promotion to the team specified by `promoted` bool
+ * (white = true). Returns the updated team arrays
+ *
+ * @param [promotion] <singletonBitboard,pieceIdx> specifying promotion to make
+ * @param [white] white team array
+ * @param [black] black team array
+ * @param [promoted] colour of pawn to promote
+ * @returns update team arrays [white, black] with promotion made
+ */
 std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
                                   team& white, team& black, bool promoted);
 
