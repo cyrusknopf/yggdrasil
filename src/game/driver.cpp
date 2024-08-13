@@ -21,7 +21,7 @@ void clearAndPrintState(team white, team black) {
 }
 
 void printWinner(std::optional<bool> winner) {
-    std::cout << "Game over" << std::endl;
+    std::cout << "\nGame over" << std::endl;
     if (!winner.has_value())
         std::cout << "Stalemate" << std::endl;
     else if (winner)

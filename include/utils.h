@@ -3,6 +3,7 @@
 
 #include <array>
 #include <cstdint>
+#include <random>
 #include <regex>
 #include <vector>
 
@@ -116,6 +117,21 @@ std::string addPieceToStringBoard(std::string& board, bitboard pieceBitboard,
  * @return string representation of the game
  */
 std::string gameStateToString(team whitePieces, team blackPieces);
+
+/*
+ * Get a random element from a vector of that type of element
+ *
+ * @param [container] vector of elements
+ * @param [seed] seed for MT19937
+ * @returns random element of `container`
+ */
+template <typename T>
+T getRandom(std::vector<T> container, int seed) {
+    std::mt19937 rng(seed);
+    std::uniform_int_distribution<std::size_t> dist(0, container.size() - 1);
+    std::size_t index = dist(rng);
+    return container.at(index);
+}
 
 // Clears the terminal window, intended to preceed printing of the board
 void clearTerm();
