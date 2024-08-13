@@ -27,9 +27,10 @@ void expansion(GameNode* parent) {
             makeMove(white, black, move, pieceIndex, parent->getTurn());
 
         // TODO check promotes empty here:yes->add one else add one per promote
-        GameNode* child = parent->addChild(parent, move, newWhite, newBlack);
+        GameNode* child = parent->addChild(move, newWhite, newBlack);
         team childWhite = child->getWhite();
         team childBlack = child->getBlack();
+
         // Given the new gamestate, if there are now no legal moves to be made,
         // the game is a stalemate
         if (getAllLegalMoves(childWhite, childBlack, child->getTurn())
@@ -37,6 +38,7 @@ void expansion(GameNode* parent) {
             child->setTerminal();
             // Do not set winner, keep as nullopt to denote draw
         };
+
         // Given the new gamestate, if either player is mated, set the node to
         // be terminal and set the winner of the node
         // TODO only need to check one here: i.e. white can never be mated if

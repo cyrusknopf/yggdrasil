@@ -76,14 +76,12 @@ class GameNode {
      * array of the node pointed to by `parent`. The turn of the child node is
      * the negation of the `parent`'s turn
      *
-     * @param [parent] parent node TODO remove for `this`
      * @param [move] bitboard of single piece who moved
      * @param [white] white team array after `move`
      * @param [black] black team array after `move`
      * @returns pointer to the created child
      */
-    GameNode* addChild(GameNode* parent, bitboard move, team& white,
-                       team& black);
+    GameNode* addChild(bitboard move, team& white, team& black);
 
     /*
      * Removes the child from `this`' `children` array. Sets the `parent`

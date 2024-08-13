@@ -6,7 +6,7 @@
 TEST(backprop, oneGeneration) {
     team t;
     GameNode* root = initialiseTree(t, t);
-    GameNode* child = root->addChild(root, 10, t, t);
+    GameNode* child = root->addChild(10, t, t);
 
     ASSERT_EQ(root->getWins(), 0);   // Start state, white to move
     ASSERT_EQ(child->getWins(), 0);  // White move, black to move
@@ -25,9 +25,9 @@ TEST(backprop, threeGenerations) {
     // Start state, white to move
     GameNode* root = initialiseTree(t, t);
     // White move, black to move
-    GameNode* child = root->addChild(root, 10, t, t);
+    GameNode* child = root->addChild(10, t, t);
     // Black move, white to move
-    GameNode* gchild = child->addChild(child, 11, t, t);
+    GameNode* gchild = child->addChild(11, t, t);
     // We say gchild is terminal, since white is to move then black won
 
     ASSERT_EQ(root->getWins(), 0);
