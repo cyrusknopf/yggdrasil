@@ -2,6 +2,7 @@
 #define _CHESS_H_
 
 #include <utility>
+#include <vector>
 
 #include "utils.h"
 
@@ -24,6 +25,32 @@ std::pair<team, team> initGame();
  * @returns true if there has been a capture, false other if not
  */
 bool checkIfCapture(team& oldBoards, team& newBoards);
+
+/*
+ * Given a team array, `t`, and specifier of what colour team, `colour`, (white
+ * = true), returns a vector of <singleton bitboard, piece index> pairs where
+ * each singleton bitboard contains the square a pawn is on to be promoted, and
+ * four copies, each with one of piece index for: horse, castle, bishop, queen
+ *
+ * @param [t] team array to get promotable pawns for
+ * @param [colour] specifier of the colour of the provided team array
+ * @returns vector of <square, pieceIdx> pairs containing possible promotions
+ */
+std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour);
+
+/*
+ * Given a promotion pair (from `getPromotions`), updates the provided team
+ * arrays by applying that promotion to the team specified by `promoted` bool
+ * (white = true). Returns the updated team arrays
+ *
+ * @param [promotion] <singletonBitboard,pieceIdx> specifying promotion to make
+ * @param [white] white team array
+ * @param [black] black team array
+ * @param [promoted] colour of pawn to promote
+ * @returns update team arrays [white, black] with promotion made
+ */
+std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
+                                  team& white, team& black, bool promoted);
 
 /*
  * Checks whether the player of the specified `colour` is is mated

@@ -3,18 +3,16 @@
 #include <cstdlib>
 #include <vector>
 
-#include "game/chess.h"
 #include "mcts/expansion.h"
 #include "mcts/gametree.h"
 #include "mcts/rollout.h"
-#include "mcts/selection.h"
 #include "utils.h"
 
 TEST(getChildren, onlyChild) {
     team t;
     GameNode* parent = initialiseTree(t, t);
 
-    GameNode* child = parent->addChild(parent, 1, t, t);
+    GameNode* child = parent->addChild(1, t, t);
 
     std::vector<GameNode*> kids = parent->getChildren();
 
@@ -32,7 +30,7 @@ TEST(getRandomChild, onlyChild) {
 
     GameNode* parent = initialiseTree(t, t);
 
-    GameNode* child = parent->addChild(parent, 0, t, t);
+    GameNode* child = parent->addChild(0, t, t);
 
     GameNode* randomKid = parent->getRandomChild(seed);
 
@@ -47,11 +45,11 @@ TEST(getRandomChild, threeChildren) {
 
     GameNode* parent = initialiseTree(t, t);
 
-    GameNode* child1 = parent->addChild(parent, 0, t, t);
+    GameNode* child1 = parent->addChild(0, t, t);
 
-    GameNode* child2 = parent->addChild(parent, 0, t, t);
+    GameNode* child2 = parent->addChild(0, t, t);
 
-    GameNode* child3 = parent->addChild(parent, 0, t, t);
+    GameNode* child3 = parent->addChild(0, t, t);
 
     GameNode* randomKid = parent->getRandomChild(seed);
 
@@ -74,7 +72,7 @@ TEST(evaluate, oneToOne) {
     team t;
     GameNode* parent = initialiseTree(t, t);
 
-    GameNode* child = parent->addChild(parent, 0, t, t);
+    GameNode* child = parent->addChild(0, t, t);
 
     child->incrWins();
 
@@ -86,7 +84,7 @@ TEST(removeChild, onlyChild) {
     team t;
     GameNode* parent = initialiseTree(t, t);
 
-    GameNode* child = parent->addChild(parent, 1, t, t);
+    GameNode* child = parent->addChild(1, t, t);
 
     ASSERT_EQ(1, parent->getChildren().size());
 
@@ -101,9 +99,9 @@ TEST(removeChild, siblings) {
     team t;
     GameNode* parent = initialiseTree(t, t);
 
-    GameNode* child1 = parent->addChild(parent, 1, t, t);
+    GameNode* child1 = parent->addChild(1, t, t);
 
-    GameNode* child2 = parent->addChild(parent, 1, t, t);
+    GameNode* child2 = parent->addChild(1, t, t);
 
     ASSERT_EQ(2, parent->getChildren().size());
 
@@ -119,7 +117,7 @@ TEST(changeRoot, onlyChild) {
     team t;
     GameNode* root = initialiseTree(t, t);
 
-    GameNode* child = root->addChild(root, 1, t, t);
+    GameNode* child = root->addChild(1, t, t);
 
     auto children = root->getChildren();
 

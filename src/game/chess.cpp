@@ -3,6 +3,7 @@
 #include <mcts/rollout.h>
 
 #include <utility>
+#include <vector>
 
 #include "game/inits.h"
 #include "game/moves.h"
@@ -26,13 +27,66 @@ bool checkIfCapture(team& oldBoards, team& newBoards) {
     return false;
 }
 
+std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour) {
+    bitboard promotionRank;
+    std::vector<std::pair<bitboard, int>> promotes{};
+    // If checking white pawns:
+    if (colour) {
+        // Rank 8 for white
+        promotionRank = 72057594037927936;
+        // For each white pawn
+        for (bitboard pawn : getAllPieces(t.at(0))) {
+            // If the pawn is in rank 8
+            if (pawn >= promotionRank) {
+                // For knight, castle, bishop, queen
+                for (int p = 1; p < 5; p++) {
+                    promotes.emplace_back(pawn, p);
+                }
+            }
+        }
+    } else {  // Otherwise checking black pawns:
+        // Rank 1 for black
+        promotionRank = 128;
+        // For each black pawn
+        for (bitboard pawn : getAllPieces(t.at(0))) {
+            // If the pawn is in rank 8
+            if (pawn <= promotionRank) {
+                // For knight, castle, bishop, queen
+                for (int p = 1; p < 5; p++) {
+                    promotes.emplace_back(pawn, p);
+                }
+            }
+        }
+    }
+    return promotes;
+}
+
+std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
+                                  team& white, team& black, bool promoted) {
+    // If we are promoting on white
+    if (promoted) {
+        team newWhite = white;
+        newWhite.at(0) = newWhite.at(0) ^ promotion.first;
+        newWhite.at(promotion.second) =
+            newWhite.at(promotion.second) | promotion.first;
+        return std::make_pair(newWhite, black);
+    } else {  // Else we are promoting on black
+        team newBlack = black;
+        newBlack.at(0) = newBlack.at(0) ^ promotion.first;
+        newBlack.at(promotion.second) =
+            newBlack.at(promotion.second) | promotion.first;
+        return std::make_pair(white, newBlack);
+    }
+}
+
 bool isMated(team& white, team& black, bool colour) {
     team own = colour ? white : black;
     team opp = colour ? black : white;
 
     // If not in check, cannot be mated
     if (!isOwnKingInCheck(own, opp, colour)) return false;
-    // Check each piece's possible moves to see if we can get out of check
+    // Check each piece's possible moves to see if we can get out of
+    // check
     for (int piece = 5; piece > 0; piece--) {
         for (bitboard move : legalMovesFromIndex(piece, white, black, colour)) {
             auto [newWhite, newBlack] =

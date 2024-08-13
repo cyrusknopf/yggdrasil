@@ -8,12 +8,10 @@
 
 #include "utils.h"
 
-GameNode* GameNode::addChild(GameNode* parent, bitboard move, team& white,
-                             team& black) {
+GameNode* GameNode::addChild(bitboard move, team& white, team& black) {
     // Turn of this node = ~parent turn
-    GameNode* child =
-        new GameNode(parent, move, white, black, !parent->getTurn());
-    parent->children.push_back(child);
+    GameNode* child = new GameNode(this, move, white, black, !this->getTurn());
+    this->children.push_back(child);
     return child;
 }
 
@@ -37,6 +35,7 @@ void GameNode::setChildren(std::vector<GameNode*> newChildren) {
     children = newChildren;
 }
 
+// TODO refactor out as non-member function
 GameNode* GameNode::getRandomChild(int seed) {
     std::vector<GameNode*> children = getChildren();
 

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-
-#include <vector>
 #include <mcts/gametree.h>
 #include <mcts/rollout.h>
+
+#include <vector>
 
 #include "game/inits.h"
 #include "game/moves.h"
@@ -370,14 +370,16 @@ TEST(getBetween, edgeCase1) {
     bitboard whiteKing = 8;
     bitboard blackQueen = 16777216;
     bitboard ownState = 2223012799;
-    bitboard oppState = 17291298090422108160;
+    bitboard oppState = 17291298090422108160ULL;
     bitboard btwn = getBetween(whiteKing, blackQueen);
     ASSERT_EQ(0, btwn & (ownState | oppState));
 }
 
 TEST(getChildren, edgeCase1) {
-    team white = { 70934096640, 134217730, 129, 36, 16, 8};
-    team black = { 34766557670277120, 4755801206503243776, 9295429630892703744, 2594073385365405696, 1152921504606846976, 17592186044416 };
+    team white = {70934096640, 134217730, 129, 36, 16, 8};
+    team black = {34766557670277120,      4755801206503243776,
+                  9295429630892703744ULL, 2594073385365405696,
+                  1152921504606846976,    17592186044416};
     GameNode* parent = new GameNode(nullptr, 134217730, white, black, false);
     auto children = getAllLegalMoves(white, black, false);
     ASSERT_EQ(0, children.size());
@@ -399,7 +401,8 @@ TEST(legalMoves, edgeCaseDoubleMove) {
     bitboard whiteCastle = 0;
     whiteCastle |= coordinateToState("f5");
     bitboard whiteQueen = coordinateToState("f8");
-    team white = {whitePawn, whiteHorse, whiteCastle, whiteBishopInit, whiteQueen, whiteKingInit};
+    team white = {whitePawn,       whiteHorse, whiteCastle,
+                  whiteBishopInit, whiteQueen, whiteKingInit};
 
     bitboard blackPawns = 0;
     blackPawns |= coordinateToState("a7");
@@ -411,7 +414,8 @@ TEST(legalMoves, edgeCaseDoubleMove) {
     bitboard blackHorse = coordinateToState("b8");
     blackHorse |= coordinateToState("e7");
     bitboard blackBishop = coordinateToState("c8");
-    team black = {blackPawns, blackHorse, blackCastle, blackBishop, blackQueenInit, blackKingInit};
+    team black = {blackPawns,  blackHorse,     blackCastle,
+                  blackBishop, blackQueenInit, blackKingInit};
 
     auto moves = getAllLegalMoves(white, black, false);
     ASSERT_EQ(1, moves.size());
