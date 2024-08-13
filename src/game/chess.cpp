@@ -27,11 +27,11 @@ bool checkIfCapture(team& oldBoards, team& newBoards) {
     return false;
 }
 
-std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool turn) {
+std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour) {
     bitboard promotionRank;
     std::vector<std::pair<bitboard, int>> promotes{};
     // If checking white pawns:
-    if (turn) {
+    if (colour) {
         // Rank 8 for white
         promotionRank = 72057594037927936;
         // For each white pawn

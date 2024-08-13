@@ -26,7 +26,17 @@ std::pair<team, team> initGame();
  */
 bool checkIfCapture(team& oldBoards, team& newBoards);
 
-std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool turn);
+/*
+ * Given a team array, `t`, and specifier of what colour team, `colour`, (white
+ * = true), returns a vector of <singleton bitboard, piece index> pairs where
+ * each singleton bitboard contains the square a pawn is on to be promoted, and
+ * four copies, each with one of piece index for: horse, castle, bishop, queen
+ *
+ * @param [t] team array to get promotable pawns for
+ * @param [colour] specifier of the colour of the provided team array
+ * @returns vector of <square, pieceIdx> pairs containing possible promotions
+ */
+std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour);
 
 std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
                                   team& white, team& black, bool promoted);
