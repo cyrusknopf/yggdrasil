@@ -95,6 +95,10 @@ GameNode* changeRoot(GameNode* oldRoot, GameNode* newRoot) {
     return newRoot;
 }
 
+/*
+ * Cannot use single ORd bitboard of white and black because different
+ * promotions are indistinguishable from eachother: cannot update correctly
+ */
 GameNode* updateRootOnMove(GameNode* currentRoot, team& white, team& black) {
     // Assume the node we are deleting is a root i.e. no parent
     assert(currentRoot->getParent() == nullptr);
@@ -113,7 +117,7 @@ GameNode* updateRootOnMove(GameNode* currentRoot, team& white, team& black) {
 
 GameNode* getMostVisitedChild(GameNode* root) {
     int mostVisits = 0;
-    GameNode* mostVisitedChild = root;
+    GameNode* mostVisitedChild = nullptr;
 
     for (GameNode* child : root->getChildren()) {
         if (child->getVisits() > mostVisits) {
