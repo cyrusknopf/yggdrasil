@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cmath>
 #include <optional>
-#include <random>
 #include <vector>
 
 #include "utils.h"
@@ -33,17 +32,6 @@ std::vector<GameNode*>& GameNode::getChildren() { return children; }
 
 void GameNode::setChildren(std::vector<GameNode*> newChildren) {
     children = newChildren;
-}
-
-// TODO refactor out as non-member function
-GameNode* GameNode::getRandomChild(int seed) {
-    std::vector<GameNode*> children = getChildren();
-
-    std::mt19937 rng(seed);
-    std::uniform_int_distribution<std::size_t> dist(0, children.size() - 1);
-    std::size_t index = dist(rng);
-
-    return children.at(index);
 }
 
 bitboard GameNode::getMove() const { return move; }

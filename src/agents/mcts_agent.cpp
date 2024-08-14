@@ -34,7 +34,7 @@ GameNode* MCTSAgent::takeTurn(GameNode* root, team whiteBitboards,
         expansion(L);
         std::random_device rd;
         // Chose a random move
-        GameNode* C = L->getRandomChild(rd());
+        GameNode* C = getRandom(L->getChildren(), (int)rd());
         // Next iter if the node is terminal
         if (C->getTerminal()) {
             backpropagate(C, !C->getWinner());

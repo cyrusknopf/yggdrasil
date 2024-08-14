@@ -422,3 +422,8 @@ TEST(legalMoves, edgeCaseDoubleMove) {
     auto [move, idx] = moves.at(0);
     ASSERT_EQ(coordinateToState("d7"), move);
 }
+
+TEST(getCastles, empty) {
+    ;
+    ;
+}

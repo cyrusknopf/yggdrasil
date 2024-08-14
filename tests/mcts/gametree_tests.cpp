@@ -24,39 +24,6 @@ TEST(getChildren, onlyChild) {
     ASSERT_EQ(child, kid);
 }
 
-TEST(getRandomChild, onlyChild) {
-    int seed = 1;
-    team t;
-
-    GameNode* parent = initialiseTree(t, t);
-
-    GameNode* child = parent->addChild(0, t, t);
-
-    GameNode* randomKid = parent->getRandomChild(seed);
-
-    // addr of child == returned pointer
-    ASSERT_EQ(child, randomKid);
-}
-
-TEST(getRandomChild, threeChildren) {
-    // When this seed is used it returns the second child
-    int seed = 1;
-    team t;
-
-    GameNode* parent = initialiseTree(t, t);
-
-    GameNode* child1 = parent->addChild(0, t, t);
-
-    GameNode* child2 = parent->addChild(0, t, t);
-
-    GameNode* child3 = parent->addChild(0, t, t);
-
-    GameNode* randomKid = parent->getRandomChild(seed);
-
-    // addr of child2 == returned pointer
-    ASSERT_EQ(child2, randomKid);
-}
-
 TEST(incrWins, pos) {
     team t;
     GameNode* node = initialiseTree(t, t);

@@ -99,14 +99,6 @@ class GameNode {
 
     void setChildren(std::vector<GameNode*> newChildren);
 
-    /*
-     * Gets a random child from the `children` vector of `this`
-     *
-     * @param [seed] int seed for MT RNG
-     * @returns pointer to randomly selected child node
-     */
-    GameNode* getRandomChild(int seed);
-
     bitboard getMove() const;
 
     team getWhite() const;

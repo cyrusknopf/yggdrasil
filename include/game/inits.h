@@ -10,6 +10,8 @@ constexpr bitboard whiteCastleInit = 0x81;
 constexpr bitboard whiteBishopInit = 0x24;
 constexpr bitboard whiteQueenInit = 0x10;
 constexpr bitboard whiteKingInit = 0x8;
+constexpr team whiteInit = {whitePawnInit,   whiteHorseInit, whiteCastleInit,
+                            whiteBishopInit, whiteQueenInit, whiteKingInit};
 
 // Black piece init positions
 constexpr bitboard blackPawnInit = 0x00FF000000000000;
@@ -18,6 +20,8 @@ constexpr bitboard blackCastleInit = 0x8100000000000000;
 constexpr bitboard blackBishopInit = 0x2400000000000000;
 constexpr bitboard blackQueenInit = 0x1000000000000000;
 constexpr bitboard blackKingInit = 0x800000000000000;
+constexpr team blackInit = {blackPawnInit,   blackHorseInit, blackCastleInit,
+                            blackBishopInit, blackQueenInit, blackKingInit};
 
 // Symbols of pieces for terminal output
 const std::string WPAWN = "♙";

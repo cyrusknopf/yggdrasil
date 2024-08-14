@@ -12,7 +12,7 @@ GameNode* selectRandomLeaf(GameNode* node, int seed) {
 
     // Find a node whose has no children i.e. a leaf
     while (children.size() != 0) {
-        GameNode* randomChild = node->getRandomChild(seed);
+        GameNode* randomChild = getRandom(node->getChildren() ,seed);
         return selectRandomLeaf(randomChild, seed);
     }
     return node;
