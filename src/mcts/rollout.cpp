@@ -25,13 +25,11 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
         // Black wins
         if (isMated(white, black, true)) {
             bool winner = false;
-            // node->getTurn = player to move now. So parent is winner
             return winner;
         }
         // White wins
         if (isMated(white, black, false)) {
             bool winner = true;
-            // node->getTurn = player to move now. So prev is winner
             return winner;
         }
 
@@ -46,6 +44,22 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
 
         auto [newWhite, newBlack] =
             makeMove(white, black, randomMove, pieceIdx, turn);
+
+        // Check if need promote
+        team own = turn ? newWhite : newBlack;
+        std::vector<std::pair<bitboard, int>> promotes =
+            getPromotions(own, turn);
+
+        // If there is a promote to make, make a random one
+        if (!promotes.empty()) {
+            std::random_device rd;
+            std::pair<bitboard, int> rdmPromote =
+                getRandom(promotes, (int)rd());
+            std::pair<team, team> newBoards =
+                promotePawn(rdmPromote, newWhite, newBlack, turn);
+            newWhite = newBoards.first;
+            newBlack = newBoards.second;
+        }
 
         // If there is no capture, increment half move clock
         if (turn) {

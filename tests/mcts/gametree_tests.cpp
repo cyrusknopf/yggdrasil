@@ -3,9 +3,9 @@
 #include <cstdlib>
 #include <vector>
 
+#include "game/chess.h"
 #include "mcts/expansion.h"
 #include "mcts/gametree.h"
-#include "mcts/rollout.h"
 #include "utils.h"
 
 TEST(getChildren, onlyChild) {

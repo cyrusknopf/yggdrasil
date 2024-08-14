@@ -416,6 +416,8 @@ std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
             moves.emplace_back(move, piece);
         }
     }
+    // TODO add castling here
+    // TODO enpassant here
     return moves;
 }
 
@@ -433,14 +435,8 @@ std::pair<bitboard, int> getRandomLegalMove(
 
 // XXX Not most efficient
 bool isOwnKingInCheck(team& own, team& opp, bool colour) {
-    bitboard ownState = 0;
-    for (bitboard piece : own) {
-        ownState |= piece;
-    }
-    bitboard oppState = 0;
-    for (bitboard piece : opp) {
-        oppState |= piece;
-    }
+    bitboard ownState = getTeamState(own);
+    bitboard oppState = getTeamState(opp);
     bitboard king = own.at(5);
 
     // Check queens
