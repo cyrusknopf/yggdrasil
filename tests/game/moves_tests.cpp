@@ -423,7 +423,6 @@ TEST(legalMoves, edgeCaseDoubleMove) {
     ASSERT_EQ(coordinateToState("d7"), move);
 }
 
-TEST(getCastles, empty) {
-    ;
-    ;
-}
+TEST(getCastles, TODO) { FAIL(); }
+
+TEST(getEnpassants, TODO) { FAIL(); }

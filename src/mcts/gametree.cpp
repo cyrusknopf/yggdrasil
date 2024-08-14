@@ -34,8 +34,6 @@ void GameNode::setChildren(std::vector<GameNode*> newChildren) {
     children = newChildren;
 }
 
-bitboard GameNode::getMove() const { return move; }
-
 team GameNode::getWhite() const { return white; }
 
 void GameNode::setWhite(team& boards) { white = boards; }

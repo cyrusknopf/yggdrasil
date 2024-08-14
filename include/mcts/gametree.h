@@ -50,7 +50,6 @@ class GameNode {
              bool turn)
         : parent(parent),
           children(),
-          move(move),
           white(white),
           black(black),
           wins(0),
@@ -98,8 +97,6 @@ class GameNode {
     std::vector<GameNode*>& getChildren();
 
     void setChildren(std::vector<GameNode*> newChildren);
-
-    bitboard getMove() const;
 
     team getWhite() const;
 

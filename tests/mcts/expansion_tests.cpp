@@ -90,8 +90,6 @@ TEST(expansion, promotion) {
 
     for (int i = 0; i < 4; i++) {
         GameNode* promote = children.at(i);
-        // Assert the move is the result of pawn push
-        ASSERT_EQ(promote->getMove(), coordinateToState("a8"));
         // Assert the pawn has been promoted i.e. removed
         ASSERT_EQ(promote->getWhite().at(0), 0);
         // Assert the piece has taken the pawn's place

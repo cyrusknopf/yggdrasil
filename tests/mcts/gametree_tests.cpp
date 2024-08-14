@@ -162,7 +162,6 @@ TEST(updateRootOnMove, possibleDoubleMove) {
     // Check the first move is the castle eastwards capture
     // (Not necessary but in current implementation this is expected behaviour)
     GameNode* correctChild = root->getChildren().at(0);
-    ASSERT_EQ(coordinateToState("b8"), correctChild->getMove());
 
     // Make the castle eastwards capture move
     auto [newWhite, newBlack] =
@@ -193,7 +192,6 @@ TEST(updateRootOnMove, possibleDoubleMoveSamePiece) {
     // (Not necessary but in current implementation this is expected behaviour)
     GameNode* correctChild = root->getChildren().at(0);
     bitboard correctMove = coordinateToState("b8") | coordinateToState("a8");
-    ASSERT_EQ(correctMove, correctChild->getMove());
 
     // Make the castle eastwards capture move
     auto [newWhite, newBlack] = makeMove(white, black, correctMove, 2, true);
