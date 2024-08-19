@@ -10,4 +10,4 @@
  * @param [quiet] if false, prints board each move to stdout
  * @returns true = white win, false = black win, nullopt = draw
  */
-std::optional<bool> simulate(GameNode* node, bool quiet);
+std::optional<bool> simulate(GameNode* node, bool quiet, int seed);

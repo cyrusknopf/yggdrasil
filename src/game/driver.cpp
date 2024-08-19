@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <optional>
+#include <random>
 #include <string>
 #include <utility>
 
@@ -57,9 +58,10 @@ void userVsMCTS(int moveTime) {
 
     // MCTS setup
     GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
+    std::random_device rd;
     // Add all moves for white to the tree
     expansion(root);
-    MCTSAgent mctsAgent = MCTSAgent(moveTime);
+    MCTSAgent mctsAgent = MCTSAgent(moveTime, (int)rd());
 
     while (!gameOver && halfMoveClock <= 100) {
         // User turn
@@ -109,9 +111,10 @@ void randomVsMCTS(int moveTime) {
 
     // MCTS setup
     GameNode* root = initialiseTree(whiteBitboards, blackBitboards);
+    std::random_device rd;
     // Add all moves for white to the tree
     expansion(root);
-    MCTSAgent mctsAgent = MCTSAgent(moveTime);
+    MCTSAgent mctsAgent = MCTSAgent(moveTime, (int)rd());
 
     // Random Agent
     RandomAgent rdmAgent = RandomAgent();

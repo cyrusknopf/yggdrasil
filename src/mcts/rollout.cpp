@@ -11,7 +11,7 @@
 #include "game/moves.h"
 #include "utils.h"
 
-std::optional<bool> simulate(GameNode* node, bool quiet) {
+std::optional<bool> simulate(GameNode* node, bool quiet, int seed) {
     team white = node->getWhite();
     team black = node->getBlack();
     assert(white.at(5) != 0);
@@ -40,8 +40,7 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             return std::nullopt;
         }
 
-        std::random_device rd;
-        auto [randomMove, pieceIdx] = getRandom(legalMoves, (int)rd());
+        auto [randomMove, pieceIdx] = getRandom(legalMoves, seed);
 
         auto [newWhite, newBlack] =
             makeMove(white, black, randomMove, pieceIdx, turn);
@@ -53,8 +52,7 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
 
         // If there is a promote to make, make a random one
         if (!promotes.empty()) {
-            std::pair<bitboard, int> rdmPromote =
-                getRandom(promotes, (int)rd());
+            std::pair<bitboard, int> rdmPromote = getRandom(promotes, seed);
             std::pair<team, team> newBoards =
                 promotePawn(rdmPromote, newWhite, newBlack, turn);
             newWhite = newBoards.first;

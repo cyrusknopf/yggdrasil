@@ -1,7 +1,6 @@
 #include "agents/mcts_agent.h"
 
 #include <iostream>
-#include <random>
 
 #include "mcts/backprop.h"
 #include "mcts/expansion.h"
@@ -32,15 +31,14 @@ GameNode* MCTSAgent::takeTurn(GameNode* root, team whiteBitboards,
         }
         // ... otherwise add the child moves
         expansion(L);
-        std::random_device rd;
         // Chose a random move
-        GameNode* C = getRandom(L->getChildren(), (int)rd());
+        GameNode* C = getRandom(L->getChildren(), seed);
         // Next iter if the node is terminal
         if (C->getTerminal()) {
             backpropagate(C, !C->getWinner());
             continue;
         }
-        std::optional<bool> res = simulate(C, true);
+        std::optional<bool> res = simulate(C, true, seed);
         gamesSimulated++;
         backpropagate(C, !res);
     }

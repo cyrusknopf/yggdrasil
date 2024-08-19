@@ -13,8 +13,12 @@ include_directories(${GTEST_INCLUDE_DIRS} include)
 # Locate OpenMP
 find_package(OpenMP REQUIRED)
 
+# Locate Google Benchmark
+find_package(benchmark REQUIRED)
+
 option(test "Build test" OFF)
 option(simul "Run random simulation" OFF)
+option(bm "Benchmark with Google benchmark" OFF)
 
 # Set optimization flags for release mode
 if(NOT CMAKE_BUILD_TYPE)
@@ -25,17 +29,7 @@ if(CMAKE_BUILD_TYPE MATCHES Release)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 endif()
 
-# Gather all test source files
-set(TEST_SOURCES
-    tests/utils_tests.cpp
-    tests/game/moves_tests.cpp
-    tests/game/chess_tests.cpp
-    tests/mcts/gametree_tests.cpp
-    tests/mcts/selection_tests.cpp
-    tests/mcts/rollout_tests.cpp
-    tests/mcts/expansion_tests.cpp
-    tests/mcts/backprop_tests.cpp
-)
+
 
 # Gather all source files
 set(SRC_SOURCES
@@ -57,6 +51,22 @@ set(SRC_SOURCES
     src/mcts/random_simul.cpp
 )
 
+# Gather all test source files
+set(TEST_SOURCES
+    tests/utils_tests.cpp
+    tests/game/moves_tests.cpp
+    tests/game/chess_tests.cpp
+    tests/mcts/gametree_tests.cpp
+    tests/mcts/selection_tests.cpp
+    tests/mcts/rollout_tests.cpp
+    tests/mcts/expansion_tests.cpp
+    tests/mcts/backprop_tests.cpp
+)
+
+set(BENCHMARK_SOURCES
+    benchmark/mcts/rollout_benchmark.cpp
+)
+
 if (test)
   # Remove driver.cpp from SRC_SOURCES
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
@@ -70,6 +80,12 @@ elseif (simul)
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
   add_executable(random_simul ${SRC_SOURCES})
   target_link_libraries(random_simul OpenMP::OpenMP_CXX)
+elseif (bm)
+  # Remove other main functions
+  list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
+  list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
+  add_executable(benchmark ${SRC_SOURCES} ${BENCHMARK_SOURCES})
+  target_link_libraries(benchmark benchmark::benchmark)
 else()
   list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
   # Add the executable for driver.cpp and link necessary source files

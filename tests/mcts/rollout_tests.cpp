@@ -49,7 +49,7 @@ TEST(simulate, blackMated) {
 
     GameNode node = GameNode(nullptr, 0, white, black, false);
 
-    std::optional<bool> res = simulate(&node, true);
+    std::optional<bool> res = simulate(&node, true, 1);
 
     ASSERT_FALSE(res);
 }
@@ -67,7 +67,7 @@ TEST(simulate, whiteMated) {
 
     GameNode node = GameNode(nullptr, 0, white, black, false);
 
-    std::optional<bool> res = simulate(&node, true);
+    std::optional<bool> res = simulate(&node, true, 1);
 
     ASSERT_FALSE(res);
 }
@@ -78,6 +78,6 @@ TEST(simulate, terminal) {
 
     GameNode* node = new GameNode(nullptr, 0, white, black, false);
     ASSERT_FALSE(node->getTerminal());
-    std::optional<bool> res = simulate(node, true);
+    std::optional<bool> res = simulate(node, true, 1);
     ASSERT_TRUE(res);
 }

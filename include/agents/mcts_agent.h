@@ -5,9 +5,13 @@
 
 class MCTSAgent {
     int moveTime;
+    int seed;
 
    public:
-    MCTSAgent(int thisMoveTime) { moveTime = thisMoveTime; }
+    MCTSAgent(int thisMoveTime, int thisSeed) {
+        moveTime = thisMoveTime;
+        seed = thisSeed;
+    }
 
     GameNode* takeTurn(GameNode* root, team whiteBitboards, team blackBitboards,
                        bool quiet);
