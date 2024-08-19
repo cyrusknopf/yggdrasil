@@ -40,7 +40,8 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
             return std::nullopt;
         }
 
-        auto [randomMove, pieceIdx] = getRandomLegalMove(legalMoves);
+        std::random_device rd;
+        auto [randomMove, pieceIdx] = getRandom(legalMoves, (int)rd());
 
         auto [newWhite, newBlack] =
             makeMove(white, black, randomMove, pieceIdx, turn);
@@ -52,7 +53,6 @@ std::optional<bool> simulate(GameNode* node, bool quiet) {
 
         // If there is a promote to make, make a random one
         if (!promotes.empty()) {
-            std::random_device rd;
             std::pair<bitboard, int> rdmPromote =
                 getRandom(promotes, (int)rd());
             std::pair<team, team> newBoards =
