@@ -65,6 +65,7 @@ set(TEST_SOURCES
 
 set(BENCHMARK_SOURCES
     benchmark/mcts/rollout_benchmark.cpp
+    benchmark/game/chess_benchmark.cpp
 )
 
 if (test)
