@@ -2,6 +2,7 @@
 
 #include <array>
 #include <random>
+#include <utility>
 #include <vector>
 
 #include "game/chess.h"
