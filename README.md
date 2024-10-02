@@ -1,5 +1,5 @@
 # Yggdrasil
-Bitboard chess engine with Monte Carlo tree search, written in C++
+Bitboard chess agent with Monte Carlo tree search, written in C++
 > "Yggdrasil: an immense and central tree in Norse mythology; it is the tree of life, encompassing all nine worlds"
 
 Written with Google C++ Style in mind. Doxygen-style documentation can be found in headers at `include/`
@@ -8,7 +8,7 @@ Written with Google C++ Style in mind. Doxygen-style documentation can be found 
 ## Demo
 <img src="demo.gif" alt="demo turn" width="200"/>
 -->
-## Running the engine
+## To play against the agent
 1. Clone the repo
 2. `cd yggradasil`
 3. `mkdir build`
