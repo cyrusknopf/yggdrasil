@@ -1,7 +1,8 @@
 # Yggdrasil
 Bitboard chess agent with Monte Carlo tree search, written in C++
+<!--
 > "Yggdrasil: an immense and central tree in Norse mythology; it is the tree of life, encompassing all nine worlds"
-
+-->
 Written with Google C++ Style in mind. Doxygen-style documentation can be found in headers at `include/`
 
 <!--
