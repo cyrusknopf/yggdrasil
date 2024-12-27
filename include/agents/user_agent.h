@@ -1,4 +1,5 @@
 
+#include <optional>
 #include <string>
 
 #include "game/moves.h"

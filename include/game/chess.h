@@ -1,6 +1,7 @@
 #ifndef _CHESS_H_
 #define _CHESS_H_
 
+#include <optional>
 #include <utility>
 #include <vector>
 

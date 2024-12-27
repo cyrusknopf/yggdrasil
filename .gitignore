@@ -4,6 +4,7 @@ experiments/
 .cache
 compile_commands.json
 .clangd
+.bash_history
 
 
 

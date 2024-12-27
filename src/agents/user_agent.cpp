@@ -1,6 +1,7 @@
 #include "agents/user_agent.h"
 
 #include <iostream>
+#include <optional>
 #include <string>
 
 #include "game/chess.h"
