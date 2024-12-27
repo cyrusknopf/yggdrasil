@@ -10,14 +10,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} include)
 
-# Locate OpenMP
-find_package(OpenMP REQUIRED)
-
 # Locate Google Benchmark
 find_package(benchmark REQUIRED)
 
 option(test "Build test" OFF)
-option(simul "Run random simulation" OFF)
 option(bm "Benchmark with Google benchmark" OFF)
 
 # Set optimization flags for release mode
@@ -48,7 +44,6 @@ set(SRC_SOURCES
     src/mcts/rollout.cpp
     src/mcts/expansion.cpp
     src/mcts/backprop.cpp
-    src/mcts/random_simul.cpp
 )
 
 # Gather all test source files
@@ -69,27 +64,22 @@ set(BENCHMARK_SOURCES
 )
 
 if (test)
+  set(CMAKE_BUILD_TYPE Debug)
   # Remove driver.cpp from SRC_SOURCES
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
-  list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
   # Add the executable for test
   add_executable(runTests ${SRC_SOURCES} ${TEST_SOURCES})
   # Link libraries to the test executable
-  target_link_libraries(runTests ${GTEST_LIBRARIES} pthread OpenMP::OpenMP_CXX)
-elseif (simul)
-  # Remove driver.cpp from SRC_SOURCES
-  list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
-  add_executable(random_simul ${SRC_SOURCES})
-  target_link_libraries(random_simul OpenMP::OpenMP_CXX)
+  target_link_libraries(runTests ${GTEST_LIBRARIES})
 elseif (bm)
+    set(CMAKE_BUILD_TYPE Release)
   # Remove other main functions
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
-  list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
   add_executable(benchmark ${SRC_SOURCES} ${BENCHMARK_SOURCES})
   target_link_libraries(benchmark benchmark::benchmark)
 else()
-  list(REMOVE_ITEM SRC_SOURCES "src/mcts/random_simul.cpp")
+    set(CMAKE_BUILD_TYPE Release)
   # Add the executable for driver.cpp and link necessary source files
   add_executable(driver ${SRC_SOURCES})
-  target_link_libraries(driver OpenMP::OpenMP_CXX)
+  target_link_libraries(driver)
 endif()
