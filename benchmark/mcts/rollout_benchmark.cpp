@@ -8,7 +8,7 @@ static void BM_simulateInit(benchmark::State& state) {
     auto [white, black] = initGame();
     GameNode* root = initialiseTree(white, black);
     int seed = 42;
-    for (auto _ : state) simulate(root, true, seed);
+    for (auto _ : state) simulate(root, seed);
 }
 
 BENCHMARK(BM_simulateInit);
