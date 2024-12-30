@@ -1,6 +1,9 @@
 experiments/
 .idea/
 /build/
+/build-bm/
+/build-test/
+/build-driver/
 .cache
 compile_commands.json
 .clangd

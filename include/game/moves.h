@@ -131,15 +131,6 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
  * @param [colour] player to find legal moves for: white = true
  */
 std::vector<Move> getAllLegalMoves(team& white, team& black, bool colour);
-/*
- * Provided a vector of [move, pieceindex] pairs, selects a random one and
- * returns that pair
- * Provided moves should be legal
- * @param [moves] vector of [move, pieceindex], output of `getAllLegalMoves`
- * @returns [move, pieceindex] pair
- */
-std::pair<bitboard, int> getRandomLegalMove(
-    std::vector<std::pair<bitboard, int>> moves);
 
 /*
  * Given two team arrays and the colour of the `own` team, checks whether

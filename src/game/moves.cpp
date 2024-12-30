@@ -421,18 +421,6 @@ std::vector<Move> getAllLegalMoves(team& white, team& black, bool colour) {
     return moves;
 }
 
-// Assumes input is legal
-std::pair<bitboard, int> getRandomLegalMove(
-    std::vector<std::pair<bitboard, int>> moves) {
-    std::random_device rd;
-
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<std::size_t> dist(0, moves.size() - 1);
-    std::size_t randomMoveIndex = dist(rng);
-
-    return moves.at(randomMoveIndex);
-}
-
 // XXX Not most efficient
 bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard ownState = getTeamState(own);
