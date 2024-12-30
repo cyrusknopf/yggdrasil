@@ -1,5 +1,5 @@
-#ifndef __MCTS_AGENT_H_
-#define __MCTS_AGENT_H_
+#ifndef _MCTS_AGENT_H_
+#define _MCTS_AGENT_H_
 
 #include "mcts/gametree.h"
 
