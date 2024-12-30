@@ -37,8 +37,7 @@ void expansion(GameNode* parent) {
     bool turn = parent->getTurn();
 
     // `parent`'s turn is the one to move next: get moves for that player
-    std::vector<std::pair<bitboard, int>> moves =
-        getAllLegalMoves(white, black, turn);
+    std::vector<Move> moves = getAllLegalMoves(white, black, turn);
 
     for (auto& [move, pieceIndex] : moves) {
         assert(move != 0);

@@ -406,15 +406,14 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
     return moves;
 }
 
-std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
-                                                       bool colour) {
-    std::vector<std::pair<bitboard, int>> moves;
+std::vector<Move> getAllLegalMoves(team& white, team& black, bool colour) {
+    std::vector<Move> moves{};
     // Iterate through each piece, adding its legal moves
     for (int piece = 0; piece < 6; piece++) {
         std::vector<bitboard> thisMoves =
             legalMovesFromIndex(piece, white, black, colour);
         for (bitboard move : thisMoves) {
-            moves.emplace_back(move, piece);
+            moves.push_back({move, piece});
         }
     }
     // TODO add castling here

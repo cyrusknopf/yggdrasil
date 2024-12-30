@@ -38,7 +38,7 @@ GameNode* MCTSAgent::takeTurn(GameNode* root, team whiteBitboards,
             backpropagate(C, !C->getWinner());
             continue;
         }
-        std::optional<bool> res = simulate(C, true, seed);
+        std::optional<bool> res = simulate(C, seed);
         gamesSimulated++;
         backpropagate(C, !res);
     }

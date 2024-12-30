@@ -31,11 +31,10 @@ TEST(getAllLegalMoves, pawn) {
     bitboard whitePawn = coordinateToState("a2");
     team white = {whitePawn, 0, 0, 0, 0, 0};
     team black = {0, 0, 0, 0, 0, 0};
-    std::vector<std::pair<bitboard, int>> moves =
-        getAllLegalMoves(white, black, true);
+    std::vector<Move> moves = getAllLegalMoves(white, black, true);
     ASSERT_EQ(2, moves.size());
-    ASSERT_EQ(0, moves.at(0).second);
-    ASSERT_EQ(0, moves.at(1).second);
+    ASSERT_EQ(coordinateToState("a3"), moves.at(0).boardState);
+    ASSERT_EQ(0, moves.at(1).pieceIdx);
 }
 
 TEST(simulate, blackMated) {
@@ -49,7 +48,7 @@ TEST(simulate, blackMated) {
 
     GameNode node = GameNode(nullptr, 0, white, black, false);
 
-    std::optional<bool> res = simulate(&node, true, 1);
+    std::optional<bool> res = simulate(&node, 1);
 
     ASSERT_FALSE(res);
 }
@@ -67,7 +66,7 @@ TEST(simulate, whiteMated) {
 
     GameNode node = GameNode(nullptr, 0, white, black, false);
 
-    std::optional<bool> res = simulate(&node, true, 1);
+    std::optional<bool> res = simulate(&node, 1);
 
     ASSERT_FALSE(res);
 }
@@ -78,6 +77,6 @@ TEST(simulate, terminal) {
 
     GameNode* node = new GameNode(nullptr, 0, white, black, false);
     ASSERT_FALSE(node->getTerminal());
-    std::optional<bool> res = simulate(node, true, 1);
+    std::optional<bool> res = simulate(node, 1);
     ASSERT_TRUE(res);
 }

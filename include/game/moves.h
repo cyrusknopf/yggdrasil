@@ -1,12 +1,19 @@
+#ifndef _MOVES_H_
+#define _MOVES_H_
+
 #include <vector>
 
 #include "utils.h"
 
+struct Move {
+    bitboard boardState;
+    int pieceIdx;
+};
+
 /*
- * Gets the pseudolegal moves for a bitboard of - possibly multiple - pawns from
- * a single pawn bitboard
- * Returns in order: single push, double push, eastwards
- * capture, westwards capture
+ * Gets the pseudolegal moves for a bitboard of - possibly multiple - pawns
+ * from a single pawn bitboard Returns in order: single push, double push,
+ * eastwards capture, westwards capture
  *
  * @param [ownState] single bitboard of all friendly pieces
  * @param [oppState] single bitboard of all enemy pieces
@@ -123,8 +130,7 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
  * @param [black] black team array
  * @param [colour] player to find legal moves for: white = true
  */
-std::vector<std::pair<bitboard, int>> getAllLegalMoves(team& white, team& black,
-                                                       bool colour);
+std::vector<Move> getAllLegalMoves(team& white, team& black, bool colour);
 /*
  * Provided a vector of [move, pieceindex] pairs, selects a random one and
  * returns that pair
@@ -145,3 +151,5 @@ std::pair<bitboard, int> getRandomLegalMove(
  * @returns true if in check, false if not
  */
 bool isOwnKingInCheck(team& own, team& opp, bool colour);
+
+#endif  // !_MOVES_H_

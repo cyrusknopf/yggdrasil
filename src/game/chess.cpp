@@ -70,6 +70,7 @@ std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
         newWhite.at(promotion.second) =
             newWhite.at(promotion.second) | promotion.first;
         return std::make_pair(newWhite, black);
+
     } else {  // Else we are promoting on black
         team newBlack = black;
         newBlack.at(0) = newBlack.at(0) ^ promotion.first;

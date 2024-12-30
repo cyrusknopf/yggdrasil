@@ -11,7 +11,7 @@
 std::pair<team, team> RandomAgent::takeTurn(team whiteBitboards,
                                             team blackBitboards, bool turn) {
     std::random_device rd;
-    std::vector<std::pair<bitboard, int>> moves =
+    std::vector<Move> moves =
         getAllLegalMoves(whiteBitboards, blackBitboards, turn);
 
     auto [randomMove, randomMoveIdx] = getRandom(moves, (int)rd());

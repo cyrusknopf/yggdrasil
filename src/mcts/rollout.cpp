@@ -2,7 +2,6 @@
 
 #include <assert.h>
 
-#include <iostream>
 #include <optional>
 #include <utility>
 #include <vector>
@@ -11,7 +10,7 @@
 #include "game/moves.h"
 #include "utils.h"
 
-std::optional<bool> simulate(GameNode* node, bool quiet, int seed) {
+std::optional<bool> simulate(GameNode* node, int seed) {
     team white = node->getWhite();
     team black = node->getBlack();
     assert(white.at(5) != 0);
@@ -19,9 +18,6 @@ std::optional<bool> simulate(GameNode* node, bool quiet, int seed) {
     bool turn = node->getTurn();
     int halfMoveClock = 0;
     while (true) {
-        if (!quiet) {
-            std::cout << gameStateToString(white, black) << std::endl;
-        }
         // Black wins
         if (isMated(white, black, true)) {
             bool winner = false;
@@ -33,8 +29,7 @@ std::optional<bool> simulate(GameNode* node, bool quiet, int seed) {
             return winner;
         }
 
-        std::vector<std::pair<bitboard, int>> legalMoves =
-            getAllLegalMoves(white, black, turn);
+        std::vector<Move> legalMoves = getAllLegalMoves(white, black, turn);
         // No legals: stalemate
         if (legalMoves.empty()) {
             return std::nullopt;
