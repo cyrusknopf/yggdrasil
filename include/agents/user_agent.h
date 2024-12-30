@@ -1,9 +1,17 @@
+#ifndef _USER_AGENT_
+#define _USER_AGENT_
 
 #include <optional>
 #include <string>
 
 #include "game/moves.h"
 #include "utils.h"
+
+struct MoveInput {
+    bitboard newBoard;
+    bitboard fromIdx;
+    bitboard toSquare;
+};
 
 class UserAgent {
    private:
@@ -30,23 +38,22 @@ class UserAgent {
     /*
      * Loops until a valid move has been taken from `takeToAndFrom`.
      * Checks that there is a piece at the 'from square' and that the 'to
-     * square' is a valid move for that piece. Retruns a tuple of information
+     * square' is a valid move for that piece. Retruns a struct of information
      * about the move.
      *
      * @param [white] white team array of bitboards
      * @param [black] black team array of bitboards
      * @param [turn] turn of player (white = true)
      * @param [message] message to display under chess board in stdout
-     * @returns tuple containing: <piece board after move, index of piece,
+     * @returns <piece board after move, index of piece,
      * singleton bitboard of 'to square'>
      */
-    std::tuple<bitboard, int, bitboard> takeMove(team& whiteBitboards,
-                                                 team& blackBitboards,
-                                                 bool turn,
-                                                 std::string& message);
+    MoveInput takeMove(team& whiteBitboards, team& blackBitboards, bool turn,
+                       std::string& message);
 
    public:
     UserAgent(){};
     std::pair<team, team> takeTurn(team whiteBitboards, team blackBitboards,
                                    bool turn, std::string& message);
 };
+#endif  // !_USER_AGENT_

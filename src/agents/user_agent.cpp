@@ -45,10 +45,8 @@ std::pair<bitboard, bitboard> UserAgent::takeToAndFrom(team& white, team& black,
     return std::make_pair(fromSquare.value(), toSquare.value());
 }
 
-std::tuple<bitboard, int, bitboard> UserAgent::takeMove(team& whiteBitboards,
-                                                        team& blackBitboards,
-                                                        bool turn,
-                                                        std::string& message) {
+MoveInput UserAgent::takeMove(team& whiteBitboards, team& blackBitboards,
+                              bool turn, std::string& message) {
     team own;
     team opp;
     bitboard newBoard;
@@ -96,7 +94,7 @@ std::tuple<bitboard, int, bitboard> UserAgent::takeMove(team& whiteBitboards,
             message = "Illegal move";
             continue;
         }
-        return std::make_tuple(newBoard, fromIdx, toSquare);
+        return {newBoard, fromIdx, toSquare};
     }
 }
 
