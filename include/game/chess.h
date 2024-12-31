@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include "game/moves.h"
 #include "utils.h"
 
 /*
@@ -37,7 +38,7 @@ bool checkIfCapture(team& oldBoards, team& newBoards);
  * @param [colour] specifier of the colour of the provided team array
  * @returns vector of <square, pieceIdx> pairs containing possible promotions
  */
-std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour);
+std::vector<Move> getPromotions(team& t, bool colour);
 
 /*
  * Given a promotion pair (from `getPromotions`), updates the provided team
@@ -50,8 +51,8 @@ std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour);
  * @param [promoted] colour of pawn to promote
  * @returns update team arrays [white, black] with promotion made
  */
-std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
-                                  team& white, team& black, bool promoted);
+std::pair<team, team> promotePawn(Move promotion, team& white, team& black,
+                                  bool promoted);
 
 /*
  * Checks whether the player of the specified `colour` is is mated

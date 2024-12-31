@@ -20,10 +20,10 @@ std::pair<team, team> RandomAgent::takeTurn(team whiteBitboards,
                                          randomMove, randomMoveIdx, turn);
 
     team own = turn ? newWhite : newBlack;
-    std::vector<std::pair<bitboard, int>> promotes = getPromotions(own, turn);
+    std::vector<Move> promotes = getPromotions(own, turn);
     if (promotes.empty()) return std::make_pair(newWhite, newBlack);
 
-    std::pair<bitboard, int> rdmPromote = getRandom(promotes, (int)rd());
+    Move rdmPromote = getRandom(promotes, (int)rd());
     auto pBoards = promotePawn(rdmPromote, newWhite, newBlack, turn);
     return pBoards;
 }

@@ -4,12 +4,11 @@
 #include <optional>
 #include <string>
 
-#include "game/moves.h"
 #include "utils.h"
 
 struct MoveInput {
     bitboard newBoard;
-    bitboard fromIdx;
+    int fromIdx;
     bitboard toSquare;
 };
 

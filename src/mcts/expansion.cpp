@@ -63,7 +63,7 @@ void expansion(GameNode* parent) {
                         promotePawn(promote, newWhite, newBlack, turn);
                     // Add them as a child
                     GameNode* child =
-                        parent->addChild(promote.first, pWhite, pBlack);
+                        parent->addChild(promote.boardState, pWhite, pBlack);
                     // Update terminality
                     updateChildTerminal(child);
                 }

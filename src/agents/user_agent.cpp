@@ -5,6 +5,7 @@
 #include <string>
 
 #include "game/chess.h"
+#include "game/moves.h"
 
 std::optional<bitboard> UserAgent::readSquare() {
     std::string square;
@@ -72,9 +73,7 @@ MoveInput UserAgent::takeMove(team& whiteBitboards, team& blackBitboards,
             opp = whiteBitboards;
         }
 
-        std::pair<bitboard, int> fromPiece = findPiece(fromSquare, own);
-        bitboard fromBoard = fromPiece.first;
-        bitboard fromIdx = fromPiece.second;
+        auto [fromBoard, fromIdx] = findPiece(fromSquare, own);
 
         if (fromIdx == -1) {
             message = "No piece at from square";

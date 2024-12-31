@@ -42,12 +42,11 @@ std::optional<bool> simulate(GameNode* node, int seed) {
 
         // Check if need promote
         team own = turn ? newWhite : newBlack;
-        std::vector<std::pair<bitboard, int>> promotes =
-            getPromotions(own, turn);
+        std::vector<Move> promotes = getPromotions(own, turn);
 
         // If there is a promote to make, make a random one
         if (!promotes.empty()) {
-            std::pair<bitboard, int> rdmPromote = getRandom(promotes, seed);
+            Move rdmPromote = getRandom(promotes, seed);
             std::pair<team, team> newBoards =
                 promotePawn(rdmPromote, newWhite, newBlack, turn);
             newWhite = newBoards.first;

@@ -1,8 +1,8 @@
 #include "game/moves.h"
 
 #include <array>
-#include <random>
-#include <utility>
+#include <cassert>
+#include <stdexcept>
 #include <vector>
 
 #include "game/chess.h"
@@ -406,6 +406,25 @@ std::vector<bitboard> legalMovesFromIndex(int idx, team& white, team& black,
     return moves;
 }
 
+Move findPiece(bitboard square, team& target) {
+    // Ensure we are only searching for a single location
+    int popcount = __builtin_popcountll(square);
+    if (popcount != 1) {
+        throw new std::invalid_argument("Tried to search with board: " +
+                                        std::to_string(square));
+    }
+    assert(__builtin_popcountll(square) == 1);
+    // i to keep track of the index that we find the board at
+    int i = 0;
+    for (auto& board : target) {
+        if ((board & square) != 0) {
+            return {board, i};
+        }
+        i++;
+    }
+    return {0, -1};
+}
+
 std::vector<Move> getAllLegalMoves(team& white, team& black, bool colour) {
     std::vector<Move> moves{};
     // Iterate through each piece, adding its legal moves
@@ -420,7 +439,6 @@ std::vector<Move> getAllLegalMoves(team& white, team& black, bool colour) {
     // TODO enpassant here
     return moves;
 }
-
 // XXX Not most efficient
 bool isOwnKingInCheck(team& own, team& opp, bool colour) {
     bitboard ownState = getTeamState(own);

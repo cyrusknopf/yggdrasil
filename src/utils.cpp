@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include "game/inits.h"
@@ -96,24 +95,6 @@ std::vector<bitboard> getAllPieces(bitboard state) {
         initState &= initState - 1;
     }
     return pieces;
-}
-
-std::pair<bitboard, int> findPiece(bitboard square, team& target) {
-    // Ensure we are only searching for a single location
-    int popcount = __builtin_popcountll(square);
-    if (popcount != 1) {
-        std::cout << "Tried to search with board: " << square << std::endl;
-    }
-    assert(__builtin_popcountll(square) == 1);
-    // i to keep track of the index that we find the board at
-    int i = 0;
-    for (auto& board : target) {
-        if ((board & square) != 0) {
-            return std::make_pair(board, i);
-        }
-        i++;
-    }
-    return std::make_pair(0, -1);
 }
 
 bitboard performCapture(bitboard victim, bitboard captor) {

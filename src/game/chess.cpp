@@ -27,9 +27,9 @@ bool checkIfCapture(team& oldBoards, team& newBoards) {
     return false;
 }
 
-std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour) {
+std::vector<Move> getPromotions(team& t, bool colour) {
     bitboard promotionRank;
-    std::vector<std::pair<bitboard, int>> promotes{};
+    std::vector<Move> promotes{};
     // If checking white pawns:
     if (colour) {
         // Rank 8 for white
@@ -40,7 +40,7 @@ std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour) {
             if (pawn >= promotionRank) {
                 // For knight, castle, bishop, queen
                 for (int p = 1; p < 5; p++) {
-                    promotes.emplace_back(pawn, p);
+                    promotes.push_back({pawn, p});
                 }
             }
         }
@@ -53,7 +53,7 @@ std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour) {
             if (pawn <= promotionRank) {
                 // For knight, castle, bishop, queen
                 for (int p = 1; p < 5; p++) {
-                    promotes.emplace_back(pawn, p);
+                    promotes.push_back({pawn, p});
                 }
             }
         }
@@ -61,21 +61,19 @@ std::vector<std::pair<bitboard, int>> getPromotions(team& t, bool colour) {
     return promotes;
 }
 
-std::pair<team, team> promotePawn(std::pair<bitboard, int> promotion,
-                                  team& white, team& black, bool promoted) {
+std::pair<team, team> promotePawn(Move promotion, team& white, team& black,
+                                  bool promoted) {
     // If we are promoting on white
     if (promoted) {
         team newWhite = white;
-        newWhite.at(0) = newWhite.at(0) ^ promotion.first;
-        newWhite.at(promotion.second) =
-            newWhite.at(promotion.second) | promotion.first;
+        newWhite.at(0) ^= promotion.boardState;
+        newWhite.at(promotion.pieceIdx) |= promotion.boardState;
         return std::make_pair(newWhite, black);
 
     } else {  // Else we are promoting on black
         team newBlack = black;
-        newBlack.at(0) = newBlack.at(0) ^ promotion.first;
-        newBlack.at(promotion.second) =
-            newBlack.at(promotion.second) | promotion.first;
+        newBlack.at(0) = newBlack.at(0) ^ promotion.boardState;
+        newBlack.at(promotion.pieceIdx) |= promotion.boardState;
         return std::make_pair(white, newBlack);
     }
 }

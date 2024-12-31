@@ -72,19 +72,6 @@ bitboard coordinateToState(const std::string& coord);
 std::vector<bitboard> getAllPieces(bitboard state);
 
 /*
- * Searches for a piece in an array which contains a 1 at the location specified
- * in the bitboard of square
- *
- * @param [square] bitboard containing a single piece which is to be searched
- * for
- * @param [target] array of bitboards which are to be searched
- * @return pair containing <bitboard which contains the square, index of the
- * bitboard in the searched array>
- */
-std::pair<bitboard, int> findPiece(bitboard square,
-                                   std::array<bitboard, 6>& target);
-
-/*
  * Capture logic for a board containing possibly many pieces (victim), and a
  * single piece (captor) which will capture one of those pieces. Returns victim
  * after capture
