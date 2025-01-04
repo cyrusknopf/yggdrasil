@@ -6,12 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Locate GTest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} include)
-
-# Locate Google Benchmark
-find_package(benchmark REQUIRED)
 
 option(test "Build test" OFF)
 option(bm "Benchmark with Google benchmark" OFF)
@@ -64,6 +58,10 @@ set(BENCHMARK_SOURCES
 )
 
 if (test)
+  # Locate GTest
+  find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS} include)
+
   set(CMAKE_BUILD_TYPE Debug)
   # Remove driver.cpp from SRC_SOURCES
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
@@ -72,13 +70,20 @@ if (test)
   # Link libraries to the test executable
   target_link_libraries(runTests ${GTEST_LIBRARIES})
 elseif (bm)
-    set(CMAKE_BUILD_TYPE Release)
+  # Locate GTest (required for benchmark)
+  find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS} include)
+  # Locate Google Benchmark
+  find_package(benchmark REQUIRED)
+
+  set(CMAKE_BUILD_TYPE Release)
   # Remove other main functions
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
   add_executable(benchmark ${SRC_SOURCES} ${BENCHMARK_SOURCES})
   target_link_libraries(benchmark benchmark::benchmark)
 else()
-    set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release)
+  include_directories(include)
   # Add the executable for driver.cpp and link necessary source files
   add_executable(driver ${SRC_SOURCES})
   target_link_libraries(driver)
