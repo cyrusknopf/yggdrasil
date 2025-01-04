@@ -10,10 +10,10 @@ Written with Google C++ Style in mind. Doxygen-style documentation can be found 
 <img src="demo.gif" alt="demo turn" width="200"/>
 -->
 ## To play against the agent
-1. Clone the repo
+_Requirements: Docker, git_
+1. `git clone git@github.com:cyrusknopf/yggdrasil.git`
 2. `cd yggradasil`
-3. `mkdir build`
-4. `cd build/`
-5. `cmake .. && make && ./driver`
-
+3. Use provided `docker_run.sh` script to build and run the provided Docker image
+4. Use provided `dr_run.sh` script to build and run the driver executable
+---
 > Developed on Apple Silicon. For issues running on macOS set the environment variable `MallocNanoZone` to `0`
