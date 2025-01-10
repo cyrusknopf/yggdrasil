@@ -76,7 +76,7 @@ elseif (bm)
   # Locate Google Benchmark
   find_package(benchmark REQUIRED)
 
-  set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE RelWithDebInfo)
   # Remove other main functions
   list(REMOVE_ITEM SRC_SOURCES "src/game/driver.cpp")
   add_executable(benchmark ${SRC_SOURCES} ${BENCHMARK_SOURCES})
